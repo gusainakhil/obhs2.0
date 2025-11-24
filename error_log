@@ -1,0 +1,10 @@
+[17-Nov-2025 12:10:53 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'station_id' in 'WHERE' in /home/obhsbeatleanalyt/public_html/photo_report.php:24
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/photo_report.php(24): mysqli->prepare('SELECT DISTINCT...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/photo_report.php on line 24
+[19-Nov-2025 07:07:05 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'date' in 'WHERE' in /home/obhsbeatleanalyt/public_html/salary.php:255
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/salary.php(255): mysqli->prepare('\r\n    SELECT \r\n...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/salary.php on line 255
