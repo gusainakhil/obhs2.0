@@ -54,6 +54,7 @@ Note: If your subscription payment is overdue, please clear the payment to resto
 
 
 
+
 function getStationName($station_id)
 {
     global $mysqli;
@@ -175,4 +176,84 @@ function acheived_feedback($train_no, $date_from, $date_to , $grade)
     }
 
     return false;
+}
+
+
+function psi_calculation($train_no, $date_from, $date_to, $grade)
+{
+    global $mysqli;
+    $station = $_SESSION['station_id'];
+
+    $date_from = $date_from . " 00:00:00";
+    $date_to   = $date_to . " 23:59:59";
+
+    // First query to get SUM feedback
+    $sql1 = "SELECT SUM(f.value) AS feedback_sum
+             FROM OBHS_feedback f
+             JOIN OBHS_passenger p ON p.id = f.passenger_id
+             WHERE p.train_no = ?
+               AND p.grade = ?
+               AND p.station_id = ?
+               AND p.created BETWEEN ? AND ?";
+
+    $stmt1 = $mysqli->prepare($sql1);
+    $stmt1->bind_param("isiss", $train_no, $grade, $station, $date_from, $date_to);
+    $stmt1->execute();
+    $result1 = $stmt1->get_result();
+    $row1 = $result1->fetch_assoc();
+    $feedback_sum = $row1['feedback_sum'] ?? 0;
+
+    // Second query to get MAX marking just for how highest marks 
+    $sql2 = "SELECT MAX(value) AS highest_marking
+             FROM OBHS_marking
+             WHERE station_id = ?";
+
+    $stmt2 = $mysqli->prepare($sql2);
+    $stmt2->bind_param("i", $station);
+    $stmt2->execute();
+    $result2 = $stmt2->get_result();
+    $row2 = $result2->fetch_assoc();
+    $highest_marking = $row2['highest_marking'] ?? 0;
+
+    return [
+        'feedback_sum' => $feedback_sum,
+        'highest_marking' => $highest_marking
+    ];
+}
+
+
+// ac or no ac and tte  coach feedback calculation function second page calculation 
+function feedback_calculation($train_no, $date_from, $date_to, $coach_type, $grade)
+{
+    global $mysqli;
+    $station = $_SESSION['station_id'];
+
+    $date_from = $date_from . " 00:00:00";
+    $date_to   = $date_to . " 23:59:59";
+
+    
+
+    $sql = "SELECT SUM(f.value) AS feedback_sum
+            FROM OBHS_feedback f
+            JOIN OBHS_passenger p ON p.id = f.passenger_id
+            WHERE p.train_no = ?
+              AND p.coach_type = ?
+              AND p.grade = ?
+              AND p.station_id = ?
+              AND p.created BETWEEN ? AND ?";
+
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("isissi", $train_no, $coach_type, $grade, $station, $date_from, $date_to);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $feedback_sum = $row['feedback_sum'] ?? 0;
+
+    $sql2 = "SELECT MAX(value) AS highest_marking
+             FROM OBHS_marking
+             WHERE station_id = ?";
+             
+    
+
+    return $feedback_sum;
 }
