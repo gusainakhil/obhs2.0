@@ -177,7 +177,7 @@ function acheived_feedback($train_no, $date_from, $date_to , $grade)
 
     return false;
 }
-
+///first page psi calculation function
 
 function psi_calculation($train_no, $date_from, $date_to, $grade)
 {
@@ -222,8 +222,8 @@ function psi_calculation($train_no, $date_from, $date_to, $grade)
 }
 
 
-// ac or no ac and tte  coach feedback calculation function second page calculation 
-function feedback_calculation($train_no, $date_from, $date_to, $coach_type, $grade)
+// ac or no ac and tte  coach feedback calculation function second page calculation  second page calculation se
+function feedback_calculation_coach_wise($train_no, $date_from, $date_to, $coach_type, $grade)
 {
     global $mysqli;
     $station = $_SESSION['station_id'];
@@ -231,29 +231,228 @@ function feedback_calculation($train_no, $date_from, $date_to, $coach_type, $gra
     $date_from = $date_from . " 00:00:00";
     $date_to   = $date_to . " 23:59:59";
 
-    
-
-    $sql = "SELECT SUM(f.value) AS feedback_sum
+    // 1️⃣ Coach-wise feedback SUM + passenger count
+    $sql = "SELECT 
+                p.coach_no,
+                SUM(f.value) AS feedback_sum,
+                COUNT(DISTINCT p.id) AS total_passenger_count
             FROM OBHS_feedback f
             JOIN OBHS_passenger p ON p.id = f.passenger_id
             WHERE p.train_no = ?
               AND p.coach_type = ?
               AND p.grade = ?
               AND p.station_id = ?
-              AND p.created BETWEEN ? AND ?";
+              AND p.created BETWEEN ? AND ?
+            GROUP BY p.coach_no";
 
     $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("isissi", $train_no, $coach_type, $grade, $station, $date_from, $date_to);
+    $stmt->bind_param("ississ", $train_no, $coach_type, $grade, $station, $date_from, $date_to);
     $stmt->execute();
     $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $feedback_sum = $row['feedback_sum'] ?? 0;
 
-    $sql2 = "SELECT MAX(value) AS highest_marking
-             FROM OBHS_marking
+    $coachData = [];
+    while ($row = $result->fetch_assoc()) {
+        $coachData[$row['coach_no']] = [
+            'coach_no'               => $row['coach_no'],
+            'feedback_sum'           => $row['feedback_sum'] ?? 0,
+            'total_passenger_count'  => $row['total_passenger_count'] ?? 0
+        ];
+    }
+
+    // 2️⃣ Highest marking + count
+    $sql2 = "SELECT 
+                MAX(value) AS highest_marking,
+                COUNT(*) AS marking_count
+             FROM OBHS_marking 
              WHERE station_id = ?";
-             
-    
 
-    return $feedback_sum;
+    $stmt2 = $mysqli->prepare($sql2);
+    $stmt2->bind_param("i", $station);
+    $stmt2->execute();
+    $res2 = $stmt2->get_result();
+    $row2 = $res2->fetch_assoc();
+
+    $highest_marking = $row2['highest_marking'] ?? 0;
+    $marking_count   = $row2['marking_count'] ?? 0;
+
+    // 3️⃣ NEW: Fetch targets from base_fb_target
+    $sql3 = "SELECT 
+                feed_per_ac_coach AS ac_coach_target,
+                feed_per_non_ac_coach AS non_ac_coach_target,
+                feedback_tte AS tte_target
+             FROM base_fb_target
+             WHERE station = ?
+               AND train_no = ?
+             LIMIT 1";
+
+    $stmt3 = $mysqli->prepare($sql3);
+    $stmt3->bind_param("ii", $station, $train_no);
+    $stmt3->execute();
+    $res3 = $stmt3->get_result();
+    $targetData = $res3->fetch_assoc() ?? [
+        'ac_coach_target'     => 0,
+        'non_ac_coach_target' => 0,
+        'tte_target'          => 0
+    ];
+
+    // FINAL RETURN
+    return [
+        'coach_wise'       => $coachData,
+        'highest_marking'  => $highest_marking,
+        'marking_count'    => $marking_count,
+        'targets'          => $targetData
+    ];
+}
+
+
+// 3 page calculation function with full details
+function feedback_calculation_coach_wise_full($train_no, $date_from, $date_to, $coach_type, $grade)
+{
+    global $mysqli;
+    $station = $_SESSION['station_id'];
+    $date_from = $date_from . " 00:00:00";
+    $date_to   = $date_to . " 23:59:59";
+
+    // 1️⃣ Coach-wise feedback SUM + passenger count
+    $sql = "SELECT 
+                p.coach_no,
+                SUM(f.value) AS feedback_sum,
+                COUNT(DISTINCT p.id) AS total_passenger_count
+            FROM OBHS_feedback f
+            JOIN OBHS_passenger p ON p.id = f.passenger_id
+            WHERE p.train_no = ?
+              AND p.coach_type = ?
+              AND p.grade = ?
+              AND p.station_id = ?
+              AND p.created BETWEEN ? AND ?
+            GROUP BY p.coach_no";
+
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("ississ", $train_no, $coach_type, $grade, $station, $date_from, $date_to);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $coachData = [];
+    while ($row = $result->fetch_assoc()) {
+        $coachData[$row['coach_no']] = [
+            'coach_no'               => $row['coach_no'],
+            'feedback_sum'           => $row['feedback_sum'] ?? 0,
+            'total_passenger_count'  => $row['total_passenger_count'] ?? 0
+        ];
+    }
+
+    // FINAL RETURN
+    return $coachData;
+}
+
+// get OBHS_marking data
+function get_marking_data($station_id)
+{
+    global $mysqli;
+    $sql = "SELECT category , value FROM OBHS_marking WHERE station_id = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i", $station_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);    
+}
+
+// get OBHS_questions data 3 page english hindi 
+function get_questions_data($station_id , $coach_type)
+{
+    global $mysqli;
+    $sql = "SELECT id , eng_question , hin_question FROM OBHS_questions WHERE station_id = ? AND type = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("is", $station_id, $coach_type);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);    
+}
+
+// get OBHS_feedback and passenger data for feedback details page 3 page
+function get_passenger_details_data_coach_wise($coach_no, $train_no, $date_from, $date_to, $coach_type, $grade)
+{
+    global $mysqli;
+    $station = $_SESSION['station_id'];
+
+    $date_from = $date_from . " 00:00:00";
+    $date_to   = $date_to . " 23:59:59";
+
+    $sql = "SELECT 
+                p.id AS passenger_id,
+                p.created AS feedback_date,
+                p.seat_no,
+                p.coach_no,
+                p.name,
+                p.pnr_number,
+                p.ph_number,
+                p.train_no,
+                p.grade,
+                SUM(f.value) AS total_feedback_sum,
+                GROUP_CONCAT(f.value ORDER BY f.id ASC SEPARATOR ', ') AS feedback_values
+            FROM OBHS_passenger p
+            JOIN OBHS_feedback f ON p.id = f.passenger_id
+            WHERE p.train_no = ?
+              AND p.coach_no = ?
+              AND p.coach_type = ?
+              AND p.grade = ?
+              AND p.station_id = ?
+              AND p.created BETWEEN ? AND ?
+            GROUP BY p.id
+            ORDER BY p.created ASC";
+
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("isssiss", $train_no, $coach_no, $coach_type, $grade, $station, $date_from, $date_to);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+function get_passenger_details_data_coach_type_wise($train_no, $coach_type, $grade, $date_from, $date_to)
+{
+    global $mysqli;
+    $station = $_SESSION['station_id'];
+
+    $date_from = $date_from . " 00:00:00";
+    $date_to   = $date_to . " 23:59:59";
+
+    $sql = "SELECT 
+                p.id AS passenger_id,
+                p.created AS feedback_date,
+                p.seat_no,
+                p.coach_no,
+                p.name,
+                p.pnr_number,
+                p.ph_number,
+                p.train_no,
+                p.grade,
+                SUM(f.value) AS total_feedback_sum,
+                GROUP_CONCAT(f.value ORDER BY f.id ASC SEPARATOR ', ') AS feedback_values
+            FROM OBHS_passenger p
+            JOIN OBHS_feedback f ON p.id = f.passenger_id
+            WHERE p.train_no = ?
+              AND p.coach_type = ?
+              AND p.grade = ?
+              AND p.station_id = ?
+              AND p.created BETWEEN ? AND ?
+            GROUP BY p.id
+            ORDER BY p.created ASC";
+
+    $stmt = $mysqli->prepare($sql);
+
+
+    $stmt->bind_param(
+        "ississ",
+        $train_no,
+        $coach_type,
+        $grade,
+        $station,
+        $date_from,
+        $date_to
+    );
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);
 }

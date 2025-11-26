@@ -15,11 +15,25 @@ if ($debug) {
 checkLogin();
 
 // Now fetch station name
+
 $station_name = getStationName($_SESSION['station_id']);
+//?train=14807&coach=A1&grade=E&from_date=2025-11-18&to_date=2025-11-24&coach_type=AC
+$station_name = getStationName($_SESSION['station_id']);
+$train_no = isset($_GET['train']) ? $_GET['train'] : null;
+$coach = isset($_GET['coach']) ? $_GET['coach'] : null;
+$grade = isset($_GET['grade']) ? $_GET['grade'] : null;
+$from_date = isset($_GET['from_date']) ? $_GET['from_date'] : null;
+$to_date = isset($_GET['to_date']) ? $_GET['to_date'] : null;
+$coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
+
+if ($coach_type === 'TTE') {
+    $coach_type = 'AC';
+}
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -213,36 +227,40 @@ $station_name = getStationName($_SESSION['station_id']);
     <!-- Mobile Sidebar Overlay -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
     <!-- sidebar  -->
-   <?php 
-   require_once 'includes/sidebar.php'
-   ?>
+    <?php
+    require_once 'includes/sidebar.php'
+        ?>
 
     <!-- Main Content -->
     <div class="lg:ml-64 min-h-screen">
 
         <!-- Top Navigation Bar -->
-       <?php 
-       require_once 'includes/header.php'
-       ?>
+        <?php
+        require_once 'includes/header.php'
+            ?>
 
         <!-- Main Content Area -->
         <main class="p-4 lg:p-6">
 
             <div class="max-w-full mx-auto">
-
-                <!-- Filter Badges -->
-                <div class="filter-badges">
-                    <div class="badge badge-excellent">Excellent = 5</div>
-                    <div class="badge badge-verygood">Very Good = 4</div>
-                    <div class="badge badge-good">Good = 3</div>
-                    <div class="badge badge-average">Average = 2</div>
-                    <div class="badge badge-poor">Poor = 1</div>
-                    <div class="badge-percent"><i class="fas fa-percentage"></i></div>
-                    <button class="badge badge-excellent" onclick="exportExcel()">Excel</button>
-                </div>
+                <?php $marking_data = get_marking_data($_SESSION['station_id']);
+                if ($marking_data) {
+                    //print _r($marking_data);
+                    {
+                        //print _r($marking_data);
+                        foreach ($marking_data as $data) {
+                            echo '<span class="badge badge-' . strtolower(preg_replace('/\s+/', '', trim($data['category']))) . ' mr-2">' . htmlspecialchars($data['category']) . ' = ' . htmlspecialchars($data['value']) . '</span>';
+                        }
+                    }
+                }
+                ?>
+                <br>
+                <br>
 
                 <!-- PDF Button -->
                 <div class="export-btn-group">
+                    <div class="badge-percent"><i class="fas fa-percentage"></i></div>
+                    <button class="badge badge-excellent" onclick="exportExcel()">Excel</button>
                     <button class="badge" style="background: #0ea5e9;" onclick="exportPDF()">PDF</button>
                 </div>
 
@@ -277,135 +295,105 @@ $station_name = getStationName($_SESSION['station_id']);
                                     Overall<br>Score</th>
                             </tr>
                             <tr>
-                                <th>Cleaning of toilets (including toilet floor, commode pan wall panels, shelf, mirror,
-                                    wash
-                                    basin, disinfection and provision of deodorant etc.)/शौचालयों की सफाई ( शामिल है,
-                                    शौचालय का
-                                    फर्श, कमोड पैन, वाल पैनल, शेल्फ, आइना, वाशबेसिन, दीशांफेक्शेन और दुर्गंध नाशक का
-                                    प्रयोग करना
-                                    उपलब्ध कराना)</th>
-                                <th>Cleaning of passenger compartment (including cleaning of passenger aisle, vestibule
-                                    area,
-                                    Doorway area and doorway wash basin, spraying of air freshener and cleaning of dust
-                                    bin) /
-                                    यैसेंजर कम्पार्टमेंट की सफाई ( शामिल है, यात्री गलियारे, वेस्टीब्युलक्षेत्र,
-                                    द्वारक्षेत्र,
-                                    और द्वारक्षे के वाश बेसिन की सफाई, एयर रेफ़ेरेशर का छिड़काव करना और डस्टबिन की सफाई
-                                    कराना)
-                                </th>
-                                <th>Collection of garbage from the coach compartments and clearance of dustbins /
-                                    डिब्बों के
-                                    कम्रों का कचरा और डस्ट के डिब्बों की सफाई कराना</th>
-                                <th>Spraying of Mosquito/Cockroach/ Fly repellent and Hanging Glue Board whenever
-                                    required or on
-                                    demand of passengers / जरूरत पड़ने पर मस्तर / मकडी द्वार डगा का छिड़काव / विलचुवे कर
-                                    लू
-                                    बोर्ड को लटकाना</th>
-                                <th>Behavior / Response of janitors/supervisor (including hygiene & cleanliness of
-                                    janitor/Supervision) / सफाई कर्मचारी का व्यवहार ( शामिल है, स्वच्छता और साफ सफाई
-                                    इस्वार्ड )
-                                </th>
+                                <?php
+
+                                $OBHS_question = get_questions_data($_SESSION['station_id'], $coach_type);
+
+                                if (!empty($OBHS_question)) {
+                                    foreach ($OBHS_question as $q) {
+
+                                        $eng = htmlspecialchars($q['eng_question']);
+                                        $hin = htmlspecialchars($q['hin_question']);
+
+                                        echo "<th>{$eng}<br><small>{$hin}</small></th>";
+                                    }
+                                } else {
+                                    echo "<th>No Questions Found</th>";
+                                }
+                                ?>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>11/02/2025<br>11:48:45</td>
-                                <td>55</td>
-                                <td>B1</td>
-                                <td><a href="#" class="customer-link">Nilamkumar</a></td>
-                                <td>6559946940</td>
-                                <td>919871477796</td>
-                                <td>18237</td>
-                                <td>F</td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">25</span></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>11/02/2025<br>18:24:10</td>
-                                <td>33</td>
-                                <td>A2</td>
-                                <td><a href="#" class="customer-link">Lek chand</a></td>
-                                <td>6760492725</td>
-                                <td>919302537984</td>
-                                <td>18237</td>
-                                <td>F</td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">25</span></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>11/02/2025<br>11:33:46</td>
-                                <td>17</td>
-                                <td>B2</td>
-                                <td><a href="#" class="customer-link">Naresh singh</a></td>
-                                <td>6659839692</td>
-                                <td>918178781662</td>
-                                <td>18237</td>
-                                <td>F</td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">25</span></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>11/02/2025<br>18:17:21</td>
-                                <td>2</td>
-                                <td>A</td>
-                                <td><a href="#" class="customer-link">Parikshit Khanduri</a></td>
-                                <td>6822794349</td>
-                                <td>919971112610</td>
-                                <td>18237</td>
-                                <td>F</td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent"
-                                        style="background-color:#10b981;">115</span>
-                                </td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">25</span></td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>11/02/2025<br>11:48:17</td>
-                                <td>55</td>
-                                <td>B1</td>
-                                <td><a href="#" class="customer-link">Nilamkumar</a></td>
-                                <td>6559946940</td>
-                                <td>919871477796</td>
-                                <td>18237</td>
-                                <td>F</td>
-                                <td><span class="status-circle status-excellent">5+3</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">5</span></td>
-                                <td><span class="status-circle status-excellent">25</span></td>
-                            </tr>
+                            <?php
+                            $passenger_details = get_passenger_details_data_coach_wise(
+                                $coach,
+                                $train_no,
+                                $from_date,
+                                $to_date,
+                                $coach_type,
+                                $grade
+                            );
+
+                            $total_feedback_sum_all = 0;   // grand total
+                            $feedback_totals = [];         // totals per feedback column
+                            
+                            if (!empty($passenger_details)) {
+                                $sr = 1;
+
+                                foreach ($passenger_details as $pd) {
+
+                                    $feedback_array = explode(", ", $pd['feedback_values']);
+
+                                    // Collect totals for last row
+                                    foreach ($feedback_array as $index => $value) {
+                                        if (!isset($feedback_totals[$index])) {
+                                            $feedback_totals[$index] = 0;
+                                        }
+                                        $feedback_totals[$index] += intval($value);
+                                    }
+
+                                    $total_feedback_sum_all += intval($pd['total_feedback_sum']);
+
+                                    echo "<tr>";
+                                    echo "<td>{$sr}</td>";
+                                    echo "<td>" . date('d/m/Y H:i:s', strtotime($pd['feedback_date'])) . "</td>";
+                                    echo "<td>{$pd['seat_no']}</td>";
+                                    echo "<td>{$pd['coach_no']}</td>";
+                                    echo "<td><a href='#' class='customer-link'>{$pd['name']}</a></td>";
+                                    echo "<td>{$pd['ph_number']}</td>";
+                                    echo "<td>{$pd['pnr_number']}</td>";
+                                    echo "<td>{$pd['train_no']}</td>";
+                                    echo "<td>{$pd['grade']}</td>";
+
+                                    foreach ($feedback_array as $fv) {
+                                        echo "<td><span class='status-circle status-excellent'>{$fv}</span></td>";
+                                    }
+
+                                    echo "<td><span class='status-circle status-excellent'>{$pd['total_feedback_sum']}</span></td>";
+                                    echo "</tr>";
+
+                                    $sr++;
+                                }
+
+                                // GRAND TOTAL ROW with same UI
+                                echo "<tr>";
+                                echo "<td colspan='9' style='text-align:center;font-weight:600;'>TOTAL</td>";
+
+                                foreach ($feedback_totals as $t) {
+                                    echo "<td><span class='status-circle status-excellent'>{$t}</span></td>";
+                                }
+
+                                echo "<td><span class='status-circle status-excellent'>{$total_feedback_sum_all}</span></td>";
+                                echo "</tr>";
+
+                            } else {
+                                echo "<tr><td colspan='15' style='text-align:center;color:red;'>No Data Found</td></tr>";
+                            }
+                            ?>
+
+
+
                         </tbody>
                     </table>
                 </div>
 
             </div>
 
-        
+
             <!-- Footer -->
-           <?php
+            <?php
             require_once 'includes/footer.php'
-           ?>
+                ?>
 
         </main>
 

@@ -104,17 +104,17 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
     <!-- Mobile Sidebar Overlay -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
     <!-- sidebar  -->
-   <?php 
-   require_once 'includes/sidebar.php'
-   ?>
+    <?php
+    require_once 'includes/sidebar.php'
+        ?>
 
     <!-- Main Content -->
     <div class="lg:ml-64 min-h-screen">
 
         <!-- Top Navigation Bar -->
-       <?php 
-       require_once 'includes/header.php'
-       ?>
+        <?php
+        require_once 'includes/header.php'
+            ?>
 
         <!-- Main Content Area -->
         <main class="p-4 lg:p-6">
@@ -143,6 +143,8 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                     </div>
                 </div>
 
+
+
                 <div class="mt-4 text-sm text-slate-700">AC Feedback Report</div>
                 <table class="table-report">
                     <thead>
@@ -155,24 +157,103 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>A</td>
-                            <td>1</td>
-                            <td style="text-align:center;"><a href="feedback-details.php?train=18237&coach=A"
-                                    style="color:#2563eb;font-weight:600;text-decoration:none;">1</a></td>
-                            <td style="text-align:right">19.60%</td>
-                        </tr>
-                        
-                    </tbody>
+                        <?php
+                        $acFeedbackData = feedback_calculation_coach_wise($train_no, $from_date, $to_date, 'AC', $grade);
+
+                        // Ensure arrays exist
+                        $coachList = $acFeedbackData['coach_wise'] ?? [];
+                        $targets = $acFeedbackData['targets'] ?? [];
+                        $ac_coach_target = $targets['ac_coach_target'] ?? 0;
+
+                        $highest_marking = $acFeedbackData['highest_marking'] ?? 0;
+                        $marking_count = $acFeedbackData['marking_count'] ?? 0;
+
+                        $row_no = 1;
+
+                        // Totals for footer
+                        $total_passenger_sum = 0;
+                        $total_percentage_sum = 0;
+                        $total_coaches = count($coachList);
+
+                        if (empty($coachList)) {
+                            echo '<tr><td colspan="5" style="text-align:center;">No data available</td></tr>';
+                        } else {
+                            foreach ($coachList as $coach_no => $data) {
+
+                                $feedback_sum = $data['feedback_sum'] ?? 0;
+                                $passenger_count = $data['total_passenger_count'] ?? 0;
+
+                                // Add to totals for footer
+                                $total_passenger_sum += $passenger_count;
+
+                                // Percentage calculation
+                                $percentage = 0.0;
+                                if ($marking_count > 0 && $highest_marking > 0) {
+
+                                    if ($passenger_count <= $ac_coach_target && $ac_coach_target > 0) {
+                                        $denom = $marking_count * $highest_marking * $ac_coach_target;
+                                        if ($denom > 0) {
+                                            $percentage = ($feedback_sum / $denom) * 100;
+                                        }
+                                    } elseif ($passenger_count > $ac_coach_target) {
+                                        $denom = $marking_count * $highest_marking * $passenger_count;
+                                        if ($denom > 0) {
+                                            $percentage = ($feedback_sum / $denom) * 100;
+                                        }
+                                    }
+                                }
+
+                                $total_percentage_sum += $percentage;
+
+                                $percentage_display = number_format((float) $percentage, 2) . '%';
+
+                                $coach_qs = urlencode($coach_no);
+                                $train_qs = urlencode($train_no);
+
+                                echo '<tr>';
+                                echo '<td>' . $row_no . '</td>';
+                                echo '<td>' . htmlspecialchars($coach_no) . '</td>';
+                                echo '<td>' . htmlspecialchars($ac_coach_target) . '</td>';
+                                echo '<td style="text-align:center;">';
+                                $query = http_build_query([
+                                    'train' => $train_no,
+                                    'coach' => $coach_no,
+                                    'grade' => $grade,
+                                    'from_date' => $from_date,
+                                    'to_date' => $to_date,
+                                    'coach_type' => 'AC'
+                                ]);
+                                echo '<a href="feedback-details.php?' . $query . '" style="color:#2563eb;font-weight:600;text-decoration:none;">';
+                                echo htmlspecialchars($passenger_count);
+                                echo '</a>';
+                                echo '</td>';
+                                echo '<td style="text-align:right;">' . $percentage_display . '</td>';
+                                echo '</tr>';
+
+                                $row_no++;
+                            }
+                        }
+
+                        // FINAL FOOTER VALUES
+                        $total_ac_target = $ac_coach_target * $total_coaches;               // ex: 6
+                        $final_total_passenger = $total_passenger_sum;       // total passenger
+                        $final_total_percentage = number_format(
+                            ($total_percentage_sum / max($total_coaches, 1)),
+                            2
+                        ) . '%';
+                        ?>
+
                     <tfoot>
                         <tr>
                             <td colspan="2" style="font-weight:700;">Total</td>
-                            <td>6</td>
-                            <td style="text-align:center;">8</td>
-                            <td style="text-align:right;">19.91 %</td>
+                            <td><?php echo $total_ac_target ?></td>
+                            <td style="text-align:center;"><a href="all-feedback-detail-report.php?<?php echo $query; ?>"><?php echo $final_total_passenger; ?></a></td>
+                            <td style="text-align:right;"><?php echo $final_total_percentage; ?></td>
                         </tr>
                     </tfoot>
+
+                    </tbody>
+
                 </table>
 
                 <div class="mt-6 text-sm text-slate-700">NON AC Feedback Report</div>
@@ -187,34 +268,233 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>S4</td>
-                            <td>1</td>
-                            <td style="text-align:center;"><a href="feedback-details.php?train=18237&coach=S4"
-                                    style="color:#2563eb;font-weight:600;text-decoration:none;">1</a></td>
-                            <td style="text-align:right">26.67%</td>
-                        </tr>
-                    </tbody>
+                        <?php
+                        // Fetch NON-AC feedback data
+                        $nonAcFeedbackData = feedback_calculation_coach_wise(
+                            $train_no,
+                            $from_date,
+                            $to_date,
+                            'NON-AC',
+                            $grade
+                        );
+
+                        // Extract data from function
+                        $nonAc_coach_target = $nonAcFeedbackData['targets']['non_ac_coach_target'] ?? 0;
+                        $marking_count = $nonAcFeedbackData['marking_count'] ?? 0;
+                        $highest_marking = $nonAcFeedbackData['highest_marking'] ?? 0;
+                        $coachList = $nonAcFeedbackData['coach_wise'] ?? [];
+
+                        $row_no = 1;
+                        $total_passenger_sum = 0; // We won't use it in footer
+                        $total_percentage_sum = 0;
+                        $total_target_sum = 0;
+                        $total_coaches = count($coachList);
+
+                        if (empty($coachList)) {
+                            echo '<tr><td colspan="5" style="text-align:center;">No data found</td></tr>';
+                        } else {
+                            foreach ($coachList as $coach_no => $data) {
+
+                                $feedback_sum = $data['feedback_sum'] ?? 0;
+                                $passenger_count = $data['total_passenger_count'] ?? 0;
+
+                                // Add to footer totals
+                                $total_target_sum += $nonAc_coach_target;
+
+                                // Percentage calculation
+                                $percentage = 0.0;
+                                if ($marking_count > 0 && $highest_marking > 0) {
+
+                                    if ($passenger_count <= $nonAc_coach_target && $nonAc_coach_target > 0) {
+                                        $denom = $marking_count * $highest_marking * $nonAc_coach_target;
+                                    } else {
+                                        $denom = $marking_count * $highest_marking * $passenger_count;
+                                    }
+
+                                    if ($denom > 0) {
+                                        $percentage = ($feedback_sum / $denom) * 100;
+                                    }
+                                }
+                                $total_passenger_sum += $passenger_count;
+
+                                $total_percentage_sum += $percentage;
+                                $percentage_display = number_format($percentage, 2) . '%';
+
+                                $coach_qs = urlencode($coach_no);
+                                $train_qs = urlencode($train_no);
+
+                                // Output table row
+                                echo "<tr>";
+                                echo "<td>{$row_no}</td>";
+                                echo "<td>{$coach_no}</td>";
+                                echo "<td>{$nonAc_coach_target}</td>";
+                                echo "<td style=\"text-align:center;\">";
+                                $query2 = http_build_query([
+                                    'train'      => $train_no,
+                                    'coach'      => $coach_no,
+                                    'grade'      => $grade,
+                                    'from_date'  => $from_date,
+                                    'to_date'    => $to_date,
+                                    'coach_type' => 'Non-AC'
+                                ]);
+                                echo '<a href="feedback-details.php?' . $query2 . '" style="color:#2563eb;font-weight:600;text-decoration:none;">';
+                                echo $passenger_count;
+                                echo "</a>";
+                                echo "</td>";
+                                echo "<td style=\"text-align:right;\">{$percentage_display}</td>";
+                                echo "</tr>";
+
+                                $row_no++;
+                            }
+                        }
+
+                        // Footer average percentage
+                        $avg_percentage = number_format($total_percentage_sum / max($total_coaches, 1), 2) . '%';
+                        ?>
+
                     <tfoot>
                         <tr>
-                            <td colspan="2" style="font-weight:700">Total</td>
-                            <td>1</td>
-                            <td style="text-align:center;">1</td>
-                            <td style="text-align:right;">26.67 %</td>
+                            <td colspan="2" style="font-weight:700;">Total</td>
+
+                            <!-- 3rd column: total target sum -->
+                            <td><?php echo $total_target_sum; ?></td>
+
+                            <!-- 4th column: total target sum again -->
+                            <td style="text-align:center;"><a href="all-feedback-detail-report.php?<?php echo $query2; ?>" style="color:#2563eb;font-weight:600;text-decoration:none;"><?php echo $total_passenger_sum;  ?></a></td>
+                          
+
+                            <!-- 5th column: average percentage -->
+                            <td style="text-align:right;"><?php echo $avg_percentage; ?></td>
                         </tr>
                     </tfoot>
+
+
                 </table>
 
             </div>
 
-        
-            <!-- Footer -->
-           <?php
-            require_once 'includes/footer.php'
-           ?>
+            <div class="mt-6 text-sm text-slate-700">TTe Feedback Report</div>
+            <table class="table-report">
+                <thead>
+                    <tr>
+                        <th>SR. No.</th>
+                        <th>Coach No.</th>
+                        <th>Feedback Target</th>
+                        <th>Achieved No. of Feedbacks</th>
+                        <th>Avg P.S.I</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Fetch TTE feedback data
+                    $tteFeedbackData = feedback_calculation_coach_wise(
+                        $train_no,
+                        $from_date,
+                        $to_date,
+                        'TTE', // यहाँ coach_type मतलब TTE के लिए data
+                        $grade
+                    );
 
-        </main>
+                    $tte_target = $tteFeedbackData['targets']['tte_target'] ?? 0;
+                    $marking_count = $tteFeedbackData['marking_count'] ?? 0;
+                    $highest_marking = $tteFeedbackData['highest_marking'] ?? 0;
+                    $coachList = $tteFeedbackData['coach_wise'] ?? [];
+
+                    $row_no = 1;
+                    $total_passenger_sum = 0;
+                    $total_percentage_sum = 0;
+                    $total_target_sum = 0;
+                    $total_coaches = count($coachList);
+
+                    if (empty($coachList)) {
+                        echo '<tr><td colspan="5" style="text-align:center;">No data found</td></tr>';
+                    } else {
+                        foreach ($coachList as $coach_no => $data) {
+
+                            $feedback_sum = $data['feedback_sum'] ?? 0;
+                            $passenger_count = $data['total_passenger_count'] ?? 0;
+
+                            // Add to footer totals
+                            $total_target_sum += $tte_target;
+                            $total_passenger_sum += $passenger_count;
+
+                            // Percentage calculation
+                            $percentage = 0.0;
+                            if ($marking_count > 0 && $highest_marking > 0) {
+
+                                if ($passenger_count <= $tte_target && $tte_target > 0) {
+                                    $denom = $marking_count * $highest_marking * $tte_target;
+                                } else {
+                                    $denom = $marking_count * $highest_marking * $passenger_count;
+                                }
+
+                                if ($denom > 0) {
+                                    $percentage = ($feedback_sum / $denom) * 100;
+                                }
+                            }
+
+                            $total_percentage_sum += $percentage;
+                            $percentage_display = number_format($percentage, 2) . '%';
+
+                            $coach_qs = urlencode($coach_no);
+                            $train_qs = urlencode($train_no);
+
+                            // Output table row
+                            echo "<tr>";
+                            echo "<td>{$row_no}</td>";
+                            echo "<td>{$coach_no}</td>";
+                            echo "<td>{$tte_target}</td>";
+                            echo "<td style=\"text-align:center;\">";
+                            $query3 = http_build_query([
+                                'train'      => $train_no,
+                                'coach'      => $coach_no,
+                                'grade'      => $grade,
+                                'from_date'  => $from_date,
+                                'to_date'    => $to_date,
+                                'coach_type' => 'TTE'
+                            ]);
+                            echo '<a href="feedback-details.php?' . $query3 . '" style="color:#2563eb;font-weight:600;text-decoration:none;">';
+                            echo $passenger_count;
+                            echo "</a>";
+                            echo "</td>";
+                            echo "<td style=\"text-align:right;\">{$percentage_display}</td>";
+                            echo "</tr>";
+
+                            $row_no++;
+                        }
+                    }
+
+                    // Footer average percentage
+                    $avg_percentage = number_format($total_percentage_sum / max($total_coaches, 1), 2) . '%';
+                    ?>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="2" style="font-weight:700;">Total</td>
+
+                        <!-- 3rd column: total TTE target sum -->
+                        <td><?php echo $total_target_sum; ?></td>
+
+                        <!-- 4th column: total passenger feedback count -->
+                        <td style="text-align:center;"><a href="all-feedback-detail-report.php?<?php echo $query3; ?>" style="color:#2563eb;font-weight:600;text-decoration:none;"><?php echo $total_passenger_sum; ?></a></td>
+
+                        <!-- 5th column: average percentage -->
+                        <td style="text-align:right;"><?php echo $avg_percentage; ?></td>
+                    </tr>
+                </tfoot>
+                </tbody>
+
+            </table>
+
+    </div>
+
+
+    <!-- Footer -->
+    <?php
+    require_once 'includes/footer.php'
+        ?>
+
+    </main>
 
     </div>
 
