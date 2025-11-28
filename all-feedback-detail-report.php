@@ -320,13 +320,10 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 $to_date
                             );
 
-                            echo 'train_no = ' . $train_no . "<br>";
-                            echo 'From = ' . $from_date . "<br>";
-                            echo 'To = ' . $to_date . "<br>";
-                            echo 'Coach Type = ' . $coach_type . "<br>";
-                            echo 'Grade = ' . $grade . "<br>";
+                        
+                    
 
-                            print_r($passenger_details_coach_type);
+                           // print_r($passenger_details_coach_type);
 
                             if (!empty($passenger_details_coach_type)) {
                                 $sr = 1;

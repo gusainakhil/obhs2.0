@@ -166,7 +166,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         $ac_coach_target = $targets['ac_coach_target'] ?? 0;
 
                         $highest_marking = $acFeedbackData['highest_marking'] ?? 0;
-                        $marking_count = $acFeedbackData['marking_count'] ?? 0;
+                        $total_questions = $acFeedbackData['total_questions'] ?? 0;
 
                         $row_no = 1;
 
@@ -188,15 +188,15 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
 
                                 // Percentage calculation
                                 $percentage = 0.0;
-                                if ($marking_count > 0 && $highest_marking > 0) {
+                                if ($total_questions > 0 && $highest_marking > 0) {
 
                                     if ($passenger_count <= $ac_coach_target && $ac_coach_target > 0) {
-                                        $denom = $marking_count * $highest_marking * $ac_coach_target;
+                                        $denom = $total_questions * $highest_marking * $ac_coach_target;
                                         if ($denom > 0) {
                                             $percentage = ($feedback_sum / $denom) * 100;
                                         }
                                     } elseif ($passenger_count > $ac_coach_target) {
-                                        $denom = $marking_count * $highest_marking * $passenger_count;
+                                        $denom = $total_questions * $highest_marking * $passenger_count;
                                         if ($denom > 0) {
                                             $percentage = ($feedback_sum / $denom) * 100;
                                         }
@@ -280,7 +280,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
 
                         // Extract data from function
                         $nonAc_coach_target = $nonAcFeedbackData['targets']['non_ac_coach_target'] ?? 0;
-                        $marking_count = $nonAcFeedbackData['marking_count'] ?? 0;
+                        $total_questions = $nonAcFeedbackData['total_questions'] ?? 0;
                         $highest_marking = $nonAcFeedbackData['highest_marking'] ?? 0;
                         $coachList = $nonAcFeedbackData['coach_wise'] ?? [];
 
@@ -303,12 +303,12 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
 
                                 // Percentage calculation
                                 $percentage = 0.0;
-                                if ($marking_count > 0 && $highest_marking > 0) {
+                                if ($total_questions > 0 && $highest_marking > 0) {
 
                                     if ($passenger_count <= $nonAc_coach_target && $nonAc_coach_target > 0) {
-                                        $denom = $marking_count * $highest_marking * $nonAc_coach_target;
+                                        $denom = $total_questions * $highest_marking * $nonAc_coach_target;
                                     } else {
-                                        $denom = $marking_count * $highest_marking * $passenger_count;
+                                        $denom = $total_questions * $highest_marking * $passenger_count;
                                     }
 
                                     if ($denom > 0) {
@@ -396,7 +396,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                     );
 
                     $tte_target = $tteFeedbackData['targets']['tte_target'] ?? 0;
-                    $marking_count = $tteFeedbackData['marking_count'] ?? 0;
+                    $total_questions = $tteFeedbackData['total_questions'] ?? 0;
                     $highest_marking = $tteFeedbackData['highest_marking'] ?? 0;
                     $coachList = $tteFeedbackData['coach_wise'] ?? [];
 
@@ -420,12 +420,12 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
 
                             // Percentage calculation
                             $percentage = 0.0;
-                            if ($marking_count > 0 && $highest_marking > 0) {
+                            if ($total_questions > 0 && $highest_marking > 0) {
 
                                 if ($passenger_count <= $tte_target && $tte_target > 0) {
-                                    $denom = $marking_count * $highest_marking * $tte_target;
+                                    $denom = $total_questions * $highest_marking * $tte_target;
                                 } else {
-                                    $denom = $marking_count * $highest_marking * $passenger_count;
+                                    $denom = $total_questions * $highest_marking * $passenger_count;
                                 }
 
                                 if ($denom > 0) {

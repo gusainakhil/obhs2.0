@@ -1,14 +1,12 @@
 
-<!-- generate marks form 1 users select station naem the automatically show the users on anoother slect box then therer are a nox which show enter 1 marks like 1 then selct value this is good the 2no shows 2 means excellent -- -->
-
  <?php
 require_once __DIR__ . '/connection.php';
 //check session
 session_start();
-if (!isset($_SESSION['user_id'])) {
-  header('Location: login.php');
-  exit;
-}
+// if (!isset($_SESSION['user_id'])) {
+//   header('Location: login.php');
+//   exit;
+// }
 // Handle create user form submission
 ?>
 <!doctype html>

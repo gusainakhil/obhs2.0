@@ -136,16 +136,16 @@ function acheived_feedback($train_no, $date_from, $date_to , $grade)
     $date_to   = $date_to . " 23:59:59";
 
     $sql = "SELECT 
-        COUNT(DISTINCT coach_no) AS distinct_coaches,
-        COUNT(*) AS total_count,
-        COUNT(CASE WHEN coach_type = 'AC' THEN 1 END) AS ac_count,
-        COUNT(CASE WHEN coach_type = 'NON-AC' THEN 1 END) AS non_ac_count,
-        COUNT(CASE WHEN coach_type = 'TTE' THEN 1 END) AS tte_count
-    FROM OBHS_passenger
-    WHERE train_no = ?
-      AND grade = ?
-      AND station_id = ?
-      AND created BETWEEN ? AND ?";
+    COUNT(DISTINCT CASE WHEN coach_type != 'TTE' THEN coach_no END) AS distinct_coaches,
+    COUNT(*) AS total_count,
+    COUNT(CASE WHEN coach_type = 'AC' THEN 1 END) AS ac_count,
+    COUNT(CASE WHEN coach_type = 'NON-AC' THEN 1 END) AS non_ac_count,
+    COUNT(CASE WHEN coach_type = 'TTE' THEN 1 END) AS tte_count
+FROM OBHS_passenger
+WHERE train_no = ?
+  AND grade = ?
+  AND station_id = ?
+  AND created BETWEEN ? AND ?";
 
     $stmt = $mysqli->prepare($sql);
 
@@ -295,12 +295,24 @@ function feedback_calculation_coach_wise($train_no, $date_from, $date_to, $coach
         'tte_target'          => 0
     ];
 
-    // FINAL RETURN
+    // FINAL RETURN (include total questions)
+    $sql4 = "SELECT COUNT(*) AS total_questions FROM `OBHS_questions` WHERE station_id = ? AND type = ?";
+    $stmt4 = $mysqli->prepare($sql4);
+    if ($stmt4) {
+        $stmt4->bind_param("is", $station, $coach_type);
+        $stmt4->execute();
+        $result4 = $stmt4->get_result();
+        $row4 = $result4->fetch_assoc();
+        $total_questions = $row4['total_questions'] ?? 0;
+    } else {
+        $total_questions = 0;
+    }
+
     return [
         'coach_wise'       => $coachData,
         'highest_marking'  => $highest_marking,
-        'marking_count'    => $marking_count,
-        'targets'          => $targetData
+        'targets'          => $targetData,
+        'total_questions'  => $total_questions
     ];
 }
 

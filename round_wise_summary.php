@@ -24,7 +24,7 @@ $station_name = getStationName($_SESSION['station_id']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Round-Wise Summary - Jodhpur</title>
+    <title>Round-Wise Summary - <?php echo $station_name ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -179,7 +179,7 @@ $station_name = getStationName($_SESSION['station_id']);
             ?>
             <!-- Summary Information -->
             <div class="summary-header">
-                Station: <?php echo  "no station" ?> &nbsp;&nbsp;|&nbsp;&nbsp; UP: <?php echo $up ?>  &nbsp;&nbsp;|&nbsp;&nbsp; Down: <?php echo $down ?>
+                Station:  <?php echo $station_name ?> &nbsp;&nbsp;|&nbsp;&nbsp; UP: <?php echo $up ?>  &nbsp;&nbsp;|&nbsp;&nbsp; Down: <?php echo $down ?>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 From: <span id="displayFrom"><?php echo $from_date ?></span> &nbsp;&nbsp;|&nbsp;&nbsp;
                 To: <span id="displayTo"><?php echo $to_date ?></span> &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -232,7 +232,7 @@ $station_name = getStationName($_SESSION['station_id']);
 
                          echo  "Feedback SUM = " . ($up_train_psi['feedback_sum'] ?? 0) . "<br>";
                        echo     "Highest Marking Value = " . ($up_train_psi['highest_marking'] ?? 'N/A') . "<br>";
-                    echo    "<br>".     "Total feedback: " . ($up_train_psi['feedback_count'] ?? ($up_train_psi['feedback_sum'] ?? 0));
+                    echo    "<br>".     "Total feedback: " . ($up_train_psi['feedback_count'] ?? ($up_train_psi['feedback_sum'] ?? 0)). "<br>";
                          
                           // Compare total target vs achieved for UP train safely (avoid using isset on expressions)
                          $up_total_target = (isset($trainUpData['total_feed']) ? $trainUpData['total_feed'] : 0) + (isset($trainUpData['tte']) ? $trainUpData['tte'] : 0);
@@ -250,21 +250,24 @@ $station_name = getStationName($_SESSION['station_id']);
                              else if ($totalfeedbackup <= $achievedfeedbackup) {
 
                                 $psi_up = ($up_train_psi['feedback_sum'] / $totalfeedbackup) * 66.66;
-                                echo  "<br>".  number_format($psi_up, 2) . "%";
+                                echo  "<br>".  number_format($psi_up, 2) . "%<br>";
                                 
                              } 
                           
                           }
 
                           elseif($trainUpData['tte'] == 1 && $uptrainachivedata['tte'] == 1) {
-                            $totalfeedbackup=$trainUpData['total_feed']+$trainUpData['tte']; 
-                            $achievedfeedbackup=$uptrainachivedata['ac_non_ac']+$uptrainachivedata['tte'];
+                       $totalfeedbackup=$trainUpData['total_feed']+$trainUpData['tte'] ;
+                         $achievedfeedbackup=$uptrainachivedata['ac_non_ac']+$uptrainachivedata['tte'];
+
                             $psi_up = ($up_train_psi['feedback_sum'] / ($up_train_psi['highest_marking'] *  $totalfeedbackup* 2)) * 100;
-                            echo  "<br>".  number_format($psi_up, 2) . "%";
+
+                            echo  "<br>".  number_format($psi_up, 2) . "%<br>";
                             if ($totalfeedbackup < $achievedfeedbackup) {
                                 $psi_up = ($up_train_psi['feedback_sum'] / $totalfeedbackup) * 100;
-                                echo  "<br>".  number_format($psi_up, 2) . "%";
+                                echo  "<br>".  number_format($psi_up, 2) . "%<br>";
                             }
+
                             elseif($totalfeedbackup == $achievedfeedbackup){
                                 $psi_up = ($up_train_psi['feedback_sum'] / ($up_train_psi['highest_marking'] *  $totalfeedbackup* 2)) * 100;
                                 echo  "<br>".  number_format($psi_up, 2) . "%";

@@ -1,4 +1,8 @@
 <?php
+//print error messages
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once __DIR__ . '/connection.php';
 //check session
 session_start();
@@ -75,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Insert questions if provided
         if (!empty($eng_questions) && is_array($eng_questions)) {
-          $insert_q_sql = "INSERT INTO `OBHS_questions` (`user_id`, `eng_question`, `hin_question`, `type`) VALUES (?, ?, ?, ?)";
+          $insert_q_sql = "INSERT INTO `OBHS_questions` (`user_id`, `eng_question`, `hin_question`, `type`, `station_id`) VALUES (?, ?, ?, ?, ?)";
           for ($i = 0; $i < count($eng_questions); $i++) {
             $eng = trim($eng_questions[$i] ?? '');
             $hin = trim($hin_questions[$i] ?? '');
@@ -83,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($eng === '' && $hin === '')
               continue;
             if ($qstmt = mysqli_prepare($conn, $insert_q_sql)) {
-              mysqli_stmt_bind_param($qstmt, 'isss', $new_user_id, $eng, $hin, $qt);
+              mysqli_stmt_bind_param($qstmt, 'isssi', $new_user_id, $eng, $hin, $qt , $station_id);
               mysqli_stmt_execute($qstmt);
               mysqli_stmt_close($qstmt);
             }
