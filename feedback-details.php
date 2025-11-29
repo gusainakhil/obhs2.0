@@ -26,9 +26,6 @@ $from_date = isset($_GET['from_date']) ? $_GET['from_date'] : null;
 $to_date = isset($_GET['to_date']) ? $_GET['to_date'] : null;
 $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
-if ($coach_type === 'TTE') {
-    $coach_type = 'AC';
-}
 
 ?>
 <!DOCTYPE html>
@@ -349,7 +346,7 @@ if ($coach_type === 'TTE') {
                                     echo "<td>" . date('d/m/Y H:i:s', strtotime($pd['feedback_date'])) . "</td>";
                                     echo "<td>{$pd['seat_no']}</td>";
                                     echo "<td>{$pd['coach_no']}</td>";
-                                    echo "<td><a href='#' class='customer-link'>{$pd['name']}</a></td>";
+                                    echo "<td><a href='employee-card.php?passenger_id={$pd['passenger_id']}' class='customer-link' target='_blank'> {$pd['name']}</a></td>";
                                     echo "<td>{$pd['ph_number']}</td>";
                                     echo "<td>{$pd['pnr_number']}</td>";
                                     echo "<td>{$pd['train_no']}</td>";

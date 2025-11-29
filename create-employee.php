@@ -16,6 +16,75 @@ checkLogin();
 
 // Now fetch station name
 $station_name = getStationName($_SESSION['station_id']);
+$station_id = $_SESSION['station_id'];
+
+// Handle form submission
+$success_message = '';
+$error_message = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_employees'])) {
+    $names = $_POST['name'] ?? [];
+    $employee_ids = $_POST['employeeId'] ?? [];
+    $designations = $_POST['designation'] ?? [];
+    
+    // Create upload directory if it doesn't exist
+    $upload_dir = 'uploads/employee/';
+    if (!file_exists($upload_dir)) {
+        mkdir($upload_dir, 0777, true);
+    }
+    
+    $inserted_count = 0;
+    $failed_count = 0;
+    
+    for ($i = 0; $i < count($names); $i++) {
+        $name = $mysqli->real_escape_string(trim($names[$i]));
+        $employee_id = $mysqli->real_escape_string(trim($employee_ids[$i]));
+        $designation = $mysqli->real_escape_string(trim($designations[$i]));
+        $photo_name = '';
+        
+        // Handle photo upload
+        if (isset($_FILES['photo']['name'][$i]) && $_FILES['photo']['error'][$i] == 0) {
+            $file_tmp = $_FILES['photo']['tmp_name'][$i];
+            $file_name = $_FILES['photo']['name'][$i];
+            $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+            $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+            
+            if (in_array($file_ext, $allowed_extensions)) {
+                // Generate unique filename
+                $photo_name = $employee_id . '_' . time() . '_' . uniqid() . '.' . $file_ext;
+                $target_file = $upload_dir . $photo_name;
+                
+                if (!move_uploaded_file($file_tmp, $target_file)) {
+                    $photo_name = ''; // Failed to upload
+                }
+            }
+        }
+        
+        // Insert into database
+        $insert_query = "INSERT INTO base_employees (employee_id, name, station, desination, photo, station_id, created_at, updated_at) 
+                        VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())";
+        $stmt = $mysqli->prepare($insert_query);
+        $stmt->bind_param("sssssi", $employee_id, $name, $station_name, $designation, $photo_name, $station_id);
+        
+        if ($stmt->execute()) {
+            $inserted_count++;
+        } else {
+            $failed_count++;
+            // Delete uploaded photo if database insert failed
+            if ($photo_name && file_exists($upload_dir . $photo_name)) {
+                unlink($upload_dir . $photo_name);
+            }
+        }
+        $stmt->close();
+    }
+    
+    if ($inserted_count > 0) {
+        $success_message = "Successfully added $inserted_count employee(s)!";
+    }
+    if ($failed_count > 0) {
+        $error_message = "Failed to add $failed_count employee(s).";
+    }
+}
 
 ?>
 <!DOCTYPE html>
@@ -175,8 +244,20 @@ $station_name = getStationName($_SESSION['station_id']);
                 <p class="text-sm text-slate-600 mt-1">Fill in the employee details below</p>
             </div>
 
+            <?php if ($success_message): ?>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+                <span class="block sm:inline"><i class="fas fa-check-circle mr-2"></i><?php echo $success_message; ?></span>
+            </div>
+            <?php endif; ?>
+
+            <?php if ($error_message): ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+                <span class="block sm:inline"><i class="fas fa-exclamation-circle mr-2"></i><?php echo $error_message; ?></span>
+            </div>
+            <?php endif; ?>
+
             <div class="form-container">
-                <form id="employeeForm" onsubmit="submitForm(event)">
+                <form id="employeeForm" method="POST" action="" enctype="multipart/form-data">
                     <div class="table-wrapper">
                         <table class="form-table">
                             <thead>
@@ -218,7 +299,7 @@ $station_name = getStationName($_SESSION['station_id']);
                         <button type="button" class="btn btn-add" onclick="addRow()">
                             <i class="fas fa-plus mr-2"></i>Add Row
                         </button>
-                        <button type="submit" class="btn btn-submit">
+                        <button type="submit" name="submit_employees" class="btn btn-submit">
                             <i class="fas fa-check mr-2"></i>Submit
                         </button>
                     </div>
@@ -282,34 +363,6 @@ $station_name = getStationName($_SESSION['station_id']);
                     btn.disabled = false;
                 }
             });
-        }
-
-        // Submit form
-        function submitForm(event) {
-            event.preventDefault();
-
-            const formData = new FormData(event.target);
-            const names = formData.getAll('name[]');
-            const employeeIds = formData.getAll('employeeId[]');
-            const designations = formData.getAll('designation[]');
-            const photos = formData.getAll('photo[]');
-
-            let employeeData = [];
-            for (let i = 0; i < names.length; i++) {
-                employeeData.push({
-                    name: names[i],
-                    employeeId: employeeIds[i],
-                    designation: designations[i],
-                    photo: photos[i].name || 'No file selected'
-                });
-            }
-
-            console.log('Employee Data:', employeeData);
-            alert(`Successfully added ${employeeData.length} employee(s)!\n\nData:\n${JSON.stringify(employeeData, null, 2)}`);
-
-            // In production, send data to server
-            // Reset form
-            event.target.reset();
         }
 
         // Mobile Sidebar Toggle

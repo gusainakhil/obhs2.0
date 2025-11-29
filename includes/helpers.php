@@ -165,6 +165,8 @@ WHERE train_no = ?
         $total_all = $row['ac_count'] + $row['non_ac_count'] + $row['tte_count'];
         $acCnonacacheivedata = $row['ac_count'] + $row['non_ac_count'];
 
+
+
         return [
             'distinct_coach'   => $row['distinct_coaches'],
             'ac'               => $row['ac_count'],
@@ -175,8 +177,50 @@ WHERE train_no = ?
         ];
     }
 
+    
+
     return false;
+    
 }
+//first page question count function
+function get_question_count($station_id)
+{
+    global $mysqli; 
+
+    $data = [
+        'total_questions' => 0,
+        'ac_questions'    => 0,
+        'non_ac_questions'=> 0
+    ];
+
+    $sql = "SELECT 
+                COUNT(*) AS total_questions,
+                COUNT(CASE WHEN type = 'AC' THEN 1 END) AS ac_questions,
+                COUNT(CASE WHEN type = 'NON-AC' THEN 1 END) AS non_ac_questions
+            FROM OBHS_questions
+            WHERE station_id = ?";
+
+    $stmt = $mysqli->prepare($sql);
+
+    if ($stmt) {
+        $stmt->bind_param("i", $station_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+
+            $data['total_questions'] = (int) ($row['total_questions'] ?? 0);
+            $data['ac_questions']    = (int) ($row['ac_questions'] ?? 0);
+            $data['non_ac_questions']= (int) ($row['non_ac_questions'] ?? 0);
+        }
+
+        $stmt->close();
+    }
+
+    return $data;
+}
+
 ///first page psi calculation function
 
 function psi_calculation($train_no, $date_from, $date_to, $grade)
@@ -213,7 +257,7 @@ function psi_calculation($train_no, $date_from, $date_to, $grade)
     $stmt2->execute();
     $result2 = $stmt2->get_result();
     $row2 = $result2->fetch_assoc();
-    $highest_marking = $row2['highest_marking'] ?? 0;
+    $highest_marking = (int) ($row2['highest_marking'] ?? 0);
 
     return [
         'feedback_sum' => $feedback_sum,
@@ -294,12 +338,15 @@ function feedback_calculation_coach_wise($train_no, $date_from, $date_to, $coach
         'non_ac_coach_target' => 0,
         'tte_target'          => 0
     ];
-
+$question_type = $coach_type;
+if ($coach_type === "TTE") {
+    $question_type = "AC";
+}
     // FINAL RETURN (include total questions)
     $sql4 = "SELECT COUNT(*) AS total_questions FROM `OBHS_questions` WHERE station_id = ? AND type = ?";
     $stmt4 = $mysqli->prepare($sql4);
     if ($stmt4) {
-        $stmt4->bind_param("is", $station, $coach_type);
+        $stmt4->bind_param("is", $station,  $question_type);
         $stmt4->execute();
         $result4 = $stmt4->get_result();
         $row4 = $result4->fetch_assoc();
@@ -373,9 +420,13 @@ function get_marking_data($station_id)
 function get_questions_data($station_id , $coach_type)
 {
     global $mysqli;
+    $question_type = $coach_type;
+if ($coach_type === "TTE") {
+    $question_type = "AC";
+}
     $sql = "SELECT id , eng_question , hin_question FROM OBHS_questions WHERE station_id = ? AND type = ?";
     $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("is", $station_id, $coach_type);
+    $stmt->bind_param("is", $station_id, $question_type);
     $stmt->execute();
     $result = $stmt->get_result();
     return $result->fetch_all(MYSQLI_ASSOC);    
@@ -389,6 +440,8 @@ function get_passenger_details_data_coach_wise($coach_no, $train_no, $date_from,
 
     $date_from = $date_from . " 00:00:00";
     $date_to   = $date_to . " 23:59:59";
+    //added coach no condition
+    
 
     $sql = "SELECT 
                 p.id AS passenger_id,

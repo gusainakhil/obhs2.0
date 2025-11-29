@@ -223,7 +223,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                                     'to_date' => $to_date,
                                     'coach_type' => 'AC'
                                 ]);
-                                echo '<a href="feedback-details.php?' . $query . '" style="color:#2563eb;font-weight:600;text-decoration:none;">';
+                                echo '<a href="feedback-details.php?' . $query . '"style="color:#2563eb;font-weight:600;text-decoration:none;" target="_blank"> ';
                                 echo htmlspecialchars($passenger_count);
                                 echo '</a>';
                                 echo '</td>';
@@ -247,7 +247,9 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         <tr>
                             <td colspan="2" style="font-weight:700;">Total</td>
                             <td><?php echo $total_ac_target ?></td>
-                            <td style="text-align:center;"><a href="all-feedback-detail-report.php?<?php echo $query; ?>"><?php echo $final_total_passenger; ?></a></td>
+                            <td style="text-align:center;"><a
+                                    href="all-feedback-detail-report.php?<?php echo $query; ?>"><?php echo $final_total_passenger; ?></a>
+                            </td>
                             <td style="text-align:right;"><?php echo $final_total_percentage; ?></td>
                         </tr>
                     </tfoot>
@@ -330,14 +332,14 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                                 echo "<td>{$nonAc_coach_target}</td>";
                                 echo "<td style=\"text-align:center;\">";
                                 $query2 = http_build_query([
-                                    'train'      => $train_no,
-                                    'coach'      => $coach_no,
-                                    'grade'      => $grade,
-                                    'from_date'  => $from_date,
-                                    'to_date'    => $to_date,
+                                    'train' => $train_no,
+                                    'coach' => $coach_no,
+                                    'grade' => $grade,
+                                    'from_date' => $from_date,
+                                    'to_date' => $to_date,
                                     'coach_type' => 'Non-AC'
                                 ]);
-                                echo '<a href="feedback-details.php?' . $query2 . '" style="color:#2563eb;font-weight:600;text-decoration:none;">';
+                                echo '<a href="feedback-details.php?' . $query2 . '" style="color:#2563eb;font-weight:600;text-decoration:none;" target="_blank"> ';
                                 echo $passenger_count;
                                 echo "</a>";
                                 echo "</td>";
@@ -360,8 +362,11 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                             <td><?php echo $total_target_sum; ?></td>
 
                             <!-- 4th column: total target sum again -->
-                            <td style="text-align:center;"><a href="all-feedback-detail-report.php?<?php echo $query2; ?>" style="color:#2563eb;font-weight:600;text-decoration:none;"><?php echo $total_passenger_sum;  ?></a></td>
-                          
+                            <td style="text-align:center;"><a
+                                    href="all-feedback-detail-report.php?<?php echo $query2; ?>"
+                                    style="color:#2563eb;font-weight:600;text-decoration:none;"><?php echo $total_passenger_sum; ?></a>
+                            </td>
+
 
                             <!-- 5th column: average percentage -->
                             <td style="text-align:right;"><?php echo $avg_percentage; ?></td>
@@ -391,7 +396,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         $train_no,
                         $from_date,
                         $to_date,
-                        'TTE', // यहाँ coach_type मतलब TTE के लिए data
+                        'TTE',
                         $grade
                     );
 
@@ -446,14 +451,14 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                             echo "<td>{$tte_target}</td>";
                             echo "<td style=\"text-align:center;\">";
                             $query3 = http_build_query([
-                                'train'      => $train_no,
-                                'coach'      => $coach_no,
-                                'grade'      => $grade,
-                                'from_date'  => $from_date,
-                                'to_date'    => $to_date,
+                                'train' => $train_no,
+                                'coach' => $coach_no,
+                                'grade' => $grade,
+                                'from_date' => $from_date,
+                                'to_date' => $to_date,
                                 'coach_type' => 'TTE'
                             ]);
-                            echo '<a href="feedback-details.php?' . $query3 . '" style="color:#2563eb;font-weight:600;text-decoration:none;">';
+                            echo '<a href="feedback-details.php?' . $query3 . '" style="color:#2563eb;font-weight:600;text-decoration:none;" target="_blank"> ';
                             echo $passenger_count;
                             echo "</a>";
                             echo "</td>";
@@ -476,7 +481,9 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         <td><?php echo $total_target_sum; ?></td>
 
                         <!-- 4th column: total passenger feedback count -->
-                        <td style="text-align:center;"><a href="all-feedback-detail-report.php?<?php echo $query3; ?>" style="color:#2563eb;font-weight:600;text-decoration:none;"><?php echo $total_passenger_sum; ?></a></td>
+                        <td style="text-align:center;"><a href="all-feedback-detail-report.php?<?php echo $query3; ?>"
+                                style="color:#2563eb;font-weight:600;text-decoration:none;"><?php echo $total_passenger_sum; ?></a>
+                        </td>
 
                         <!-- 5th column: average percentage -->
                         <td style="text-align:right;"><?php echo $avg_percentage; ?></td>
