@@ -424,7 +424,7 @@ function get_questions_data($station_id , $coach_type)
 if ($coach_type === "TTE") {
     $question_type = "AC";
 }
-    $sql = "SELECT id , eng_question , hin_question FROM OBHS_questions WHERE station_id = ? AND type = ?";
+    $sql = "SELECT id , eng_question , hin_question FROM OBHS_questions WHERE station_id = ? AND type = ? ORDER BY `OBHS_questions`.`id` ASC";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param("is", $station_id, $question_type);
     $stmt->execute();
@@ -453,6 +453,7 @@ function get_passenger_details_data_coach_wise($coach_no, $train_no, $date_from,
                 p.ph_number,
                 p.train_no,
                 p.grade,
+                f.feed_param,
                 SUM(f.value) AS total_feedback_sum,
                 GROUP_CONCAT(f.value ORDER BY f.id ASC SEPARATOR ', ') AS feedback_values
             FROM OBHS_passenger p
@@ -464,7 +465,7 @@ function get_passenger_details_data_coach_wise($coach_no, $train_no, $date_from,
               AND p.station_id = ?
               AND p.created BETWEEN ? AND ?
             GROUP BY p.id
-            ORDER BY p.created ASC";
+            ORDER BY f.feed_param ASC";
 
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param("isssiss", $train_no, $coach_no, $coach_type, $grade, $station, $date_from, $date_to);
@@ -492,6 +493,7 @@ function get_passenger_details_data_coach_type_wise($train_no, $coach_type, $gra
                 p.ph_number,
                 p.train_no,
                 p.grade,
+                f.feed_param,
                 SUM(f.value) AS total_feedback_sum,
                 GROUP_CONCAT(f.value ORDER BY f.id ASC SEPARATOR ', ') AS feedback_values
             FROM OBHS_passenger p
@@ -502,7 +504,7 @@ function get_passenger_details_data_coach_type_wise($train_no, $coach_type, $gra
               AND p.station_id = ?
               AND p.created BETWEEN ? AND ?
             GROUP BY p.id
-            ORDER BY p.created ASC";
+            ORDER BY f.feed_param ASC";
 
     $stmt = $mysqli->prepare($sql);
 
@@ -520,4 +522,18 @@ function get_passenger_details_data_coach_type_wise($train_no, $coach_type, $gra
     $stmt->execute();
     $result = $stmt->get_result();
     return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+function check_highest_marking($station_id)
+{
+    global $mysqli;
+
+    $sql = "SELECT MAX(value) AS highest_marking FROM OBHS_marking WHERE station_id = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i", $station_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    return (int) ($row['highest_marking'] ?? 0);
 }

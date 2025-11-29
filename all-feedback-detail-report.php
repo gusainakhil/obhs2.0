@@ -33,7 +33,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback Details - Jodhpur</title>
+    <title>Feedback Details - <?php echo htmlspecialchars($station_name); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -170,7 +170,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
         }
 
         .status-circle {
-            width: 18px;
+            width: 22px;
             height: 18px;
             border-radius: 50%;
             display: inline-block;
@@ -215,6 +215,43 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
         .customer-link:hover {
             text-decoration: underline;
         }
+       @media print {
+
+   /* A4 Landscape with no margin */
+   @page {
+      size: A4 landscape;
+      margin: 0;
+   }
+
+   /* Hide everything */
+   body * {
+      visibility: hidden;
+   }
+
+   /* Only print this DIV */
+   .table-wrapper, 
+   .table-wrapper * {
+      visibility: visible;
+   }
+
+   /* Position cleanly for print */
+   .table-wrapper {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      padding: 10px;
+      font-size: 11px;
+      line-height: 1.2;
+   }
+
+   /* Hide print button */
+   button {
+      display: none !important;
+   }
+}
+</style>
+
     </style>
 </head>
 
@@ -250,22 +287,14 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                     }
                 }
                 ?>
+                <!-- <button class="badge badge-excellent" onclick="exportExcel()">Excel</button> -->
+                <button type="button" class="badge" style="background: #0ea5e9;" onclick="window.print()" aria-label="Print">Print</button>
                 <br>
                 <br>
 
-                <!-- PDF Button -->
-                <div class="export-btn-group">
-                    <div class="badge-percent"><i class="fas fa-percentage"></i></div>
-                    <button class="badge badge-excellent" onclick="exportExcel()">Excel</button>
-                    <button class="badge" style="background: #0ea5e9;" onclick="exportPDF()">PDF</button>
-                </div>
-
-                <!-- Header Info -->
-                <div class="header-info">
-                    Station: Dadn
-                </div>
-
-
+    
+                    
+                     <?php $highest_marking=check_highest_marking($_SESSION['station_id']); ?>
                 <!-- Table -->
                 <div class="table-wrapper">
                     <table class="feedback-table">
@@ -297,6 +326,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 $OBHS_question = get_questions_data($_SESSION['station_id'], $coach_type);
 
                                 if (!empty($OBHS_question)) {
+                                    $totalQuestions = count($OBHS_question); 
                                     foreach ($OBHS_question as $q) {
 
                                         $eng = htmlspecialchars($q['eng_question']);
@@ -349,31 +379,117 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                     echo "<td>" . date('d/m/Y H:i:s', strtotime($pd['feedback_date'])) . "</td>";
                                     echo "<td>{$pd['seat_no']}</td>";
                                     echo "<td>{$pd['coach_no']}</td>";
-                                    echo "<td><a href='#' class='customer-link'>{$pd['name']}</a></td>";
+                                    echo "<td><a href='employee-card.php?passenger_id={$pd['passenger_id']}"
+                                . "&station_id={$_SESSION['station_id']}"
+                                . "&train_no={$pd['train_no']}"
+                                . "&coach_no={$pd['coach_no']}"
+                                 . "&phone={$pd['ph_number']}"
+                                . "&pnr_number={$pd['pnr_number']}"
+                                . "&name={$pd['name']}"
+                                . "&grade={$pd['grade']}"
+                                . "&seat_no={$pd['seat_no']}"
+                                . "&date_from={$from_date}"
+                                . "&date_to={$to_date}' class='customer-link' target='_blank'>"
+                                . "{$pd['name']}</a></td>";
                                     echo "<td>{$pd['ph_number']}</td>";
                                     echo "<td>{$pd['pnr_number']}</td>";
                                     echo "<td>{$pd['train_no']}</td>";
                                     echo "<td>{$pd['grade']}</td>";
 
-                                    foreach ($feedback_array as $fv) {
+                                   foreach ($feedback_array as $fv) {
                                         echo "<td><span class='status-circle status-excellent'>{$fv}</span></td>";
                                     }
 
-                                    echo "<td><span class='status-circle status-excellent'>{$pd['total_feedback_sum']}</span></td>";
+                                    
+                                    $num_questions = count($feedback_array);
+                                    $max_score = $highest_marking;
+                                    $max_total =  $totalQuestions * $max_score;
+                                    $psi = 0;
+                                    if ($max_total > 0) {
+                                        $psi = (intval($pd['total_feedback_sum']) / $max_total) * 100;
+                                    }
+                                    $psi_display = number_format($psi, 2);
+
+                                    // Map PSI to status classes
+                                    if ($psi >= 90) {
+                                        $status_class = 'status-excellent';
+                                    } elseif ($psi >= 75) {
+                                        $status_class = 'status-verygood';
+                                    } elseif ($psi >= 60) {
+                                        $status_class = 'status-good';
+                                    } elseif ($psi >= 40) {
+                                        $status_class = 'status-average';
+                                    } else {
+                                        $status_class = 'status-poor';
+                                    }
+
+                                    echo "<td><span class='status-circle {$status_class}'>{$psi_display}%</span></td>";
                                     echo "</tr>";
 
                                     $sr++;
                                 }
 
-                                // TOTAL ROW (same UI as feedback rows)
+                                // GRAND TOTAL ROW with same UI
                                 echo "<tr>";
                                 echo "<td colspan='9' style='text-align:center;font-weight:600;'>TOTAL</td>";
 
-                                foreach ($feedback_totals as $t) {
-                                    echo "<td><span class='status-circle status-excellent'>{$t}</span></td>";
+                                // Calculate PSI per question and overall PSI for the total row
+                                // Use the coach-type passenger list (`$passenger_details_coach_type`) that we iterated above
+                                $responses = is_array($passenger_details_coach_type) ? count($passenger_details_coach_type) : 0;
+                                $responses = max(0, intval($responses));
+                                $max_score = intval($highest_marking);
+                                $total_questions = isset($totalQuestions) ? intval($totalQuestions) : count($feedback_totals);
+
+                                if ($responses > 0 && $max_score > 0) {
+                                    foreach ($feedback_totals as $t) {
+                                        $t = intval($t);
+                                        $max_for_col = $responses * $max_score;
+                                        $psi_col = $max_for_col > 0 ? ($t / $max_for_col) * 100 : 0;
+                                        $psi_col_display = number_format($psi_col, 2) . '%';
+
+                                        if ($psi_col >= 90) {
+                                            $status_class = 'status-excellent';
+                                        } elseif ($psi_col >= 75) {
+                                            $status_class = 'status-verygood';
+                                        } elseif ($psi_col >= 60) {
+                                            $status_class = 'status-good';
+                                        } elseif ($psi_col >= 40) {
+                                            $status_class = 'status-average';
+                                        } else {
+                                            $status_class = 'status-poor';
+                                        }
+
+                                        echo "<td><span class='status-circle {$status_class}'>{$psi_col_display}</span></td>";
+                                    }
+
+                                    // Overall PSI (use the accumulated grand total `$grand_total_sum`)
+                                    $max_total_overall = $responses * $total_questions * $max_score;
+                                    $overall_psi = $max_total_overall > 0 ? ($grand_total_sum / $max_total_overall) * 100 : 0;
+                                    $overall_display = number_format($overall_psi, 2) . '%';
+
+                                    if ($overall_psi >= 90) {
+                                        $overall_class = 'status-excellent';
+                                    } elseif ($overall_psi >= 75) {
+                                        $overall_class = 'status-verygood';
+                                    } elseif ($overall_psi >= 60) {
+                                        $overall_class = 'status-good';
+                                    } elseif ($overall_psi >= 40) {
+                                        $overall_class = 'status-average';
+                                    } else {
+                                        $overall_class = 'status-poor';
+                                    }
+
+                                    // replace the raw total cell with overall PSI percentage
+                                    echo "<td><span class='status-circle {$overall_class}'>{$overall_display}</span></td>";
+                                } else {
+                                    // Fallback: no responses or invalid max score — show zeros
+                                    foreach ($feedback_totals as $t) {
+                                        echo "<td><span class='status-circle status-poor'>0.00%</span></td>";
+                                    }
+                                    echo "<td><span class='status-circle status-poor'>0.00%</span></td>";
                                 }
 
-                                echo "<td><span class='status-circle status-excellent'>{$grand_total_sum}</span></td>";
+                                // echo "<td><span class='status-circle status-excellent'>{$total_feedback_sum_all}</span></td>";
                                 echo "</tr>";
 
                             } else {

@@ -1,10 +1,28 @@
+<?php
+include 'includes/helpers.php';
+session_start();
+ $station_name = getStationName($_SESSION['station_id']); ?>
+<?php http://obhs.test/employee-card.php?passenger_id=mRPwj4db9O8wJjZKAfcyGGjhCyQ45vWc&station_id=3&train_no=22875&coach_no=C1&phone=918889563123&pnr_number=6657691634&name=Ramana%20kumar&seat_no=21&grade=A&date_from=2025-09-01&date_to=2025-09-04
+// 
+$passenger_id = isset($_GET['passenger_id']) ? $_GET['passenger_id'] : '';
+$station_id = isset($_GET['station_id']) ? $_GET['station_id'] : '';
+$train_no = isset($_GET['train_no']) ? $_GET['train_no'] : '';
+$coach_no = isset($_GET['coach_no']) ? $_GET['coach_no'] : '';
+$grade = isset($_GET['grade']) ? $_GET['grade'] : '';
+$date_from = isset($_GET['date_from']) ? $_GET['date_from'] : '';
+$date_to = isset($_GET['date_to']) ? $_GET['date_to'] : '';
+$seat_no = isset($_GET['seat_no']) ? $_GET['seat_no'] : '';
+$phone = isset($_GET['phone']) ? $_GET['phone'] : '';
+$pnr_number = isset($_GET['pnr_number']) ? $_GET['pnr_number'] : '';
+$name = isset($_GET['name']) ? $_GET['name'] : '';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Feedback Card</title>
+    <title><?php echo htmlspecialchars($name." - ".$passenger_id); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -15,11 +33,11 @@
         }
 
         .employee-card {
-            width: 650px;
+            width: 700px;
             background: white;
             border: 2px solid #000;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin: 40px auto;
+            margin:  auto;
         }
 
         .card-header {
@@ -31,20 +49,20 @@
 
         .card-title {
             color: #000;
-            font-size: 16px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .card-body {
-            padding: 30px;
+            padding: 20px;
         }
 
         .employee-info {
             display: flex;
             gap: 30px;
-            margin-bottom: 30px;
+         
         }
 
         .employee-photo-container {
@@ -86,17 +104,17 @@
         }
 
         .greeting-text {
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 13px;
+        
             color: #000;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             text-align: justify;
         }
 
         .service-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+
         }
 
         .service-table th,
@@ -175,6 +193,10 @@
             body {
                 background: white;
             }
+             @page {
+      size: A4 ;
+      margin: 0;
+   }
 
             .card-footer,
             .no-print {
@@ -192,6 +214,10 @@
 
 <body class="bg-slate-100 min-h-screen p-4">
 
+
+
+
+
     <div class="employee-card">
         <!-- Card Header -->
         <div class="card-header">
@@ -201,30 +227,29 @@
         <!-- Card Body -->
         <div class="card-body">
             <div class="greeting-text">
-                <strong>Dear Passenger, Nageshvr. Rav</strong><br><br>
+                <strong>Dear Passenger, <?php echo $name; ?></strong><br><br>
                 Our endeavor is to provide you the most hygienic On Board Housekeeping Services. Services during 5:00 to 22:00 hrs Feedback: Passengers are requested to give feedback regarding services provided by OBHS staff, in the format given below on your mobile. Based on your Feedback, payment to the contractor will be made. It will help us to serve you better. Kindly spare a few minutes and rate the areas as given in the table below:
             </div>
-
             <div class="employee-info">
-                <div class="employee-photo-container">
-                    <img src="https://via.placeholder.com/150x180/cccccc/666666?text=Employee+Photo" alt="Employee Photo">
-                </div>
-                <div class="employee-basic-info">
-                    <div class="info-row">
+                <div class="row" style=" margin-bottom:15px;">
+                    <div class="info-col" style="flex:1; display:flex; align-items:center; gap:10px;">
                         <span class="info-label"><strong>Train:</strong></span>
-                        <span class="info-value">20805</span>
+                        <span class="info-value"><?php echo $train_no; ?></span>
                     </div>
-                    <div class="info-row">
+                    <div class="info-col" style="flex:1; display:flex; align-items:center; gap:10px;">
                         <span class="info-label"><strong>Date:</strong></span>
-                        <span class="info-value">21/02/2025</span>
+                        <span class="info-value"><?php echo $date_from; ?></span>
                     </div>
-                    <div class="info-row">
+                </div>
+
+                <div class="row" style="">
+                    <div class="info-col" style="flex:1; display:flex; align-items:center; gap:10px;">
                         <span class="info-label"><strong>Seat:</strong></span>
-                        <span class="info-value">07 - 7</span>
+                        <span class="info-value"><?php echo $seat_no; ?></span>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label"><strong>Passenger:</strong></span>
-                        <span class="info-value">Nageshvr. Rav 918977300010</span>
+                    <div class="info-col" style="flex:1; display:flex; align-items:center; gap:10px;">
+                        <span class="info-label"><strong>PNR:</strong></span>
+                        <span class="info-value"><?php echo $pnr_number; ?></span>
                     </div>
                 </div>
             </div>
@@ -233,11 +258,17 @@
             <table class="service-table">
                 <thead>
                     <tr>
-                        <th style="text-align: left; width: 50%;">Visakhapatnam – Areas of Cleaning / Services</th>
-                        <th class="rating-cell">Very Good</th>
-                        <th class="rating-cell">Satisfactory</th>
-                        <th class="rating-cell">Poor</th>
-                        <th class="rating-cell">Not Attended</th>
+                        <th style="text-align: left; width: 50%;"><?php echo $station_name ?>– Areas of Cleaning / Services</th>
+                        <?php $marking_data = get_marking_data($_SESSION['station_id']);
+                if ($marking_data) {
+                    {
+                        foreach ($marking_data as $data) {
+                            echo '<th class="badge badge-' . strtolower(preg_replace('/\s+/', '', trim($data['category']))) . ' mr-2">' . htmlspecialchars($data['category']) . '</span>';
+                        }
+                    }
+                }
+                ?>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -285,9 +316,9 @@
             <button onclick="window.print()" class="btn btn-print">
                 <i class="fas fa-print"></i> Print
             </button>
-            <button onclick="window.history.back()" class="btn btn-back">
+            <!-- <button onclick="window.history.back()" class="btn btn-back">
                 <i class="fas fa-arrow-left"></i> Back
-            </button>
+            </button> -->
         </div>
     </div>
 

@@ -30,7 +30,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Train Report - Jodhpur</title>
+    <title>Train Report - <?php echo htmlspecialchars($station_name); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -39,6 +39,14 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
 
         body {
             font-family: 'Inter', sans-serif;
+        }
+        td {
+            white-space: nowrap;
+            text-align: center;
+        }
+        th {
+            white-space: nowrap;
+            text-align: center;
         }
 
         .report-header {
@@ -76,7 +84,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             padding: 12px 16px;
-            text-align: left;
+           
             font-size: 14px;
             white-space: nowrap;
         }
@@ -123,19 +131,18 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
 
                 <!-- Export Buttons -->
                 <div class="flex justify-end gap-2 mb-4">
-                    <button class="btn-export" onclick="exportPDF()">
-                        <i class="fas fa-file-pdf mr-2"></i>PDF
+                    <button type="button" class="btn-export" onclick="window.print()">
+                        <i class="fas fa-print mr-2"></i>Print
                     </button>
-                    <button class="btn-export" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);"
-                        onclick="exportExcel()">
+                    <!-- <button class="btn-export" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="exportExcel()">
                         <i class="fas fa-file-excel mr-2"></i>Excel
-                    </button>
+                    </button> -->
                 </div>
 
                 <!-- Report Header -->
                 <div class="report-header rounded-lg">
                     <div class="report-grid">
-                        <div class="report-cell">Station: Dadn</div>
+                        <div class="report-cell">Station: <?php echo htmlspecialchars($station_name); ?></div>
                         <div class="report-cell">Train No: <?php echo htmlspecialchars($train_no); ?></div>
                         <div class="report-cell">From: <?php echo htmlspecialchars($from_date); ?></div>
                         <div class="report-cell">To: <?php echo htmlspecialchars($to_date); ?></div>
@@ -176,7 +183,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         $total_coaches = count($coachList);
 
                         if (empty($coachList)) {
-                            echo '<tr><td colspan="5" style="text-align:center;">No data available</td></tr>';
+                            echo '<tr><td colspan="5">No data available</td></tr>';
                         } else {
                             foreach ($coachList as $coach_no => $data) {
 
@@ -213,8 +220,8 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                                 echo '<tr>';
                                 echo '<td>' . $row_no . '</td>';
                                 echo '<td>' . htmlspecialchars($coach_no) . '</td>';
-                                echo '<td>' . htmlspecialchars($ac_coach_target) . '</td>';
-                                echo '<td style="text-align:center;">';
+                                echo '<td >' . htmlspecialchars($ac_coach_target) . '</td>';
+                                echo '<td>';
                                 $query = http_build_query([
                                     'train' => $train_no,
                                     'coach' => $coach_no,
@@ -227,7 +234,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                                 echo htmlspecialchars($passenger_count);
                                 echo '</a>';
                                 echo '</td>';
-                                echo '<td style="text-align:right;">' . $percentage_display . '</td>';
+                                echo '<td>' . $percentage_display . '</td>';
                                 echo '</tr>';
 
                                 $row_no++;
@@ -247,10 +254,9 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         <tr>
                             <td colspan="2" style="font-weight:700;">Total</td>
                             <td><?php echo $total_ac_target ?></td>
-                            <td style="text-align:center;"><a
-                                    href="all-feedback-detail-report.php?<?php echo $query; ?>"><?php echo $final_total_passenger; ?></a>
+                            <td><a href="all-feedback-detail-report.php?<?php echo $query; ?>" target="_blank" style="color:blue"><?php echo $final_total_passenger; ?></a>
                             </td>
-                            <td style="text-align:right;"><?php echo $final_total_percentage; ?></td>
+                            <td><?php echo $final_total_percentage; ?></td>
                         </tr>
                     </tfoot>
 
@@ -293,7 +299,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         $total_coaches = count($coachList);
 
                         if (empty($coachList)) {
-                            echo '<tr><td colspan="5" style="text-align:center;">No data found</td></tr>';
+                            echo '<tr><td colspan="5">No data found</td></tr>';
                         } else {
                             foreach ($coachList as $coach_no => $data) {
 
@@ -330,7 +336,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                                 echo "<td>{$row_no}</td>";
                                 echo "<td>{$coach_no}</td>";
                                 echo "<td>{$nonAc_coach_target}</td>";
-                                echo "<td style=\"text-align:center;\">";
+                                echo "<td>";
                                 $query2 = http_build_query([
                                     'train' => $train_no,
                                     'coach' => $coach_no,
@@ -343,7 +349,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                                 echo $passenger_count;
                                 echo "</a>";
                                 echo "</td>";
-                                echo "<td style=\"text-align:right;\">{$percentage_display}</td>";
+                                echo "<td>{$percentage_display}</td>";
                                 echo "</tr>";
 
                                 $row_no++;
@@ -362,14 +368,14 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                             <td><?php echo $total_target_sum; ?></td>
 
                             <!-- 4th column: total target sum again -->
-                            <td style="text-align:center;"><a
+                            <td><a
                                     href="all-feedback-detail-report.php?<?php echo $query2; ?>"
-                                    style="color:#2563eb;font-weight:600;text-decoration:none;"><?php echo $total_passenger_sum; ?></a>
+                                    style="color:#2563eb;font-weight:600;text-decoration:none;" target="_blank"><?php echo $total_passenger_sum; ?></a>
                             </td>
 
 
                             <!-- 5th column: average percentage -->
-                            <td style="text-align:right;"><?php echo $avg_percentage; ?></td>
+                            <td><?php echo $avg_percentage; ?></td>
                         </tr>
                     </tfoot>
 
@@ -412,7 +418,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                     $total_coaches = count($coachList);
 
                     if (empty($coachList)) {
-                        echo '<tr><td colspan="5" style="text-align:center;">No data found</td></tr>';
+                        echo '<tr><td colspan="5">No data found</td></tr>';
                     } else {
                         foreach ($coachList as $coach_no => $data) {
 
@@ -449,7 +455,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                             echo "<td>{$row_no}</td>";
                             echo "<td>{$coach_no}</td>";
                             echo "<td>{$tte_target}</td>";
-                            echo "<td style=\"text-align:center;\">";
+                            echo "<td>";
                             $query3 = http_build_query([
                                 'train' => $train_no,
                                 'coach' => $coach_no,
@@ -462,7 +468,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                             echo $passenger_count;
                             echo "</a>";
                             echo "</td>";
-                            echo "<td style=\"text-align:right;\">{$percentage_display}</td>";
+                            echo "<td>{$percentage_display}</td>";
                             echo "</tr>";
 
                             $row_no++;
@@ -481,12 +487,12 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         <td><?php echo $total_target_sum; ?></td>
 
                         <!-- 4th column: total passenger feedback count -->
-                        <td style="text-align:center;"><a href="all-feedback-detail-report.php?<?php echo $query3; ?>"
-                                style="color:#2563eb;font-weight:600;text-decoration:none;"><?php echo $total_passenger_sum; ?></a>
+                        <td><a href="all-feedback-detail-report.php? <?php echo $query3; ?>"
+                                style="color:#2563eb;font-weight:600;text-decoration:none;" target="_blank"><?php echo $total_passenger_sum; ?></a>
                         </td>
 
                         <!-- 5th column: average percentage -->
-                        <td style="text-align:right;"><?php echo $avg_percentage; ?></td>
+                        <td><?php echo $avg_percentage; ?></td>
                     </tr>
                 </tfoot>
                 </tbody>
