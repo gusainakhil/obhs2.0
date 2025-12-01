@@ -16,6 +16,127 @@ checkLogin();
 
 // Now fetch station name
 $station_name = getStationName($_SESSION['station_id']);
+$station_id = $_SESSION['station_id'];
+
+// Handle delete request
+if (isset($_POST['delete_employee'])) {
+    $employee_id = intval($_POST['employee_id']);
+    
+    // Get employee photo before deleting
+    $query = "SELECT photo FROM base_employees WHERE id = ? AND station_id = ?";
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param("ii", $employee_id, $station_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $emp_data = $result->fetch_assoc();
+    $stmt->close();
+    
+    if ($emp_data) {
+        // Delete from database
+        $delete_query = "DELETE FROM base_employees WHERE id = ? AND station_id = ?";
+        $stmt = $mysqli->prepare($delete_query);
+        $stmt->bind_param("ii", $employee_id, $station_id);
+        
+        if ($stmt->execute()) {
+            // Delete photo file if exists
+            if (!empty($emp_data['photo'])) {
+                $photo_file = 'uploads/employee/' . $emp_data['photo'];
+                if (file_exists($photo_file)) {
+                    unlink($photo_file);
+                }
+            }
+            $_SESSION['success_msg'] = 'Employee deleted successfully!';
+        } else {
+            $_SESSION['error_msg'] = 'Failed to delete employee.';
+        }
+        $stmt->close();
+    }
+    
+    header("Location: view-employee.php");
+    exit();
+}
+
+// Handle edit/update request
+if (isset($_POST['update_employee'])) {
+    $employee_id = intval($_POST['edit_employee_id']);
+    $name = $_POST['edit_name'];
+    $employee_code = $_POST['edit_employee_id_code'];
+    $designation = $_POST['edit_designation'];
+    $old_photo = $_POST['old_photo'];
+    $photo_name = $old_photo;
+    
+    // Handle photo upload if new photo is provided
+    if (isset($_FILES['edit_photo']) && $_FILES['edit_photo']['error'] == 0) {
+        $upload_dir = 'uploads/employee/';
+        if (!file_exists($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        
+        $file_tmp = $_FILES['edit_photo']['tmp_name'];
+        $file_name = $_FILES['edit_photo']['name'];
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+        
+        if (in_array($file_ext, $allowed_extensions)) {
+            $photo_name = $employee_code . '_' . time() . '_' . uniqid() . '.' . $file_ext;
+            $target_file = $upload_dir . $photo_name;
+            
+            if (move_uploaded_file($file_tmp, $target_file)) {
+                // Delete old photo if exists
+                if (!empty($old_photo) && file_exists($upload_dir . $old_photo)) {
+                    unlink($upload_dir . $old_photo);
+                }
+            } else {
+                $photo_name = $old_photo; // Keep old photo if upload fails
+            }
+        }
+    }
+    
+    // Update database
+    $update_query = "UPDATE base_employees SET name = ?, employee_id = ?, desination = ?, photo = ?, updated_at = NOW() WHERE id = ? AND station_id = ?";
+    $stmt = $mysqli->prepare($update_query);
+    $stmt->bind_param("ssssii", $name, $employee_code, $designation, $photo_name, $employee_id, $station_id);
+    
+    if ($stmt->execute()) {
+        $_SESSION['success_msg'] = 'Employee updated successfully!';
+    } else {
+        $_SESSION['error_msg'] = 'Failed to update employee.';
+    }
+    $stmt->close();
+    
+    header("Location: view-employee.php");
+    exit();
+}
+
+// Fetch employees from database
+$employees = [];
+
+// Pagination settings
+$records_per_page = isset($_GET['per_page']) ? intval($_GET['per_page']) : 10;
+$current_page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($current_page - 1) * $records_per_page;
+
+// Get total count
+$count_query = "SELECT COUNT(*) as total FROM base_employees WHERE station_id = ?";
+$stmt = $mysqli->prepare($count_query);
+$stmt->bind_param("i", $station_id);
+$stmt->execute();
+$count_result = $stmt->get_result();
+$total_records = $count_result->fetch_assoc()['total'];
+$stmt->close();
+
+$total_pages = ceil($total_records / $records_per_page);
+
+// Fetch paginated employees
+$query = "SELECT * FROM base_employees WHERE station_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?";
+$stmt = $mysqli->prepare($query);
+$stmt->bind_param("iii", $station_id, $records_per_page, $offset);
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $employees[] = $row;
+}
+$stmt->close();
 
 ?>
 <!DOCTYPE html>
@@ -163,6 +284,21 @@ $station_name = getStationName($_SESSION['station_id']);
             justify-content: center;
         }
 
+        .btn-card {
+            background-color: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-card:hover {
+            background-color: #7c3aed;
+        }
+
         .btn-edit {
             background-color: #0ea5e9;
             color: white;
@@ -270,15 +406,27 @@ $station_name = getStationName($_SESSION['station_id']);
                 <p class="text-sm text-slate-600 mt-1">Manage all employee records</p>
             </div>
 
+            <?php if (isset($_SESSION['success_msg'])): ?>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+                <span class="block sm:inline"><i class="fas fa-check-circle mr-2"></i><?php echo $_SESSION['success_msg']; unset($_SESSION['success_msg']); ?></span>
+            </div>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['error_msg'])): ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+                <span class="block sm:inline"><i class="fas fa-exclamation-circle mr-2"></i><?php echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?></span>
+            </div>
+            <?php endif; ?>
+
             <!-- Controls Bar -->
             <div class="controls-bar">
                 <div class="entries-control">
                     <span>Show</span>
-                    <select id="entriesPerPage" onchange="changeEntries()">
-                        <option value="10" selected>10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
+                    <select id="entriesPerPage" onchange="changeEntries(this.value)">
+                        <option value="10" <?php echo $records_per_page == 10 ? 'selected' : ''; ?>>10</option>
+                        <option value="25" <?php echo $records_per_page == 25 ? 'selected' : ''; ?>>25</option>
+                        <option value="50" <?php echo $records_per_page == 50 ? 'selected' : ''; ?>>50</option>
+                        <option value="100" <?php echo $records_per_page == 100 ? 'selected' : ''; ?>>100</option>
                     </select>
                     <span>entries</span>
                 </div>
@@ -311,166 +459,39 @@ $station_name = getStationName($_SESSION['station_id']);
                         </tr>
                     </thead>
                     <tbody id="employeeTableBody">
+                        <?php 
+                        if (count($employees) > 0):
+                            $sr_no = 1;
+                            foreach ($employees as $employee):
+                                $photo_path = !empty($employee['photo']) ? 'uploads/employee/' . $employee['photo'] : 'https://via.placeholder.com/40';
+                                if (!empty($employee['photo']) && !file_exists($photo_path)) {
+                                    $photo_path = 'https://via.placeholder.com/40';
+                                }
+                        ?>
                         <tr>
-                            <td>1</td>
-                            <td><img src="https://via.placeholder.com/40" alt="Employee" class="employee-photo mx-auto">
-                            </td>
-                            <td>ABDUL SAHID</td>
-                            <td>SKS-002</td>
-                            <td>JANITOR</td>
+                            <td><?php echo $sr_no++; ?></td>
+                            <td><img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Employee" class="employee-photo mx-auto"></td>
+                            <td><?php echo htmlspecialchars($employee['name']); ?></td>
+                            <td><?php echo htmlspecialchars($employee['employee_id']); ?></td>
+                            <td><?php echo htmlspecialchars($employee['desination']); ?></td>
                             <td>
                                 <div class="action-btns">
-                                    <button class="btn-edit" onclick="editEmployee(1)"><i
-                                            class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(1)"><i
-                                            class="fas fa-trash"></i></button>
+                                    <button class="btn-edit" onclick="openEditModal(<?php echo $employee['id']; ?>, '<?php echo addslashes($employee['name']); ?>', '<?php echo addslashes($employee['employee_id']); ?>', '<?php echo addslashes($employee['desination']); ?>', '<?php echo addslashes($employee['photo']); ?>')"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-delete" onclick="deleteEmployee(<?php echo $employee['id']; ?>)"><i class="fas fa-trash"></i></button>
                                 </div>
                             </td>
                         </tr>
+                        <?php 
+                            endforeach;
+                        else:
+                        ?>
                         <tr>
-                            <td>2</td>
-                            <td><img src="https://via.placeholder.com/40" alt="Employee" class="employee-photo mx-auto">
-                            </td>
-                            <td>RAHUL YADAV</td>
-                            <td>SKS-003</td>
-                            <td>JANITOR</td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="btn-edit" onclick="editEmployee(2)"><i
-                                            class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(2)"><i
-                                            class="fas fa-trash"></i></button>
-                                </div>
+                            <td colspan="6" style="text-align: center; padding: 40px;">
+                                <i class="fas fa-users text-4xl text-slate-300 mb-2"></i>
+                                <p style="color: #64748b;">No employees found. <a href="create-employee.php" style="color: #0ea5e9;">Add your first employee</a></p>
                             </td>
                         </tr>
-                        <tr>
-                            <td>3</td>
-                            <td><img src="https://via.placeholder.com/40" alt="Employee" class="employee-photo mx-auto">
-                            </td>
-                            <td>AKASH YADAV</td>
-                            <td>SKS-004</td>
-                            <td>JANITOR</td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="btn-edit" onclick="editEmployee(3)"><i
-                                            class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(3)"><i
-                                            class="fas fa-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td><img src="https://via.placeholder.com/40" alt="Employee" class="employee-photo mx-auto">
-                            </td>
-                            <td>DINESH PAL</td>
-                            <td>SKS-005</td>
-                            <td>JANITOR</td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="btn-edit" onclick="editEmployee(4)"><i
-                                            class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(4)"><i
-                                            class="fas fa-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td><img src="https://via.placeholder.com/40" alt="Employee" class="employee-photo mx-auto">
-                            </td>
-                            <td>SANTOSH KUMAR SAHU</td>
-                            <td>SKS-006</td>
-                            <td>JANITOR</td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="btn-edit" onclick="editEmployee(5)"><i
-                                            class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(5)"><i
-                                            class="fas fa-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td><img src="https://via.placeholder.com/40" alt="Employee" class="employee-photo mx-auto">
-                            </td>
-                            <td>SUNIL PAIKRA</td>
-                            <td>SKS-007</td>
-                            <td>JANITOR</td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="btn-edit" onclick="editEmployee(6)"><i
-                                            class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(6)"><i
-                                            class="fas fa-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>7</td>
-                            <td><img src="https://via.placeholder.com/40" alt="Employee" class="employee-photo mx-auto">
-                            </td>
-                            <td>KISHAN KUMAR</td>
-                            <td>SKS-008</td>
-                            <td>JANITOR</td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="btn-edit" onclick="editEmployee(7)"><i
-                                            class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(7)"><i
-                                            class="fas fa-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>8</td>
-                            <td><img src="https://via.placeholder.com/40" alt="Employee" class="employee-photo mx-auto">
-                            </td>
-                            <td>ABHILASH SINGH</td>
-                            <td>SKS-009</td>
-                            <td>JANITOR</td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="btn-edit" onclick="editEmployee(8)"><i
-                                            class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(8)"><i
-                                            class="fas fa-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>9</td>
-                            <td><img src="https://via.placeholder.com/40" alt="Employee" class="employee-photo mx-auto">
-                            </td>
-                            <td>RAHUL BANJARE</td>
-                            <td>SKS-010</td>
-                            <td>JANITOR</td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="btn-edit" onclick="editEmployee(9)"><i
-                                            class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(9)"><i
-                                            class="fas fa-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>10</td>
-                            <td><img src="https://via.placeholder.com/40" alt="Employee" class="employee-photo mx-auto">
-                            </td>
-                            <td>SURESH KHANDEKAR</td>
-                            <td>SKS-011</td>
-                            <td>EHK</td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="btn-edit" onclick="editEmployee(10)"><i
-                                            class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(10)"><i
-                                            class="fas fa-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -478,18 +499,48 @@ $station_name = getStationName($_SESSION['station_id']);
             <!-- Pagination -->
             <div class="pagination-wrapper">
                 <div class="pagination-info">
-                    Showing 1 to 10 of 294 entries
+                    Showing <?php echo $total_records > 0 ? $offset + 1 : 0; ?> to <?php echo min($offset + $records_per_page, $total_records); ?> of <?php echo $total_records; ?> entries
                 </div>
                 <div class="pagination-controls">
+                    <?php if ($current_page > 1): ?>
+                    <button onclick="goToPage(<?php echo $current_page - 1; ?>)">Previous</button>
+                    <?php else: ?>
                     <button disabled>Previous</button>
-                    <span class="active">1</span>
-                    <span onclick="goToPage(2)">2</span>
-                    <span onclick="goToPage(3)">3</span>
-                    <span onclick="goToPage(4)">4</span>
-                    <span onclick="goToPage(5)">5</span>
-                    <span>...</span>
-                    <span onclick="goToPage(30)">30</span>
-                    <button onclick="goToPage(2)">Next</button>
+                    <?php endif; ?>
+                    
+                    <?php
+                    // Show pagination numbers
+                    $start_page = max(1, $current_page - 2);
+                    $end_page = min($total_pages, $current_page + 2);
+                    
+                    if ($start_page > 1) {
+                        echo '<span onclick="goToPage(1)">1</span>';
+                        if ($start_page > 2) {
+                            echo '<span>...</span>';
+                        }
+                    }
+                    
+                    for ($i = $start_page; $i <= $end_page; $i++) {
+                        if ($i == $current_page) {
+                            echo '<span class="active">' . $i . '</span>';
+                        } else {
+                            echo '<span onclick="goToPage(' . $i . ')">' . $i . '</span>';
+                        }
+                    }
+                    
+                    if ($end_page < $total_pages) {
+                        if ($end_page < $total_pages - 1) {
+                            echo '<span>...</span>';
+                        }
+                        echo '<span onclick="goToPage(' . $total_pages . ')">' . $total_pages . '</span>';
+                    }
+                    ?>
+                    
+                    <?php if ($current_page < $total_pages): ?>
+                    <button onclick="goToPage(<?php echo $current_page + 1; ?>)">Next</button>
+                    <?php else: ?>
+                    <button disabled>Next</button>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -503,34 +554,112 @@ $station_name = getStationName($_SESSION['station_id']);
 
     </div>
 
+    <!-- Edit Employee Modal -->
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-slate-800">Edit Employee</h3>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form method="POST" action="" enctype="multipart/form-data">
+                <input type="hidden" name="edit_employee_id" id="edit_employee_id">
+                <input type="hidden" name="old_photo" id="old_photo">
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Employee Name</label>
+                    <input type="text" name="edit_name" id="edit_name" required
+                        class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Employee ID</label>
+                    <input type="text" name="edit_employee_id_code" id="edit_employee_id_code" required
+                        class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Designation</label>
+                    <input type="text" name="edit_designation" id="edit_designation" required
+                        class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Photo</label>
+                    <div class="mb-2" id="current_photo_preview"></div>
+                    <input type="file" name="edit_photo" id="edit_photo" accept="image/*"
+                        class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p class="text-xs text-slate-500 mt-1">Leave empty to keep current photo</p>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button type="submit" name="update_employee"
+                        class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 font-semibold">
+                        <i class="fas fa-save mr-2"></i>Update
+                    </button>
+                    <button type="button" onclick="closeEditModal()"
+                        class="flex-1 bg-slate-300 text-slate-700 px-4 py-2 rounded-md hover:bg-slate-400 font-semibold">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Form -->
+    <form id="deleteForm" method="POST" action="" style="display: none;">
+        <input type="hidden" name="delete_employee" value="1">
+        <input type="hidden" name="employee_id" id="delete_employee_id">
+    </form>
+
     <script>
-        // Edit employee
-        function editEmployee(id) {
-            alert('Edit employee with ID: ' + id + '\n\n(This would open an edit form or modal)');
+        // Open edit modal
+        function openEditModal(id, name, employeeId, designation, photo) {
+            document.getElementById('edit_employee_id').value = id;
+            document.getElementById('edit_name').value = name;
+            document.getElementById('edit_employee_id_code').value = employeeId;
+            document.getElementById('edit_designation').value = designation;
+            document.getElementById('old_photo').value = photo;
+            
+            // Show current photo
+            const photoPreview = document.getElementById('current_photo_preview');
+            if (photo) {
+                photoPreview.innerHTML = '<img src="uploads/employee/' + photo + '" alt="Current Photo" class="w-20 h-20 object-cover rounded border">';
+            } else {
+                photoPreview.innerHTML = '<p class="text-sm text-slate-500">No photo uploaded</p>';
+            }
+            
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+        
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
         }
 
         // Delete employee
         function deleteEmployee(id) {
-            if (confirm('Are you sure you want to delete this employee?')) {
-                alert('Employee deleted successfully!');
-                // In real app, delete from table and refresh
+            if (confirm('Are you sure you want to delete this employee? This will also delete their photo.')) {
+                document.getElementById('delete_employee_id').value = id;
+                document.getElementById('deleteForm').submit();
             }
         }
 
         // Export PDF
         function exportPDF() {
-            alert('Exporting to PDF...\nIn production, this would generate a PDF report.');
+            window.open('export-employee-pdf.php', '_blank');
         }
 
         // Export Excel
         function exportExcel() {
-            alert('Exporting to Excel...\nIn production, this would generate an Excel file.');
+            window.open('export-employee-excel.php', '_blank');
         }
 
         // Change entries per page
-        function changeEntries() {
-            const entries = document.getElementById('entriesPerPage').value;
-            alert('Showing ' + entries + ' entries per page\n(In production, this would reload the table)');
+        function changeEntries(perPage) {
+            window.location.href = '?per_page=' + perPage + '&page=1';
         }
 
         // Search table
@@ -558,7 +687,8 @@ $station_name = getStationName($_SESSION['station_id']);
 
         // Go to page
         function goToPage(page) {
-            alert('Going to page ' + page + '\n(In production, this would load page ' + page + ' data)');
+            const perPage = document.getElementById('entriesPerPage').value;
+            window.location.href = '?per_page=' + perPage + '&page=' + page;
         }
 
         // Mobile Sidebar Toggle

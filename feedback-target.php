@@ -16,6 +16,7 @@ checkLogin();
 
 // Now fetch station name
 $station_name = getStationName($_SESSION['station_id']);
+$station_id = $_SESSION['station_id'];
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
@@ -29,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $no_non_ac_coaches = $_POST['no_non_ac_coach'] ?? [];
     $feed_per_non_ac_coaches = $_POST['feed_per_non_ac_coach'] ?? [];
     $feedback_ttes = $_POST['feedback_tte'] ?? [];
-    $stations = $_POST['station'] ?? [];
     
     // Loop through each row and insert
     foreach ($train_numbers as $index => $train_no) {
@@ -42,14 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $no_non_ac_coach = $no_non_ac_coaches[$index] ?? 0;
         $feed_per_non_ac_coach = $feed_per_non_ac_coaches[$index] ?? 0;
         $feedback_tte = $feedback_ttes[$index] ?? 0;
-        $station = $stations[$index] ?? '';
         
-        // Prepare SQL statement
+        // Prepare SQL statement - use station_id from session
         $sql = "INSERT INTO base_fb_target (train_no, no_ac_coach, feed_per_ac_coach, no_non_ac_coach, feed_per_non_ac_coach, feedback_tte, station, created_at, updated_at) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
         
         $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param("siiiiss", $train_no, $no_ac_coach, $feed_per_ac_coach, $no_non_ac_coach, $feed_per_non_ac_coach, $feedback_tte, $station);
+        $stmt->bind_param("siiiisi", $train_no, $no_ac_coach, $feed_per_ac_coach, $no_non_ac_coach, $feed_per_non_ac_coach, $feedback_tte, $station_id);
         
         if (!$stmt->execute()) {
             $success = false;
@@ -60,8 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
     
     if ($success && empty($errors)) {
-        $_SESSION['success_message'] = "Feedback targets added successfully!";
-        header("Location: feedback-target.php");
+        $_SESSION['success_msg'] = "Feedback targets added successfully!";
+        header("Location: view-feedback-target.php");
         exit();
     }
 }
@@ -247,7 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                                     <td><input type="number" name="no_non_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
                                     <td><input type="number" name="feed_per_non_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
                                     <td><input type="number" name="feedback_tte[]" class="form-input" placeholder="0" min="0" required></td>
-                                    <td><input type="text" name="station[]" class="form-input" placeholder="Station" value="<?php echo htmlspecialchars($station_name); ?>"></td>
+                                    <td><input type="text" class="form-input" placeholder="Station" value="<?php echo htmlspecialchars($station_name); ?>" readonly></td>
                                     <td>
                                         <button type="button" class="btn-remove" onclick="removeRow(this)">
                                             <i class="fas fa-trash"></i> Remove
@@ -294,7 +293,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                 <td><input type="number" name="no_non_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
                 <td><input type="number" name="feed_per_non_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
                 <td><input type="number" name="feedback_tte[]" class="form-input" placeholder="0" min="0" required></td>
-                <td><input type="text" name="station[]" class="form-input" placeholder="Station" value="${stationName}"></td>
+                <td><input type="text" class="form-input" placeholder="Station" value="${stationName}" readonly></td>
                 <td>
                     <button type="button" class="btn-remove" onclick="removeRow(this)">
                         <i class="fas fa-trash"></i> Remove

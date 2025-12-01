@@ -52,21 +52,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
               // if $r_name is "Round Wise Summary", insert round_wise_summary.php link
               // elseif $r_name is "Photo Report", insert photo_report.php link
-              // elseif $r_name is "Photo Report Time Slot", insert photo_report_time_slot.php link
-              // elseif $r_name is "Attendance Report", insert attendance_report.php link
+              // elseif $r_name is "Photo Report Time Slot", insert photo_report.php link
+              // elseif $r_name is "Attendance Report", insert view-attendance.php link
 
               if ($r_name === 'Round Wise Summary') {
                 $empty_link = 'round_wise_summary.php';
               } elseif ($r_name === 'Photo Report') {
-                $empty_link = 'photo_report.php';
+                $empty_link = 'photo_report_before_after.php';
               } elseif ($r_name === 'Photo Report Time Slot') {
-                $empty_link = 'photo_report_time_slot.php';
+                $empty_link = 'photo_report.php';
               } elseif ($r_name === 'Attendance Report') {
-                $empty_link = 'attendance_report.php';
+                $empty_link = 'view-no-photo-attendance.php';
               } elseif ($r_name === 'Attendance Photo Report') {
-                $empty_link = 'attendance_photo_report.php';
+                $empty_link = 'view-attendance.php';
               } elseif ($r_name === 'Time Interval Attendance') {
-                $empty_link = 'time_interval_attendance.php';
+                $empty_link = 'attendance-report-row-wise.php';
               } else {
                 $empty_link = '';
               }

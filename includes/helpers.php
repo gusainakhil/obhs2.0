@@ -79,6 +79,57 @@ function getStationName($station_id)
 }
 
 
+function feedback_count()
+{
+    global $mysqli;
+
+    // Ensure session started
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $station_id = $_SESSION['station_id'] ?? null;
+    if (!$station_id) {
+        return ['today' => 0, 'month' => 0];
+    }
+
+    $counts = ['today' => 0, 'month' => 0];
+
+    // Count distinct passengers who gave feedback today
+    $sqlToday = "SELECT COUNT(DISTINCT p.id) AS total FROM OBHS_feedback f
+                 JOIN OBHS_passenger p ON p.id = f.passenger_id
+                 WHERE DATE(p.created) = CURDATE() AND p.station_id = ?";
+    $stmt = $mysqli->prepare($sqlToday);
+    if ($stmt) {
+        $stmt->bind_param("i", $station_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $row = $res->fetch_assoc();
+        $counts['today'] = (int) ($row['total'] ?? 0);
+        $stmt->close();
+    }
+
+    // Count distinct passengers who gave feedback in the current month
+    $sqlMonth = "SELECT COUNT(DISTINCT p.id) AS total FROM OBHS_feedback f
+                 JOIN OBHS_passenger p ON p.id = f.passenger_id
+                 WHERE DATE_FORMAT(p.created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
+                   AND p.station_id = ?";
+    $stmt2 = $mysqli->prepare($sqlMonth);
+    if ($stmt2) {
+        $stmt2->bind_param("i", $station_id);
+        $stmt2->execute();
+        $res2 = $stmt2->get_result();
+        $row2 = $res2->fetch_assoc();
+        $counts['month'] = (int) ($row2['total'] ?? 0);
+        $stmt2->close();
+    }
+
+    return $counts;
+}
+
+
+
+
 
 function get_coach_count($train_no)
 {

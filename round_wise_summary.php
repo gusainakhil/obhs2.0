@@ -170,7 +170,7 @@ $station_name = getStationName($_SESSION['station_id']);
 
 
             } else {
-                echo '<p> no data is found </p>';
+                echo '<p>  </p>';
                 exit();
 
             }
