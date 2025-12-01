@@ -2,8 +2,7 @@
 include 'includes/helpers.php';
 session_start();
  $station_name = getStationName($_SESSION['station_id']); ?>
-<?php http://obhs.test/employee-card.php?passenger_id=mRPwj4db9O8wJjZKAfcyGGjhCyQ45vWc&station_id=3&train_no=22875&coach_no=C1&phone=918889563123&pnr_number=6657691634&name=Ramana%20kumar&seat_no=21&grade=A&date_from=2025-09-01&date_to=2025-09-04
-// 
+<?php 
 $passenger_id = isset($_GET['passenger_id']) ? $_GET['passenger_id'] : '';
 $station_id = isset($_GET['station_id']) ? $_GET['station_id'] : '';
 $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : '';
