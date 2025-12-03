@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $end_date = $_POST['end_date'] ?? null;
   $mobile = trim($_POST['mobile'] ?? '');
   $email = trim($_POST['email'] ?? '');
+  $pnr = isset($_POST['pnr']) ? (int) $_POST['pnr'] : 1; // default to 1 (off)
   $reports = $_POST['reports'] ?? [];
   $eng_questions = $_POST['eng_question'] ?? [];
   $hin_questions = $_POST['hin_question'] ?? [];
@@ -34,9 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hashed = password_hash($password, PASSWORD_DEFAULT);
     $type = 2; // organisation
 
-    $insert_user_sql = "INSERT INTO `OBHS_users` (`organisation_name`, `username`, `mobile`, `email`, `station_id`, `password`, `start_date`, `end_date`, `type`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $insert_user_sql = "INSERT INTO `OBHS_users` (`organisation_name`, `username`, `mobile`, `email`, `station_id`, `password`, `start_date`, `end_date`, `type`, `PNR`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     if ($stmt = mysqli_prepare($conn, $insert_user_sql)) {
-      mysqli_stmt_bind_param($stmt, 'ssssisssi', $organisation_name, $username, $mobile, $email, $station_id, $hashed, $start_date, $end_date, $type);
+      mysqli_stmt_bind_param($stmt, 'ssssisssii', $organisation_name, $username, $mobile, $email, $station_id, $hashed, $start_date, $end_date, $type, $pnr);
       if (mysqli_stmt_execute($stmt)) {
         $new_user_id = mysqli_insert_id($conn);
         mysqli_stmt_close($stmt);
@@ -262,7 +263,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                     <div class="row g-3 mb-4">
-                      <div class="col-md-12">
+                     
+                      <div class="col-md-6">
                         <label class="form-label">Type of Reports</label>
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" name="reports[]" value="Round Wise Summary"
@@ -304,6 +306,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             Attendance Report
                           </label>
                         </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="pnr" class="form-label">PNR Functionality</label>
+                        <!-- default = off (1). If user turns it ON the checkbox sends 0 -->
+                        <input type="hidden" name="pnr" value="1" />
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="pnr" name="pnr" value="0">
+                          <label class="form-check-label" for="pnr">On / Off </label>
+                        </div>
+                        <p class="text-danger small mt-2">NOTE : If PNR Functionality is ON, User will be able to see PNR related data.</p>
+                        <p class="text-danger small mt-2">NOTE : After Submitting the form, please update Marks calculation accordingly.</p>
                       </div>
                     </div>
 

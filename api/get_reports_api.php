@@ -19,7 +19,9 @@ require_once "../includes/connection.php";
 $response = [
     "status" => false,
     "message" => "",
-    "data" => []
+    "data" => [],
+    "pnr" => [],
+    "station_url" => []   // 🔹 New Station URL array
 ];
 
 // Allow only POST
@@ -40,12 +42,19 @@ if ($user_id === "" || !is_numeric($user_id)) {
     exit;
 }
 
-// ******** FETCH MENU / REPORTS ********
+// ******** FETCH REPORTS + USERS + STATION URL ********
 $sql = "
-    SELECT reports_name, link 
-    FROM OBHS_reports 
-    WHERE user_id = ? 
-    ORDER BY id ASC
+    SELECT 
+        r.reports_name,
+        r.link,
+        u.PNR,
+        u.station_id,
+        s.url AS station_url
+    FROM OBHS_reports AS r
+    LEFT JOIN OBHS_users AS u ON r.user_id = u.user_id
+    LEFT JOIN OBHS_station AS s ON u.station_id = s.station_id
+    WHERE r.user_id = ?
+    ORDER BY r.id ASC
 ";
 
 $stmt = $mysqli->prepare($sql);
@@ -56,20 +65,40 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
 
     $reports = [];
+    $pnr = "";
+    $station_url = "";
 
     while ($row = $result->fetch_assoc()) {
+
+        // Reports list
         $reports[] = [
             "reports_name" => $row['reports_name'],
             "link" => $row['link']
         ];
+
+        // PNR
+        $pnr = $row["PNR"];
+
+        // Station URL
+        $station_url = $row["station_url"];
     }
 
     $response["status"] = true;
-    $response["message"] = "Reports fetched successfully";
+    $response["message"] = "Data fetched successfully";
     $response["data"] = $reports;
 
+    // Separate PNR array
+    $response["pnr"] = [
+        "PNR" => $pnr
+    ];
+
+    // Separate Station URL array
+    $response["station_url"] = [
+        "url" => $station_url
+    ];
+
 } else {
-    $response["message"] = "No reports found!";
+    $response["message"] = "No data found!";
 }
 
 $stmt->close();

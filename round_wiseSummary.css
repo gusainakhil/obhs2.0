@@ -148,7 +148,7 @@
         }
 
         .report-table thead th:first-child {
-            background: #0f766e;
+     
             position: sticky;
             left: 0;
             z-index: 10;
