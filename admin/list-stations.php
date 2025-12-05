@@ -113,13 +113,14 @@ if (!isset($_SESSION['user_id'])) {
                           <th>Zone Name</th>
                           <th>Division Name</th>
                           <th>Station Name</th>
+                          <th>Shift server</th>
                           <th style="width: 80px">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         <?php
                         // Fetch stations joined with zone and division names
-                        $stations_sql = "SELECT s.station_id, s.Zone_id, s.Division_id, s.station_name, s.created_at, 
+                        $stations_sql = "SELECT s.station_id, s.Zone_id, s.Division_id, s.station_name, s.url, s.created_at, 
                           z.name AS zone_name, d.name AS division_name
                           FROM `OBHS_station` s
                           LEFT JOIN `OBHS_zones` z ON s.Zone_id = z.id
@@ -136,6 +137,17 @@ if (!isset($_SESSION['user_id'])) {
                           <td><?php echo htmlspecialchars($row['zone_name'] ?? ''); ?></td>
                           <td><?php echo htmlspecialchars($row['division_name'] ?? ''); ?></td>
                           <td><?php echo htmlspecialchars($row['station_name']); ?></td>
+                          <?php
+                          $url = isset($row['url']) ? (int)$row['url'] : null;
+                          $station_id = (int)$row['station_id'];
+                          if ($url === 0) {
+                            echo '<td><button type="button" class="btn btn-sm toggle-server-btn" title="Toggle server" data-id="'.$station_id.'" data-server="0"><span class="badge bg-danger">server 1</span></button></td>';
+                          } elseif ($url === 1) {
+                            echo '<td><button type="button" class="btn btn-sm toggle-server-btn" title="Toggle server" data-id="'.$station_id.'" data-server="1"><span class="badge bg-success">server 2</span></button></td>';
+                          } else {
+                            echo '<td>' . htmlspecialchars($row['url'] ?? '') . '</td>';
+                          }
+                          ?>
                        
                           <td>
                             <button type="button" class="btn btn-sm btn-primary edit-station-btn" title="Edit"
@@ -156,6 +168,7 @@ if (!isset($_SESSION['user_id'])) {
                         }
                         ?>
                       </tbody>
+                     
                     </table>
                   </div>
                   <!-- /.card-body -->
@@ -216,6 +229,34 @@ if (!isset($_SESSION['user_id'])) {
       });
     </script>
     <!-- Edit Station Modal -->
+    <!-- Toggle Server Modal -->
+    <div class="modal fade" id="toggleServerModal" tabindex="-1" aria-labelledby="toggleServerLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="toggleServerLabel">Toggle Shift Server</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="toggleServerAlert" class="alert d-none" role="alert"></div>
+            <form id="toggleServerForm">
+              <input type="hidden" name="station_id" id="toggleStationId" />
+              <div class="mb-3">
+                <label for="toggleServerSelect" class="form-label">Select server</label>
+                <select id="toggleServerSelect" name="server" class="form-select">
+                  <option value="0">server 1</option>
+                  <option value="1">server 2</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" id="saveToggleServerBtn" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="modal fade" id="editStationModal" tabindex="-1" aria-labelledby="editStationLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -318,6 +359,73 @@ if (!isset($_SESSION['user_id'])) {
           });
         }
       })();
+      
+        // Toggle server button handling
+        (function () {
+          const toggleButtons = document.querySelectorAll('.toggle-server-btn');
+          const toggleModalEl = document.getElementById('toggleServerModal');
+          let toggleModal;
+          if (toggleModalEl) toggleModal = new bootstrap.Modal(toggleModalEl);
+
+          toggleButtons.forEach(btn => {
+            btn.addEventListener('click', function () {
+              const id = this.dataset.id;
+              const server = this.dataset.server;
+              document.getElementById('toggleStationId').value = id;
+              document.getElementById('toggleServerSelect').value = server;
+              const alertEl = document.getElementById('toggleServerAlert');
+              alertEl.className = 'alert d-none';
+              alertEl.textContent = '';
+              if (toggleModal) toggleModal.show();
+            });
+          });
+
+          const saveToggleBtn = document.getElementById('saveToggleServerBtn');
+          if (saveToggleBtn) {
+            saveToggleBtn.addEventListener('click', function () {
+              const stationId = document.getElementById('toggleStationId').value;
+              const serverVal = document.getElementById('toggleServerSelect').value;
+              const alertEl = document.getElementById('toggleServerAlert');
+
+              saveToggleBtn.disabled = true;
+              fetch('toggle-server.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ station_id: stationId, server: serverVal })
+              })
+              .then(r => {
+                const ct = r.headers.get('content-type') || '';
+                if (r.ok && ct.includes('application/json')) return r.json();
+                return r.text().then(text => { throw new Error(text || 'Server error'); });
+              })
+              .then(data => {
+                if (data.success) {
+                  // update the button in the table row
+                  const btn = document.querySelector('.toggle-server-btn[data-id="' + stationId + '"]');
+                  if (btn) {
+                    const badge = btn.querySelector('.badge');
+                    // update data-server and badge text/color
+                    btn.setAttribute('data-server', serverVal);
+                    if (serverVal === '0' || serverVal === 0) {
+                      if (badge) { badge.className = 'badge bg-danger'; badge.textContent = 'server 1'; }
+                    } else {
+                      if (badge) { badge.className = 'badge bg-success'; badge.textContent = 'server 2'; }
+                    }
+                  }
+                  if (toggleModal) toggleModal.hide();
+                } else {
+                  alertEl.className = 'alert alert-danger';
+                  alertEl.textContent = data.message || 'Update failed';
+                }
+              })
+              .catch(err => {
+                alertEl.className = 'alert alert-danger';
+                alertEl.textContent = 'Error: ' + (err.message || err);
+              })
+              .finally(() => { saveToggleBtn.disabled = false; });
+            });
+          }
+        })();
     </script>
     <!--end::OverlayScrollbars Configure-->
     <!--end::Script-->
