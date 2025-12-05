@@ -1,8 +1,8 @@
 <?php
 include 'includes/helpers.php';
 session_start();
- $station_name = getStationName($_SESSION['station_id']); ?>
-<?php 
+$station_name = getStationName($_SESSION['station_id']); ?>
+<?php
 $passenger_id = isset($_GET['passenger_id']) ? $_GET['passenger_id'] : '';
 $station_id = isset($_GET['station_id']) ? $_GET['station_id'] : '';
 $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : '';
@@ -18,10 +18,11 @@ $name = isset($_GET['name']) ? $_GET['name'] : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($name." - ".$passenger_id); ?></title>
+    <title><?php echo htmlspecialchars($name . " - " . $passenger_id); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -36,7 +37,7 @@ $name = isset($_GET['name']) ? $_GET['name'] : '';
             background: white;
             border: 2px solid #000;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin:  auto;
+            margin: auto;
         }
 
         .card-header {
@@ -61,7 +62,7 @@ $name = isset($_GET['name']) ? $_GET['name'] : '';
         .employee-info {
             display: flex;
             gap: 30px;
-         
+
         }
 
         .employee-photo-container {
@@ -104,7 +105,7 @@ $name = isset($_GET['name']) ? $_GET['name'] : '';
 
         .greeting-text {
             font-size: 13px;
-        
+
             color: #000;
             margin-bottom: 10px;
             text-align: justify;
@@ -192,10 +193,11 @@ $name = isset($_GET['name']) ? $_GET['name'] : '';
             body {
                 background: white;
             }
-             @page {
-      size: A4 ;
-      margin: 0;
-   }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
 
             .card-footer,
             .no-print {
@@ -227,7 +229,11 @@ $name = isset($_GET['name']) ? $_GET['name'] : '';
         <div class="card-body">
             <div class="greeting-text">
                 <strong>Dear Passenger, <?php echo $name; ?></strong><br><br>
-                Our endeavor is to provide you the most hygienic On Board Housekeeping Services. Services during 5:00 to 22:00 hrs Feedback: Passengers are requested to give feedback regarding services provided by OBHS staff, in the format given below on your mobile. Based on your Feedback, payment to the contractor will be made. It will help us to serve you better. Kindly spare a few minutes and rate the areas as given in the table below:
+                Our endeavor is to provide you the most hygienic On Board Housekeeping Services. Services during 5:00 to
+                22:00 hrs Feedback: Passengers are requested to give feedback regarding services provided by OBHS staff,
+                in the format given below on your mobile. Based on your Feedback, payment to the contractor will be
+                made. It will help us to serve you better. Kindly spare a few minutes and rate the areas as given in the
+                table below:
             </div>
             <div class="employee-info">
                 <div class="row" style=" margin-bottom:15px;">
@@ -253,61 +259,95 @@ $name = isset($_GET['name']) ? $_GET['name'] : '';
                 </div>
             </div>
 
-            <!-- Service Areas Table -->
+            <?php
+            // 1. Get Marking Columns (Excellent, Very Good, Good, Poor...)
+            $marking_data = get_marking_data($_SESSION['station_id']);
+
+
+            // 2. Get Feedback + Questions
+            $sql = "SELECT 
+            f.feed_param,
+            f.value,
+            f.passenger_id,
+            f.super_name,
+            q.id AS question_id,
+            q.eng_question,
+            q.hin_question,
+            q.type,
+            q.station_id
+        FROM OBHS_feedback AS f
+        JOIN OBHS_questions AS q ON f.feed_param = q.id
+        WHERE f.passenger_id = ?";
+
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("s", $passenger_id);
+            $stmt->execute();
+            $feedback_result = $stmt->get_result();
+
+            // Map question_id → feedback_value
+            $feedback = [];
+            while ($row = $feedback_result->fetch_assoc()) {
+                $feedback[$row['question_id']] = $row['value'];
+            }
+            ?>
+
             <table class="service-table">
                 <thead>
                     <tr>
-                        <th style="text-align: left; width: 50%;"><?php echo $station_name ?>– Areas of Cleaning / Services</th>
-                        <?php $marking_data = get_marking_data($_SESSION['station_id']);
-                if ($marking_data) {
-                    {
-                        foreach ($marking_data as $data) {
-                            echo '<th class="badge badge-' . strtolower(preg_replace('/\s+/', '', trim($data['category']))) . ' mr-2">' . htmlspecialchars($data['category']) . '</span>';
-                        }
-                    }
-                }
-                ?>
-                        
+                        <th style="text-align:left; width:50%;">
+                            <?php echo $station_name; ?> – Areas of Cleaning / Services
+                        </th>
+
+                        <!-- Dynamic column headings -->
+                        <?php foreach ($marking_data as $mark): ?>
+                            <th><?php echo htmlspecialchars($mark['category']); ?></th>
+                        <?php endforeach; ?>
                     </tr>
                 </thead>
+
                 <tbody>
-                    <tr>
-                        <td style="text-align: left;">Cleaning of toilets (including toilet floor, commode pan, wall panels, shelf, mirror, wash basin, disinfection, and provision of deodorant, etc.)</td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                        <td class="rating-cell"><span class="checkmark">✔</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Cleaning of passenger compartment (including cleaning of passenger aisle, vestibule area, Doorway area and doorway wash basin, spraying of air freshener and cleaning of dust bin).</td>
-                        <td class="rating-cell"><span class="checkmark">✔</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Collection of garbage from the coach compartments and clearance of dustbins.</td>
-                        <td class="rating-cell"><span class="checkmark">✔</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Spraying of Mosquito/Cockroach/ Fly repellent and providing Glue Board whenever required or on demand by passengers.</td>
-                        <td class="rating-cell"><span class="checkmark">✔</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Behavior / Response of janitors/supervisor (including hygiene & cleanliness of janitor/Supervisor)</td>
-                        <td class="rating-cell"><span class="checkmark">✔</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                        <td class="rating-cell"><span class="crossmark">✖</span></td>
-                    </tr>
+
+                    <?php
+                    // Fetch all questions
+                    $q_sql = "SELECT q.id, q.eng_question ,hin_question
+          FROM OBHS_questions AS q
+          JOIN OBHS_feedback AS f ON f.feed_param = q.id
+          WHERE f.passenger_id = ?
+          ORDER BY q.id ASC";
+                    $q_stmt = $mysqli->prepare($q_sql);
+                    $q_stmt->bind_param("s", $passenger_id);
+                    $q_stmt->execute();
+                    $questions = $q_stmt->get_result();
+
+                    while ($q = $questions->fetch_assoc()):
+                        $qid = $q['id'];
+                        $user_value = isset($feedback[$qid]) ? $feedback[$qid] : null;
+                        ?>
+
+                        <tr>
+                            <td style="text-align:left;">
+                                <?php echo htmlspecialchars($q['eng_question'] . " " . $q['hin_question']); ?>
+                            </td>
+
+                            <!-- Dynamic tick/cross -->
+                            <?php foreach ($marking_data as $mark):
+
+                                // COMPARE by value
+                                if ($user_value == $mark['value']) {
+                                    $html = '<span class="checkmark">✔</span>';
+                                } else {
+                                    $html = '<span class="crossmark">✖</span>';
+                                }
+                                ?>
+                                <td class="rating-cell"><?php echo $html; ?></td>
+                            <?php endforeach; ?>
+
+                        </tr>
+
+                    <?php endwhile; ?>
                 </tbody>
             </table>
+
         </div>
 
         <!-- Card Footer -->
