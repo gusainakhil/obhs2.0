@@ -167,7 +167,7 @@
                   </li>
                 </ul>
               </li>
-               <li class="nav-item">
+               <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-megaphone"></i>  
                       Payment Alert
@@ -183,10 +183,10 @@
                   </li>
                 </ul>
                  
-              </li>
+              </li> -->
 
 
-               <li class="nav-item">
+               <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-megaphone"></i>  
                       Advertisment
@@ -209,7 +209,7 @@
                     </a>
                   </li>
                 </ul>
-              </li>
+              </li> -->
               
             </ul>
             <!--end::Sidebar Menu-->
