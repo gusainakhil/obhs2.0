@@ -287,15 +287,15 @@ $stmt->close();
                             <i class="fas fa-train text-white text-2xl"></i>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h3 class="text-xs font-bold text-gray-700 uppercase mb-2">TRAINS RUNNING</h3>
+                            <h3 class="text-xs font-bold text-gray-700 uppercase mb-2">TOTAL TRAINS RUNNING</h3>
                             <div class="flex items-center justify-between gap-2">
                                 <div class="text-center">
                                     <p class="text-[10px] text-gray-500 font-semibold mb-0.5">TODAY</p>
-                                    <p class="text-xl font-bold text-gray-900 leading-tight">28</p>
+                                    <p class="text-xl font-bold text-gray-900 leading-tight"><?php echo train_today_count($_SESSION['station_id']); ?></p>
                                 </div>
                                 <div class="text-center">
                                     <p class="text-[10px] text-gray-500 font-semibold mb-0.5">THIS MONTH</p>
-                                    <p class="text-xl font-bold text-gray-900 leading-tight">235</p>
+                                    <p class="text-xl font-bold text-gray-900 leading-tight"><?php echo train_month_count($_SESSION['station_id']); ?></p>
                                 </div>
                             </div>
                         </div>
@@ -308,22 +308,56 @@ $stmt->close();
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
                 <!-- Gross Happiness Index -->
-                <div class="bg-white rounded-xl shadow-md p-5">
+                <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200">
                     <div class="flex items-center space-x-2 mb-4">
-                        <i class="fas fa-smile text-slate-400"></i>
-                        <h2 class="text-sm font-semibold text-slate-700">Gross Happiness Index</h2>
+                        <i class="fas fa-crown text-indigo-500"></i>
+                        <h2 class="text-sm font-semibold text-slate-700">Subscription Status </h2>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-4"><?php echo $station_name; ?></h3>
+                    
                     <div class="space-y-3">
-                        <div class="bg-emerald-500 rounded-lg px-4 py-3 text-white">
-                            <p class="text-sm font-semibold">HIGH RATINGS (4034) :: 100.00%</p>
-                        </div>
-                        <div class="bg-red-500 rounded-lg px-4 py-3 text-white flex items-center">
-                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3">
-                                <i class="fas fa-frown text-red-500"></i>
+                        <?php
+                        $subscription_query = "SELECT start_date, end_date FROM OBHS_users WHERE user_id = ?";
+                        $stmt = $mysqli->prepare($subscription_query);
+                        $stmt->bind_param("i", $_SESSION['user_id']);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        
+                        if ($row = $result->fetch_assoc()) {
+                            $end_date = new DateTime($row['end_date']);
+                            $today = new DateTime();
+                            $days_left = $today->diff($end_date)->days;
+                            $is_active = $days_left > 0;
+                            $status_color = $days_left > 30 ? 'green' : ($days_left > 0 ? 'amber' : 'red');
+                            $status_text = $is_active ? 'ACTIVE' : 'EXPIRED';
+                        ?>
+                        
+                        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium">Status</p>
+                                <p class="text-lg font-bold text-<?php echo $status_color; ?>-600"><?php echo $status_text; ?></p>
                             </div>
-                            <p class="text-sm font-semibold">LOW RATINGS (0) :: 0.00%</p>
+                            <i class="fas fa-<?php echo $is_active ? 'check-circle' : 'exclamation-circle'; ?> text-2xl text-<?php echo $status_color; ?>-500"></i>
                         </div>
+                        
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                            <div class="p-2 bg-slate-50 rounded border border-slate-200">
+                                <p class="text-xs text-slate-500">Days Left</p>
+                                <p class="text-xl font-bold text-slate-800"><?php echo max(0, $days_left); ?></p>
+                            </div>
+                            <div class="p-2 bg-slate-50 rounded border border-slate-200">
+                                <p class="text-xs text-slate-500">Expires</p>
+                                <p class="font-semibold text-slate-800"><?php echo $end_date->format('M d'); ?></p>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full bg-slate-200 rounded-full h-1.5">
+                            <div class="bg-<?php echo $status_color; ?>-500 h-full rounded-full" style="width: <?php echo min(100, ($days_left / 365) * 100); ?>%"></div>
+                        </div>
+                        
+                        <?php
+                        }
+                        $stmt->close();
+                        ?>
                     </div>
                 </div>
 
@@ -331,15 +365,37 @@ $stmt->close();
                 <div class="bg-white rounded-xl shadow-md p-5">
                     <div class="flex items-center space-x-2 mb-4">
                         <i class="fas fa-star text-slate-400"></i>
-                        <h2 class="text-sm font-semibold text-slate-700">Latest Ratings</h2>
+                        <h2 class="text-sm font-semibold text-slate-700">Latest Feedback </h2>
                     </div>
-                    <div class="flex items-center justify-between py-8">
-                        <div>
-                            <p class="text-blue-500 font-semibold text-lg mb-1">Suresh :-</p>
-                            <p class="text-slate-600 text-sm">Score: <span
-                                    class="font-bold text-slate-800">100.00%</span></p>
+                    <div class="space-y-3 max-h-48 overflow-y-auto">
+                        <?php 
+                        $feedback_query = "SELECT train_no, name, Pnr_number, ph_number, created_at FROM OBHS_passenger WHERE station_id = ? ORDER BY created_at DESC LIMIT 5";
+                        $stmt = $mysqli->prepare($feedback_query);
+                        $stmt->bind_param("i", $station_id);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        
+                        if ($result->num_rows > 0):
+                            while ($row = $result->fetch_assoc()): 
+                        ?>
+                        <div class="flex items-center justify-between py-2 border-b border-slate-100">
+                            <div>
+                                <p class="text-blue-500 font-semibold text-sm mb-1"><?php echo htmlspecialchars($row['name']) . " - " . $row['ph_number'];  ?> </p>
+                                <p class="text-slate-600 text-xs">PNR: <span class="font-bold text-slate-800"><?php echo($row['Pnr_number'])." - ".($row['train_no']);  ?></span></p>
+                            </div>
+                            <div class="text-xs text-blue-400"><?php echo date('m/d/Y', strtotime($row['created_at'])); ?></div>
                         </div>
-                        <div class="text-xs text-blue-400">06/09/2025</div>
+                        <?php 
+                            endwhile;
+                        else:
+                        ?>
+                        <div class="text-center py-4 text-slate-500 text-sm">
+                            No feedback yet
+                        </div>
+                        <?php 
+                        endif;
+                        $stmt->close();
+                        ?>
                     </div>
                 </div>
 

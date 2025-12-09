@@ -78,6 +78,82 @@ function getStationName($station_id)
     }
 }
 
+/// feedback count function for today and month
+
+
+function train_today_count($station_id) {
+    global $mysqli;
+
+    $sql = "
+        SELECT COUNT(DISTINCT train_no) AS total_unique_trains
+        FROM (
+            SELECT train_no COLLATE utf8mb4_unicode_ci AS train_no
+            FROM base_attendance
+            WHERE station_id = $station_id
+              AND DATE(created_at) = CURDATE()
+
+            UNION
+
+            SELECT train_no COLLATE utf8mb4_unicode_ci AS train_no
+            FROM OBHS_passenger
+            WHERE station_id = $station_id
+              AND DATE(created_at) = CURDATE()
+
+            UNION
+
+            SELECT train_no COLLATE utf8mb4_unicode_ci AS train_no
+            FROM base_photo_report
+            WHERE station_id = $station_id
+              AND DATE(created_at) = CURDATE()
+        ) AS all_trains
+    ";
+
+    $result = mysqli_query($mysqli, $sql);
+    $row = mysqli_fetch_assoc($result);
+    return $row['total_unique_trains'];
+}
+
+
+
+function train_month_count($station_id) {
+    global $mysqli;
+
+    $sql = "
+        SELECT COUNT(DISTINCT train_no) AS total_unique_trains
+        FROM (
+            SELECT train_no COLLATE utf8mb4_unicode_ci AS train_no
+            FROM base_attendance
+            WHERE station_id = $station_id
+              AND MONTH(created_at) = MONTH(CURDATE())
+              AND YEAR(created_at) = YEAR(CURDATE())
+
+            UNION
+
+            SELECT train_no COLLATE utf8mb4_unicode_ci AS train_no
+            FROM OBHS_passenger
+            WHERE station_id = $station_id
+              AND MONTH(created_at) = MONTH(CURDATE())
+              AND YEAR(created_at) = YEAR(CURDATE())
+
+            UNION
+
+            SELECT train_no COLLATE utf8mb4_unicode_ci AS train_no
+            FROM base_photo_report
+            WHERE station_id = $station_id
+              AND MONTH(created_at) = MONTH(CURDATE())
+              AND YEAR(created_at) = YEAR(CURDATE())
+        ) AS all_trains
+    ";
+
+    $result = mysqli_query($mysqli, $sql);
+    $row = mysqli_fetch_assoc($result);
+    return $row['total_unique_trains'];
+}
+
+
+
+
+
 
 function feedback_count()
 {
