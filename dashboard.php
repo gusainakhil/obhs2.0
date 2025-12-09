@@ -452,6 +452,31 @@ $stmt->close();
                     <div id="feedbackChart" style="width: 100%; height: 200px;"></div>
                 </div>
 
+                <?php
+                // Fetch weekly feedback count for the last 7 days
+                $feedback_data = [];
+                foreach ($days as $day) {
+                    $feedback_data[$day] = 0;
+                }
+
+                // Get feedback count grouped by day of week for the last 7 days
+                $feedback_query = "SELECT DATE(created_at) as date, DAYNAME(created_at) as day_name, COUNT(*) as count 
+                                   FROM OBHS_passenger 
+                                   WHERE station_id = ? 
+                                   AND created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                                   GROUP BY DATE(created_at), DAYNAME(created_at)
+                                   ORDER BY date ASC";
+                $stmt = $mysqli->prepare($feedback_query);
+                $stmt->bind_param("s", $station_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                while ($row = $result->fetch_assoc()) {
+                    $day_short = substr($row['day_name'], 0, 3); // Get first 3 characters (Sun, Mon, etc.)
+                    $feedback_data[$day_short] = (int)$row['count'];
+                }
+                $stmt->close();
+                ?>
+
             </div>
 
             <!-- Footer -->
@@ -552,13 +577,13 @@ $stmt->close();
         function drawFeedbackChart() {
             var data = google.visualization.arrayToDataTable([
                 ['Day', 'Feedback Count'],
-                ['Sun', 600],
-                ['Mon', 705],
-                ['Tue', 560],
-                ['Wed', 760],
-                ['Thu', 520],
-                ['Fri', 655],
-                ['Sat', 465]
+                ['Sun', <?php echo $feedback_data['Sun']; ?>],
+                ['Mon', <?php echo $feedback_data['Mon']; ?>],
+                ['Tue', <?php echo $feedback_data['Tue']; ?>],
+                ['Wed', <?php echo $feedback_data['Wed']; ?>],
+                ['Thu', <?php echo $feedback_data['Thu']; ?>],
+                ['Fri', <?php echo $feedback_data['Fri']; ?>],
+                ['Sat', <?php echo $feedback_data['Sat']; ?>]
             ]);
 
             var options = {
