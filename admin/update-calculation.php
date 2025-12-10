@@ -137,10 +137,12 @@ session_start();
                                     <select class="form-select" name="value1_rating" required>
                                         <option value="">Select Rating...</option>
                                         <option value="Excellent">Excellent</option>
+                                        <option value="satisfactory">Satisfactory</option>
                                         <option value="Very Good">Very Good</option>
                                         <option value="Good">Good</option>
                                         <option value="Average">Average</option>
                                         <option value="Poor">Poor</option>
+                                        <option value="NOt_attended">Not attended</option>
                                     </select>
                                 </div>
                             </div>
@@ -158,10 +160,12 @@ session_start();
                                     <select class="form-select" name="value2_rating" required>
                                        <option value="">Select Rating...</option>
                                         <option value="Excellent">Excellent</option>
+                                        <option value="satisfactory">Satisfactory</option>
                                         <option value="Very Good">Very Good</option>
                                         <option value="Good">Good</option>
                                         <option value="Average">Average</option>
                                         <option value="Poor">Poor</option>
+                                        <option value="NOt_attended">Not attended</option>
                                     </select>
                                 </div>
                             </div>
@@ -176,13 +180,15 @@ session_start();
                                            min="0" max="100" placeholder="Enter marks (0-100)" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <select class="form-select" name="value3_rating" required>
+                                    <select class="form-select" name="value2_rating" required>
                                        <option value="">Select Rating...</option>
                                         <option value="Excellent">Excellent</option>
+                                        <option value="satisfactory">Satisfactory</option>
                                         <option value="Very Good">Very Good</option>
                                         <option value="Good">Good</option>
                                         <option value="Average">Average</option>
                                         <option value="Poor">Poor</option>
+                                        <option value="NOt_attended">Not attended</option>
                                     </select>
                                 </div>
                             </div>
@@ -197,13 +203,15 @@ session_start();
                                            min="0" max="100" placeholder="Enter marks (0-100)" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <select class="form-select" name="value4_rating" required>
+                                     <select class="form-select" name="value2_rating" required>
                                        <option value="">Select Rating...</option>
                                         <option value="Excellent">Excellent</option>
+                                        <option value="satisfactory">Satisfactory</option>
                                         <option value="Very Good">Very Good</option>
                                         <option value="Good">Good</option>
                                         <option value="Average">Average</option>
                                         <option value="Poor">Poor</option>
+                                        <option value="NOt_attended">Not attended</option>
                                     </select>
                                 </div>
                             </div>
@@ -218,13 +226,15 @@ session_start();
                                            min="0" max="100" placeholder="Enter marks (0-100)" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <select class="form-select" name="value5_rating" required>
-                                      <option value="">Select Rating...</option>
+                                    <select class="form-select" name="value2_rating" required>
+                                       <option value="">Select Rating...</option>
                                         <option value="Excellent">Excellent</option>
+                                        <option value="satisfactory">Satisfactory</option>
                                         <option value="Very Good">Very Good</option>
                                         <option value="Good">Good</option>
                                         <option value="Average">Average</option>
                                         <option value="Poor">Poor</option>
+                                        <option value="NOt_attended">Not attended</option>
                                     </select>
                                 </div>
                             </div>
