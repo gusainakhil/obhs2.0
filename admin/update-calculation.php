@@ -100,6 +100,18 @@ session_start();
                 </div>
                 <!--end::Card Header-->
                 <!--begin::Form-->
+                <?php if (isset($_SESSION['calc_flash_success'])): ?>
+                <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+                  <?php echo htmlspecialchars($_SESSION['calc_flash_success']); unset($_SESSION['calc_flash_success']); ?>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['calc_flash_error'])): ?>
+                <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+                  <?php echo htmlspecialchars($_SESSION['calc_flash_error']); unset($_SESSION['calc_flash_error']); ?>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <?php endif; ?>
 
                 <form method="POST" action="save-marking.php" class="needs-validation" novalidate>
                     <div class="card-body">
@@ -137,12 +149,12 @@ session_start();
                                     <select class="form-select" name="value1_rating" required>
                                         <option value="">Select Rating...</option>
                                         <option value="Excellent">Excellent</option>
-                                        <option value="satisfactory">Satisfactory</option>
+                                        <option value="Satisfactory">Satisfactory</option>
                                         <option value="Very Good">Very Good</option>
                                         <option value="Good">Good</option>
                                         <option value="Average">Average</option>
                                         <option value="Poor">Poor</option>
-                                        <option value="NOt_attended">Not attended</option>
+                                        <option value="Not Attended">Not Attended</option>
                                     </select>
                                 </div>
                             </div>
@@ -180,15 +192,15 @@ session_start();
                                            min="0" max="100" placeholder="Enter marks (0-100)" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <select class="form-select" name="value2_rating" required>
+                                    <select class="form-select" name="value3_rating" required>
                                        <option value="">Select Rating...</option>
                                         <option value="Excellent">Excellent</option>
-                                        <option value="satisfactory">Satisfactory</option>
+                                        <option value="Satisfactory">Satisfactory</option>
                                         <option value="Very Good">Very Good</option>
                                         <option value="Good">Good</option>
                                         <option value="Average">Average</option>
                                         <option value="Poor">Poor</option>
-                                        <option value="NOt_attended">Not attended</option>
+                                        <option value="Not Attended">Not Attended</option>
                                     </select>
                                 </div>
                             </div>
@@ -203,15 +215,15 @@ session_start();
                                            min="0" max="100" placeholder="Enter marks (0-100)" required>
                                 </div>
                                 <div class="col-md-6">
-                                     <select class="form-select" name="value2_rating" required>
+                                     <select class="form-select" name="value4_rating" required>
                                        <option value="">Select Rating...</option>
                                         <option value="Excellent">Excellent</option>
-                                        <option value="satisfactory">Satisfactory</option>
+                                        <option value="Satisfactory">Satisfactory</option>
                                         <option value="Very Good">Very Good</option>
                                         <option value="Good">Good</option>
                                         <option value="Average">Average</option>
                                         <option value="Poor">Poor</option>
-                                        <option value="NOt_attended">Not attended</option>
+                                        <option value="Not Attended">Not Attended</option>
                                     </select>
                                 </div>
                             </div>
@@ -226,7 +238,7 @@ session_start();
                                            min="0" max="100" placeholder="Enter marks (0-100)" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <select class="form-select" name="value2_rating" required>
+                                    <select class="form-select" name="value5_rating" required>
                                        <option value="">Select Rating...</option>
                                         <option value="Excellent">Excellent</option>
                                         <option value="Satisfactory">Satisfactory</option>
