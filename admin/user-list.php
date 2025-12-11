@@ -113,6 +113,7 @@ if (!isset($_SESSION['user_id'])) {
                           <th>Organisation Name</th>
                           <th>Start Date</th>
                           <th>End Date</th>
+                          <th>Info</th>
                           <th>Login</th>
                           <th>Status</th>
                           <th style="width: 100px">Actions</th>
@@ -141,6 +142,7 @@ if (!isset($_SESSION['user_id'])) {
                           <td><?php echo htmlspecialchars($user['organisation_name'] ?? ''); ?></td>
                           <td><?php echo htmlspecialchars($user['start_date'] ?? ''); ?></td>
                             <td><?php echo htmlspecialchars($user['end_date'] ?? ''); ?></td>
+                            <td><a href="user-info.php?id=<?php echo (int)$user['user_id']; ?>" class="btn btn-sm btn-primary" title="Info"><i class="bi bi-info-circle"></i></a></td>
                             <td><a href="../dashboard.php" class="btn btn-sm btn-primary">Login</a></td>
                             <td>
                             <button type="button" class="badge <?php echo $badgeClass; ?> border-0" 

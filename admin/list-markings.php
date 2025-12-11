@@ -44,7 +44,7 @@ if ($station_id > 0) {
           FROM OBHS_marking m
           LEFT JOIN OBHS_station s ON m.station_id = s.station_id
           LEFT JOIN OBHS_users u ON m.user_id = u.user_id"
-          . $where_sql . " ORDER BY m.created_at DESC";
+          . $where_sql . " ORDER BY   m.value DESC";
   $result = mysqli_query($conn, $sql);
 } else {
   // No station selected — prompt user to pick one and do not query the markings table
@@ -137,12 +137,13 @@ if ($station_id > 0) {
                         <th>Category</th>
                         <th>Value</th>
                         <th>Created At</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                     <?php
                     if ($show_select_prompt) {
-                      echo "<tr><td colspan=6 class=\"text-center\">Please select a station to view markings.</td></tr>";
+                      echo "<tr><td colspan=7 class=\"text-center\">Please select a station to view markings.</td></tr>";
                     } elseif ($result && mysqli_num_rows($result) > 0) {
                       while ($row = mysqli_fetch_assoc($result)) {
                         $id = (int)$row['id'];
@@ -158,10 +159,14 @@ if ($station_id > 0) {
                         echo "<td>{$category}</td>\n";
                         echo "<td>{$value}</td>\n";
                         echo "<td>{$created}</td>\n";
+                        echo "<td>
+                          <button type=\"button\" class=\"btn btn-sm btn-primary edit-marking-btn\" data-id=\"{$id}\" data-category=\"{$category}\" data-value=\"{$value}\" title=\"Edit\"><i class=\"bi bi-pencil\"></i></button>
+                          <button type=\"button\" class=\"btn btn-sm btn-danger delete-marking-btn\" data-id=\"{$id}\" data-category=\"{$category}\" title=\"Delete\"><i class=\"bi bi-trash\"></i></button>
+                        </td>\n";
                         echo "</tr>\n";
                       }
                     } else {
-                      echo "<tr><td colspan=6 class=\"text-center\">No marking records found for the selected filters.</td></tr>";
+                      echo "<tr><td colspan=7 class=\"text-center\">No marking records found for the selected filters.</td></tr>";
                     }
                     ?>
                     </tbody>
@@ -175,6 +180,58 @@ if ($station_id > 0) {
 
     </main>
     <?php include "footer.php" ?>
+  </div>
+
+  <!-- Edit Marking Modal -->
+  <div class="modal fade" id="editMarkingModal" tabindex="-1" aria-labelledby="editMarkingLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editMarkingLabel">Edit Marking Value</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="editMarkingAlert" class="alert d-none" role="alert"></div>
+          <form id="editMarkingForm">
+            <input type="hidden" name="marking_id" id="modalMarkingId" />
+            <div class="mb-3">
+              <label for="modalCategory" class="form-label">Category</label>
+              <input type="text" class="form-control" id="modalCategory" readonly />
+            </div>
+            <div class="mb-3">
+              <label for="modalValue" class="form-label">Value</label>
+              <input type="number" class="form-control" id="modalValue" name="value" required />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" id="saveMarkingBtn" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteMarkingModal" tabindex="-1" aria-labelledby="deleteMarkingLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteMarkingLabel">Delete Marking</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="deleteMarkingAlert" class="alert d-none" role="alert"></div>
+          <p>Are you sure you want to delete this marking?</p>
+          <p><strong>Category:</strong> <span id="deleteCategory"></span></p>
+          <input type="hidden" id="deleteMarkingId" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
@@ -225,6 +282,128 @@ if ($station_id > 0) {
             userEl.disabled = true;
           });
       });
+    })();
+
+    // Edit marking modal handling
+    (function () {
+      const editButtons = document.querySelectorAll('.edit-marking-btn');
+      const editModalEl = document.getElementById('editMarkingModal');
+      let editModal;
+      if (editModalEl) {
+        editModal = new bootstrap.Modal(editModalEl);
+      }
+
+      editButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+          const id = this.dataset.id;
+          const category = this.dataset.category || '';
+          const value = this.dataset.value || '';
+          document.getElementById('modalMarkingId').value = id;
+          document.getElementById('modalCategory').value = category;
+          document.getElementById('modalValue').value = value;
+          const alertEl = document.getElementById('editMarkingAlert');
+          alertEl.className = 'alert d-none';
+          alertEl.textContent = '';
+          if (editModal) editModal.show();
+        });
+      });
+
+      const saveBtn = document.getElementById('saveMarkingBtn');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', function () {
+          const markingId = document.getElementById('modalMarkingId').value;
+          const newValue = document.getElementById('modalValue').value.trim();
+          const alertEl = document.getElementById('editMarkingAlert');
+
+          if (!newValue) {
+            alertEl.className = 'alert alert-danger';
+            alertEl.textContent = 'Value cannot be empty.';
+            return;
+          }
+
+          saveBtn.disabled = true;
+          fetch('update-marking.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ marking_id: markingId, value: newValue })
+          })
+          .then(r => {
+            const ct = r.headers.get('content-type') || '';
+            if (r.ok && ct.includes('application/json')) return r.json();
+            return r.text().then(text => { throw new Error(text || 'Server error'); });
+          })
+          .then(data => {
+            if (data.success) {
+              // Reload the page to show updated value
+              window.location.reload();
+            } else {
+              alertEl.className = 'alert alert-danger';
+              alertEl.textContent = data.message || 'Update failed';
+            }
+          })
+          .catch(err => {
+            alertEl.className = 'alert alert-danger';
+            alertEl.textContent = 'Error: ' + (err.message || err);
+          })
+          .finally(() => { saveBtn.disabled = false; });
+        });
+      }
+    })();
+
+    // Delete marking modal handling
+    (function () {
+      const deleteButtons = document.querySelectorAll('.delete-marking-btn');
+      const deleteModalEl = document.getElementById('deleteMarkingModal');
+      let deleteModal;
+      if (deleteModalEl) {
+        deleteModal = new bootstrap.Modal(deleteModalEl);
+      }
+
+      deleteButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+          const id = this.dataset.id;
+          const category = this.dataset.category || '';
+          document.getElementById('deleteMarkingId').value = id;
+          document.getElementById('deleteCategory').textContent = category;
+          const alertEl = document.getElementById('deleteMarkingAlert');
+          alertEl.className = 'alert d-none';
+          alertEl.textContent = '';
+          if (deleteModal) deleteModal.show();
+        });
+      });
+
+      const confirmBtn = document.getElementById('confirmDeleteBtn');
+      if (confirmBtn) {
+        confirmBtn.addEventListener('click', function () {
+          const markingId = document.getElementById('deleteMarkingId').value;
+          const alertEl = document.getElementById('deleteMarkingAlert');
+
+          confirmBtn.disabled = true;
+          fetch('update-marking.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ marking_id: markingId, action: 'delete' })
+          })
+          .then(r => {
+            const ct = r.headers.get('content-type') || '';
+            if (r.ok && ct.includes('application/json')) return r.json();
+            return r.text().then(text => { throw new Error(text || 'Server error'); });
+          })
+          .then(data => {
+            if (data.success) {
+              window.location.reload();
+            } else {
+              alertEl.className = 'alert alert-danger';
+              alertEl.textContent = data.message || 'Delete failed';
+            }
+          })
+          .catch(err => {
+            alertEl.className = 'alert alert-danger';
+            alertEl.textContent = 'Error: ' + (err.message || err);
+          })
+          .finally(() => { confirmBtn.disabled = false; });
+        });
+      }
     })();
   </script>
 </body>
