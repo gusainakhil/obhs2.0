@@ -229,12 +229,12 @@ session_start();
                                     <select class="form-select" name="value2_rating" required>
                                        <option value="">Select Rating...</option>
                                         <option value="Excellent">Excellent</option>
-                                        <option value="satisfactory">Satisfactory</option>
+                                        <option value="Satisfactory">Satisfactory</option>
                                         <option value="Very Good">Very Good</option>
                                         <option value="Good">Good</option>
                                         <option value="Average">Average</option>
                                         <option value="Poor">Poor</option>
-                                        <option value="NOt_attended">Not attended</option>
+                                        <option value="Not Attended">Not Attended</option>
                                     </select>
                                 </div>
                             </div>

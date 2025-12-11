@@ -445,20 +445,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                     <input type="text" name="eng_question[]"
                                                                         class="form-control"
                                                                         placeholder="Enter question in English"
-                                                                        value="<?php echo htmlspecialchars($q['eng_question']); ?>"
-                                                                        required />
+                                                                        value="<?php echo htmlspecialchars($q['eng_question']); ?>" />
                                                                 </div>
                                                                 <div class="col-md-5">
                                                                     <label class="form-label">Question (Hindi)</label>
                                                                     <input type="text" name="hin_question[]"
                                                                         class="form-control"
                                                                         placeholder="प्रश्न हिंदी में दर्ज करें"
-                                                                        value="<?php echo htmlspecialchars($q['hin_question']); ?>"
-                                                                        required />
+                                                                        value="<?php echo htmlspecialchars($q['hin_question']); ?>" />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <label class="form-label">Type</label>
-                                                                    <select class="form-select" name="q_type[]" required>
+                                                                    <select class="form-select" name="q_type[]">
                                                                         <option value="">Select Type</option>
                                                                         <option value="AC" <?php if ($q['type'] === 'AC')
                                                                             echo 'selected'; ?>>AC</option>
@@ -479,17 +477,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                 <label class="form-label">Question (English)</label>
                                                                 <input type="text" name="eng_question[]"
                                                                     class="form-control"
-                                                                    placeholder="Enter question in English" required />
+                                                                    placeholder="Enter question in English" />
                                                             </div>
                                                             <div class="col-md-5">
                                                                 <label class="form-label">Question (Hindi)</label>
                                                                 <input type="text" name="hin_question[]"
                                                                     class="form-control"
-                                                                    placeholder="प्रश्न हिंदी में दर्ज करें" required />
+                                                                    placeholder="प्रश्न हिंदी में दर्ज करें" />
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <label class="form-label">Type</label>
-                                                                <select class="form-select" name="q_type[]" required>
+                                                                <select class="form-select" name="q_type[]">
                                                                     <option value="">Select Type</option>
                                                                     <option value="AC">AC</option>
                                                                     <option value="NON-AC">NON-AC</option>
@@ -528,8 +526,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         roundwisesummary.addEventListener('change', function () {
                                             if (this.checked) {
                                                 questionsSectionRoundWise.style.display = 'block';
+                                                // Enable required on questions
+                                                questionsContainer.querySelectorAll('input, select').forEach(el => el.required = true);
                                             } else {
                                                 questionsSectionRoundWise.style.display = 'none';
+                                                // Disable required on questions
+                                                questionsContainer.querySelectorAll('input, select').forEach(el => el.required = false);
                                             }
                                         });
 
@@ -540,15 +542,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="row g-3">
                               <div class="col-md-5">
                                 <label class="form-label">Question (English)</label>
-                                <input type="text" name="eng_question[]" class="form-control" placeholder="Enter question in English" required />
+                                <input type="text" name="eng_question[]" class="form-control" placeholder="Enter question in English" />
                               </div>
                               <div class="col-md-5">
                                 <label class="form-label">Question (Hindi)</label>
-                                <input type="text" name="hin_question[]" class="form-control" placeholder="प्रश्न हिंदी में दर्ज करें" required />
+                                <input type="text" name="hin_question[]" class="form-control" placeholder="प्रश्न हिंदी में दर्ज करें" />
                               </div>
                               <div class="col-md-2">
                                 <label class="form-label">Type</label>
-                                <select class="form-select" name="q_type[]" required>
+                                <select class="form-select" name="q_type[]">
                                   <option value="" selected disabled>Select Type</option>
                                   <option value="AC">AC</option>
                                   <option value="NON-AC">Non-AC</option>
