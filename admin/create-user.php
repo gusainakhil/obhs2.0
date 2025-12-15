@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Insert reports if any
         if (!empty($reports) && is_array($reports)) {
-          $insert_report_sql = "INSERT INTO `OBHS_reports` (`user_id`, `reports_name`, `link`) VALUES (?, ?, ?)";
+          $insert_report_sql = "INSERT INTO `OBHS_reports` (`user_id`, `reports_name`, `link` , `type` ,`station_id`) VALUES (?, ?, ? , ?, ?)";
           foreach ($reports as $r) {
             $r_name = trim($r);
             if ($r_name === '')
@@ -58,20 +58,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
               if ($r_name === 'Round Wise Summary') {
                 $empty_link = 'round_wise_summary.php';
+                $type='Feedback';
               } elseif ($r_name === 'Photo Report') {
                 $empty_link = 'photo_report_before_after.php';
+                $type='photo_report';
               } elseif ($r_name === 'Photo Report Time Slot') {
                 $empty_link = 'photo_report.php';
+                $type='photo_report';
+              } elseif ($r_name === 'Photo Report Coach Wise') {
+                $empty_link = 'photo_report_coach_wise.php';
+                $type='photo_report';
               } elseif ($r_name === 'Attendance Report') {
                 $empty_link = 'view-no-photo-attendance.php';
+                $type='Attendance';
               } elseif ($r_name === 'Attendance Photo Report') {
                 $empty_link = 'view-attendance.php';
+                $type='Attendance';
               } elseif ($r_name === 'Time Interval Attendance') {
                 $empty_link = 'attendance-report-row-wise.php';
+                $type='Attendance';
               } else {
                 $empty_link = '';
               }
-              mysqli_stmt_bind_param($rstmt, 'iss', $new_user_id, $r_name, $empty_link);
+              mysqli_stmt_bind_param($rstmt, 'isssi', $new_user_id, $r_name, $empty_link , $type, $station_id);
               mysqli_stmt_execute($rstmt);
               mysqli_stmt_close($rstmt);
             }
@@ -287,6 +296,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             Photo Report Time Slot
                           </label>
                         </div>
+                          <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="reports[]"
+                            value="Photo Report Coach Wise" id="photoReportTimeSlot">
+                          <label class="form-check-label" for="photoReportTimeSlot">
+                            Photo Report Coach Wise
+                          </label>
+                        </div>
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" name="reports[]" value="Attendance Photo Report" id="attendancePhotoReport">
                           <label class="form-check-label" for="attendancePhotoReport">
@@ -307,17 +323,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                           </label>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                        <div class="col-md-6">
                         <label for="pnr" class="form-label">PNR Functionality</label>
-                        <!-- default = off (1). If user turns it ON the checkbox sends 0 -->
-                        <input type="hidden" name="pnr" value="1" />
+                        <!-- default = on (1). If user turns it Off the checkbox sends 0 -->
+                        <input type="hidden" name="pnr" value="0" />
                         <div class="form-check form-switch mt-2">
-                          <input class="form-check-input" type="checkbox" id="pnr" name="pnr" value="0">
+                          <input class="form-check-input" type="checkbox" id="pnr" name="pnr" value="1" checked>
                           <label class="form-check-label" for="pnr">On / Off </label>
                         </div>
                         <p class="text-danger small mt-2">NOTE : If PNR Functionality is ON, User will be able to see PNR related data.</p>
-                        <p class="text-danger small mt-2">NOTE : After Submitting the form, please update Marks calculation accordingly.</p>
-                      </div>
+                        <p class="text-danger small mt-2">NOTE : After Submitting the form, please update Marks calculation if you select Round wise summary</p>
+                        </div>
                     </div>
 
                     <!-- Questions Section -->

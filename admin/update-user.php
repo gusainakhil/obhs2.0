@@ -90,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $end_date = $_POST['end_date'] ?? null;
     $mobile = trim($_POST['mobile'] ?? '');
     $email = trim($_POST['email'] ?? '');
+    $pnr = isset($_POST['pnr']) ? (int) $_POST['pnr'] : 0;
     $reports = $_POST['reports'] ?? [];
     $eng_questions = $_POST['eng_question'] ?? [];
     $hin_questions = $_POST['hin_question'] ?? [];
@@ -109,18 +110,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Build update SQL depending on whether password provided
         if ($password !== '') {
             $hashed = password_hash($password, PASSWORD_DEFAULT);
-            $update_sql = "UPDATE `OBHS_users` SET `organisation_name` = ?, `username` = ?, `mobile` = ?, `email` = ?, `station_id` = ?, `password` = ?, `start_date` = ?, `end_date` = ?, `type` = ? WHERE `user_id` = ?";
+            $update_sql = "UPDATE `OBHS_users` SET `organisation_name` = ?, `username` = ?, `mobile` = ?, `email` = ?, `station_id` = ?, `password` = ?, `start_date` = ?, `end_date` = ?, `type` = ?, `PNR` = ? WHERE `user_id` = ?";
             if ($ustmt = mysqli_prepare($conn, $update_sql)) {
-                mysqli_stmt_bind_param($ustmt, 'ssssisssii', $organisation_name, $username, $mobile, $email, $station_id, $hashed, $start_date, $end_date, $type, $user_id_to_update);
+                mysqli_stmt_bind_param($ustmt, 'ssssisssiii', $organisation_name, $username, $mobile, $email, $station_id, $hashed, $start_date, $end_date, $type, $pnr, $user_id_to_update);
                 $ok = mysqli_stmt_execute($ustmt);
                 mysqli_stmt_close($ustmt);
             } else {
                 $ok = false;
             }
         } else {
-            $update_sql = "UPDATE `OBHS_users` SET `organisation_name` = ?, `username` = ?, `mobile` = ?, `email` = ?, `station_id` = ?, `start_date` = ?, `end_date` = ?, `type` = ? WHERE `user_id` = ?";
+            $update_sql = "UPDATE `OBHS_users` SET `organisation_name` = ?, `username` = ?, `mobile` = ?, `email` = ?, `station_id` = ?, `start_date` = ?, `end_date` = ?, `type` = ?, `PNR` = ? WHERE `user_id` = ?";
             if ($ustmt = mysqli_prepare($conn, $update_sql)) {
-                mysqli_stmt_bind_param($ustmt, 'ssssissii', $organisation_name, $username, $mobile, $email, $station_id, $start_date, $end_date, $type, $user_id_to_update);
+                mysqli_stmt_bind_param($ustmt, 'ssssissiii', $organisation_name, $username, $mobile, $email, $station_id, $start_date, $end_date, $type, $pnr, $user_id_to_update);
                 $ok = mysqli_stmt_execute($ustmt);
                 mysqli_stmt_close($ustmt);
             } else {
@@ -138,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if (!empty($reports) && is_array($reports)) {
-                $insert_report_sql = "INSERT INTO `OBHS_reports` (`user_id`, `reports_name`, `link`) VALUES (?, ?, ?)";
+                $insert_report_sql = "INSERT INTO `OBHS_reports` (`user_id`, `reports_name`, `link`, `type`, `station_id`) VALUES (?, ?, ?, ?, ?)";
                 foreach ($reports as $r) {
                     $r_name = trim($r);
                     if ($r_name === '')
@@ -146,20 +147,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($rstmt = mysqli_prepare($conn, $insert_report_sql)) {
                         if ($r_name === 'Round Wise Summary') {
                             $link = 'round_wise_summary.php';
+                            $type='Feedback';
                         } elseif ($r_name === 'Photo Report') {
                             $link = 'photo_report_before_after.php';
+                            $type='photo_report';
                         } elseif ($r_name === 'Photo Report Time Slot') {
                             $link = 'photo_report.php';
+                            $type='photo_report';
+                        } elseif ($r_name === 'Photo Report Coach Wise') {
+                            $link = 'photo_report_coach_wise.php';
+                            $type='photo_report';  
                         } elseif ($r_name === 'Attendance Report') {
                             $link = 'view-no-photo-attendance.php';
+                            $type='Attendance';
                         } elseif ($r_name === 'Attendance Photo Report') {
                             $link = 'view-attendance.php';
+                            $type='Attendance';
                         } elseif ($r_name === 'Time Interval Attendance') {
                             $link = 'attendance-report-row-wise.php';
+                            $type='Attendance';
                         } else {
                             $link = '';
+                            $type='';
                         }
-                        mysqli_stmt_bind_param($rstmt, 'iss', $user_id_to_update, $r_name, $link);
+                        mysqli_stmt_bind_param($rstmt, 'isssi', $user_id_to_update, $r_name, $link, $type, $station_id);
                         mysqli_stmt_execute($rstmt);
                         mysqli_stmt_close($rstmt);
                     }
@@ -404,6 +415,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                         Photo Report Time Slot
                                                     </label>
                                                 </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="reports[]"
+                                                        value="Photo Report Coach Wise" id="photoReportCoachWise" <?php if (in_array('Photo Report Coach Wise', $existing_reports))
+                                                            echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="photoReportCoachWise">
+                                                        Photo Report Coach Wise
+                                                    </label>
+                                                </div>
                                                    <div class="form-check">
                                                        <input class="form-check-input" type="checkbox" name="reports[]"
                                                            value="Attendance Photo Report" id="attendancePhotoReport" <?php if (in_array('Attendance Photo Report', $existing_reports))
@@ -426,6 +445,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                             echo 'checked'; ?>>
                                                     <label class="form-check-label" for="attendancereport">
                                                         Attendance Report
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- update pnr functionality -->
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-12">
+                                                <label class="form-label">PNR Functionality</label>
+                                                <input type="hidden" name="pnr" value="0" />
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="pnr" value="1"
+                                                        id="pnr" <?php if (!empty($existing_user['PNR']) && $existing_user['PNR'] == 1) echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="pnr">
+                                                        On / Off
                                                     </label>
                                                 </div>
                                             </div>

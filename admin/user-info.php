@@ -149,6 +149,10 @@ $is_active = $end_date > $today;
                                                 <span class="info-label">Station:</span>
                                                 <span class="info-value"><?php echo htmlspecialchars($user['station_name'] ?? 'N/A'); ?></span>
                                             </div>
+                                             <div class="mb-3">
+                                                <span class="info-label">Login In Link:</span>
+                                                <span class="info-value"><a href="https://obhs.beatleanalytics.in/" target="_blank">https://obhs.beatleanalytics.in/</a></span>
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
@@ -163,8 +167,8 @@ $is_active = $end_date > $today;
                                                 <span class="info-label">PNR Functionality:</span>
                                                 <span class="info-value">
                                                     <?php 
-                                                    $pnr = isset($user['PNR']) ? (int)$user['PNR'] : 1;
-                                                    echo $pnr === 0 ? '<span class="badge bg-success">ON</span>' : '<span class="badge bg-secondary">OFF</span>'; 
+                                                    $pnr = isset($user['PNR']) ? (int)$user['PNR'] : 0;
+                                                    echo $pnr === 1 ? '<span class="badge bg-success">ON</span>' : '<span class="badge bg-secondary">OFF</span>'; 
                                                     ?>
                                                 </span>
                                             </div>
@@ -177,6 +181,11 @@ $is_active = $end_date > $today;
                                                     ?>
                                                 </span>
                                             </div>
+                                            <div class="mb-3">
+                                                <span class="info-label">Mobile:</span>
+                                                <span class="info-value"><?php echo htmlspecialchars($user['mobile'] ?? 'N/A'); ?></span>
+                                            </div>
+                                            
                                         </div>
                                     </div>
 
@@ -220,7 +229,7 @@ $is_active = $end_date > $today;
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Report Name</th>
-                                                        <th>Link</th>
+                                                        
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -228,7 +237,7 @@ $is_active = $end_date > $today;
                                                     <tr>
                                                         <td><?php echo $i++; ?></td>
                                                         <td><?php echo htmlspecialchars($report['reports_name']); ?></td>
-                                                        <td><?php echo htmlspecialchars($report['link'] ?: 'N/A'); ?></td>
+                                                        
                                                     </tr>
                                                     <?php endforeach; ?>
                                                 </tbody>
