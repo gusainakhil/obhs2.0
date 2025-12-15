@@ -77,6 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               } elseif ($r_name === 'Time Interval Attendance') {
                 $empty_link = 'attendance-report-row-wise.php';
                 $type='Attendance';
+              } elseif ($r_name === 'Daily Attendance Report') {
+                $empty_link = 'daily-attendance.php';
+                $type='Attendance';
               } else {
                 $empty_link = '';
               }
@@ -322,6 +325,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             Attendance Report
                           </label>
                         </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="reports[]" value="Daily Attendance Report"
+                            id="dailyAttendanceReport">
+                          <label class="form-check-label" for="dailyAttendanceReport">
+                            Daily Attendance Report
+                          </label>
+                        </div>
+
                       </div>
                         <div class="col-md-6">
                         <label for="pnr" class="form-label">PNR Functionality</label>
