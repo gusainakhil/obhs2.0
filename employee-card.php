@@ -277,7 +277,7 @@ $name = isset($_GET['name']) ? $_GET['name'] : '';
             q.station_id
         FROM OBHS_feedback AS f
         JOIN OBHS_questions AS q ON f.feed_param = q.id
-        WHERE f.passenger_id = ?";
+        WHERE f.passenger_id = ? order BY f.id ASC";
 
             $stmt = $mysqli->prepare($sql);
             $stmt->bind_param("s", $passenger_id);

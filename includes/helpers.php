@@ -535,7 +535,7 @@ function feedback_calculation_coach_wise_full($train_no, $date_from, $date_to, $
 function get_marking_data($station_id)
 {
     global $mysqli;
-    $sql = "SELECT category , value FROM OBHS_marking WHERE station_id = ?";
+    $sql = "SELECT category , value FROM OBHS_marking WHERE station_id = ? ORDER BY `value` DESC";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param("i", $station_id);
     $stmt->execute();
@@ -622,7 +622,7 @@ function get_passenger_details_data_coach_type_wise($train_no, $coach_type, $gra
                 p.grade,
                 f.feed_param,
                 SUM(f.value) AS total_feedback_sum,
-                GROUP_CONCAT(f.value ORDER BY f.id ASC SEPARATOR ', ') AS feedback_values
+                GROUP_CONCAT(f.value ORDER BY f.feed_param ASC SEPARATOR ', ') AS feedback_values
             FROM OBHS_passenger p
             JOIN OBHS_feedback f ON p.id = f.passenger_id
             WHERE p.train_no = ?
@@ -631,7 +631,7 @@ function get_passenger_details_data_coach_type_wise($train_no, $coach_type, $gra
               AND p.station_id = ?
               AND p.created BETWEEN ? AND ?
             GROUP BY p.id
-            ORDER BY f.feed_param ASC";
+            ORDER BY p.created asc";
 
     $stmt = $mysqli->prepare($sql);
 
