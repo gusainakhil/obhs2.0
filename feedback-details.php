@@ -173,7 +173,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
         .status-circle {
             width: 22px;
             height: 18px;
-            border-radius: 50%;
+            /* border-radius: 50%; */
             display: inline-block;
             text-align: center;
             line-height: 18px;
