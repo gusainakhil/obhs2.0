@@ -47,7 +47,7 @@ if ($editing_id > 0) {
     }
 
     // load questions
-    $q_sql = "SELECT `eng_question`, `hin_question`, `type` FROM `OBHS_questions` WHERE `user_id` = ? ORDER BY id ASC";
+    $q_sql = "SELECT `id`, `eng_question`, `hin_question`, `type` FROM `OBHS_questions` WHERE `user_id` = ? ORDER BY id ASC";
     if ($qstmt = mysqli_prepare($conn, $q_sql)) {
         mysqli_stmt_bind_param($qstmt, 'i', $editing_id);
         mysqli_stmt_execute($qstmt);
@@ -95,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $eng_questions = $_POST['eng_question'] ?? [];
     $hin_questions = $_POST['hin_question'] ?? [];
     $q_types = $_POST['q_type'] ?? [];
+    $q_ids = $_POST['q_id'] ?? [];
 
     // CSRF check
     if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
@@ -180,26 +181,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // replace questions
-            $delq = mysqli_prepare($conn, "DELETE FROM `OBHS_questions` WHERE `user_id` = ?");
-            if ($delq) {
-                mysqli_stmt_bind_param($delq, 'i', $user_id_to_update);
-                mysqli_stmt_execute($delq);
-                mysqli_stmt_close($delq);
-            }
-
+            // update existing and add new questions
             if (!empty($eng_questions) && is_array($eng_questions)) {
-                $insert_q_sql = "INSERT INTO `OBHS_questions` (`user_id`, `eng_question`, `hin_question`, `type`, `station_id`) VALUES (?, ?, ?, ?, ?)";
                 for ($i = 0; $i < count($eng_questions); $i++) {
                     $eng = trim($eng_questions[$i] ?? '');
                     $hin = trim($hin_questions[$i] ?? '');
                     $qt = trim($q_types[$i] ?? '');
+                    $q_id = isset($q_ids[$i]) ? (int)$q_ids[$i] : 0;
+                    
                     if ($eng === '' && $hin === '')
                         continue;
-                    if ($qstmt = mysqli_prepare($conn, $insert_q_sql)) {
-                        mysqli_stmt_bind_param($qstmt, 'isssi', $user_id_to_update, $eng, $hin, $qt , $station_id);
-                        mysqli_stmt_execute($qstmt);
-                        mysqli_stmt_close($qstmt);
+                    
+                    // If question ID exists, update the existing question
+                    if ($q_id > 0) {
+                        $update_q_sql = "UPDATE `OBHS_questions` SET `eng_question` = ?, `hin_question` = ?, `type` = ? WHERE `id` = ? AND `user_id` = ?";
+                        if ($qstmt = mysqli_prepare($conn, $update_q_sql)) {
+                            mysqli_stmt_bind_param($qstmt, 'sssii', $eng, $hin, $qt, $q_id, $user_id_to_update);
+                            mysqli_stmt_execute($qstmt);
+                            mysqli_stmt_close($qstmt);
+                        }
+                    } else {
+                        // Otherwise, insert as new question
+                        $insert_q_sql = "INSERT INTO `OBHS_questions` (`user_id`, `eng_question`, `hin_question`, `type`, `station_id`) VALUES (?, ?, ?, ?, ?)";
+                        if ($qstmt = mysqli_prepare($conn, $insert_q_sql)) {
+                            mysqli_stmt_bind_param($qstmt, 'isssi', $user_id_to_update, $eng, $hin, $qt , $station_id);
+                            mysqli_stmt_execute($qstmt);
+                            mysqli_stmt_close($qstmt);
+                        }
                     }
                 }
             }
@@ -481,8 +489,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             <h5 class="mb-3">Questions for Round Wise Summary</h5>
                                             <div id="questionsContainer">
                                                 <?php if (!empty($existing_questions)): ?>
+                                                    <h6 class="mb-3" style="color: #666;"><i class="bi bi-pencil-square"></i> Existing Questions (Editable)</h6>
                                                     <?php foreach ($existing_questions as $q): ?>
-                                                        <div class="question-item border rounded p-3 mb-3">
+                                                        <div class="question-item border rounded p-3 mb-3" style="background-color: #f0f7ff;">
                                                             <div class="row g-3">
                                                                 <div class="col-md-5">
                                                                     <label class="form-label">Question (English)</label>
@@ -490,6 +499,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                         class="form-control"
                                                                         placeholder="Enter question in English"
                                                                         value="<?php echo htmlspecialchars($q['eng_question']); ?>" />
+                                                                    <input type="hidden" name="q_id[]" value="<?php echo (int)$q['id']; ?>" />
                                                                 </div>
                                                                 <div class="col-md-5">
                                                                     <label class="form-label">Question (Hindi)</label>
@@ -509,12 +519,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <button type="button"
-                                                                class="btn btn-danger btn-sm mt-2 remove-question"><i
-                                                                    class="bi bi-trash"></i> Remove</button>
                                                         </div>
                                                     <?php endforeach; ?>
-                                                <?php else: ?>
+                                                    <hr class="my-4" />
+                                                    <h6 class="mb-3"><i class="bi bi-plus-circle-fill"></i> Add New Questions</h6>
+                                                <?php endif; ?>
+                                                <div id="newQuestionsContainer">
                                                     <div class="question-item border rounded p-3 mb-3">
                                                         <div class="row g-3">
                                                             <div class="col-md-5">
@@ -522,6 +532,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                 <input type="text" name="eng_question[]"
                                                                     class="form-control"
                                                                     placeholder="Enter question in English" />
+                                                                <input type="hidden" name="q_id[]" value="0" />
                                                             </div>
                                                             <div class="col-md-5">
                                                                 <label class="form-label">Question (Hindi)</label>
@@ -538,12 +549,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <button type="button"
-                                                            class="btn btn-danger btn-sm mt-2 remove-question"
-                                                            style="display:none;"><i class="bi bi-trash"></i>
-                                                            Remove</button>
                                                     </div>
-                                                <?php endif; ?>
+                                                </div>
                                             </div>
                                             <button type="button" class="btn btn-success btn-sm mb-4" id="addQuestion">
                                                 <i class="bi bi-plus-circle"></i> Add Question
@@ -559,34 +566,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <!--end::Footer-->
                                 </form>
 
-                                <script>
-                                    document.addEventListener('DOMContentLoaded', function () {
-                                        const questionsContainer = document.getElementById('questionsContainer');
-                                        const addQuestionBtn = document.getElementById('addQuestion');
-                                        const questionsSectionRoundWise = document.getElementById('questionsSectionRoundWise');
-                                        const roundwisesummary = document.getElementById('roundwisesummary');
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            const addQuestionBtn = document.getElementById('addQuestion');
+                                            const questionsSectionRoundWise = document.getElementById('questionsSectionRoundWise');
+                                            const roundwisesummary = document.getElementById('roundwisesummary');
 
-                                        // Show/hide questions section based on checkbox
-                                        roundwisesummary.addEventListener('change', function () {
-                                            if (this.checked) {
-                                                questionsSectionRoundWise.style.display = 'block';
-                                                // Enable required on questions
-                                                questionsContainer.querySelectorAll('input, select').forEach(el => el.required = true);
-                                            } else {
-                                                questionsSectionRoundWise.style.display = 'none';
-                                                // Disable required on questions
-                                                questionsContainer.querySelectorAll('input, select').forEach(el => el.required = false);
-                                            }
-                                        });
+                                            // Show/hide questions section based on checkbox
+                                            roundwisesummary.addEventListener('change', function () {
+                                                if (this.checked) {
+                                                    questionsSectionRoundWise.style.display = 'block';
+                                                    const newQuestionsContainer = document.getElementById('newQuestionsContainer');
+                                                    newQuestionsContainer.querySelectorAll('input, select').forEach(el => el.required = true);
+                                                } else {
+                                                    questionsSectionRoundWise.style.display = 'none';
+                                                    const newQuestionsContainer = document.getElementById('newQuestionsContainer');
+                                                    newQuestionsContainer.querySelectorAll('input, select').forEach(el => el.required = false);
+                                                }
+                                            });
 
-                                        addQuestionBtn.addEventListener('click', function () {
-                                            const questionItem = document.createElement('div');
-                                            questionItem.className = 'question-item border rounded p-3 mb-3';
-                                            questionItem.innerHTML = `
+                                            addQuestionBtn.addEventListener('click', function () {
+                                                const newQuestionsContainer = document.getElementById('newQuestionsContainer');
+                                                const questionItem = document.createElement('div');
+                                                questionItem.className = 'question-item border rounded p-3 mb-3';
+                                                questionItem.innerHTML = `
                             <div class="row g-3">
                               <div class="col-md-5">
                                 <label class="form-label">Question (English)</label>
                                 <input type="text" name="eng_question[]" class="form-control" placeholder="Enter question in English" />
+                                <input type="hidden" name="q_id[]" value="0" />
                               </div>
                               <div class="col-md-5">
                                 <label class="form-label">Question (Hindi)</label>
@@ -601,34 +609,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </select>
                               </div>
                             </div>
-                            <button type="button" class="btn btn-danger btn-sm mt-2 remove-question">
-                              <i class="bi bi-trash"></i> Remove
-                            </button>
                           `;
-                                            questionsContainer.appendChild(questionItem);
-                                            updateRemoveButtons();
-                                        });
-
-                                        questionsContainer.addEventListener('click', function (e) {
-                                            if (e.target.closest('.remove-question')) {
-                                                e.target.closest('.question-item').remove();
-                                                updateRemoveButtons();
-                                            }
-                                        });
-
-                                        function updateRemoveButtons() {
-                                            const items = questionsContainer.querySelectorAll('.question-item');
-                                            items.forEach((item, index) => {
-                                                const removeBtn = item.querySelector('.remove-question');
-                                                if (items.length > 1) {
-                                                    removeBtn.style.display = 'inline-block';
-                                                } else {
-                                                    removeBtn.style.display = 'none';
-                                                }
+                                                newQuestionsContainer.appendChild(questionItem);
                                             });
-                                        }
-                                    });
-                                </script>
+                                        });
+                                    </script>
                                 <!--end::Form-->
                             </div>
                             <!--end::Form-->
