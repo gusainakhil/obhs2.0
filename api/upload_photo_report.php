@@ -2,7 +2,6 @@
 // upload_photo_report_simple.php
 header('Content-Type: application/json; charset=utf-8');
 ini_set('display_errors', 0);
-
 // DB connection (must set $mysqli)
 require_once __DIR__ . '/../includes/connection.php';
 

@@ -232,6 +232,12 @@ if (isset($_GET['from_date']) && isset($_GET['to_date'])) {
     echo "</thead><tbody>";
 
     $a = 0; 
+    $from_date = $_GET['from_date'];
+    $to_date = $_GET['to_date'];
+    
+    // Convert them to full DATETIME ranges for the database
+    $start_datetime = $from_date . " 00:00:00"; // Start of the first day
+    $end_datetime = $to_date . " 23:59:59";
 
     $query = "
     SELECT 
@@ -246,14 +252,14 @@ if (isset($_GET['from_date']) && isset($_GET['to_date'])) {
         AND created_at BETWEEN ? AND ?
     GROUP BY employee_id, employee_name, desination,  toc, employee_name_unique
     HAVING 
-        FIND_IN_SET('Start of Journey', GROUP_CONCAT(DISTINCT type_of_attendance)) > 0
-        AND FIND_IN_SET('Mid of Journey', GROUP_CONCAT(DISTINCT type_of_attendance)) > 0
-        AND FIND_IN_SET('End of Journey', GROUP_CONCAT(DISTINCT type_of_attendance)) > 0
+        FIND_IN_SET('Start of journey', GROUP_CONCAT(DISTINCT type_of_attendance)) > 0
+        AND FIND_IN_SET('Mid of journey', GROUP_CONCAT(DISTINCT type_of_attendance)) > 0
+        AND FIND_IN_SET('End of journey', GROUP_CONCAT(DISTINCT type_of_attendance)) > 0
     ORDER BY employee_name;
     ";
 
     $stmt = $mysqli->prepare($query);
-    $stmt->bind_param("sss", $station_id, $from_date, $to_date);
+    $stmt->bind_param("sss", $station_id, $start_datetime, $end_datetime);
     $stmt->execute();
     $results = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     $stmt->close();

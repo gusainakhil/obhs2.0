@@ -1,2 +1,0 @@
-[21-Nov-2025 17:40:30 Asia/Kolkata] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/obhsbeatleanalyt/public_html/admin/update-calculation.php on line 7
-[21-Nov-2025 17:40:30 Asia/Kolkata] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/obhsbeatleanalyt/public_html/admin/update-calculation.php:1) in /home/obhsbeatleanalyt/public_html/admin/update-calculation.php on line 9

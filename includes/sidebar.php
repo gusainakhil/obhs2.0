@@ -39,19 +39,18 @@
             echo '<p class="text-slate-400 text-sm px-4">No menu assigned.</p>';
         }
         ?>
-        <a href="train-information.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">Train Report</span> </a>
+        <!--<a href="train-information.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">Train Report</span> </a>-->
         <a href="feedback-target.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">Feedback Target</span> </a>
         <a href="view-feedback-target.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">View Feedback Target</span> </a>
         <a href="create-employee.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">Create Employee</span> </a>
         <a href="view-employee.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">View Employee</span> </a>
         
-        
         <!--Remove -->
-        <!-- <a href="view-attendance.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">View Attendance</span> </a>
-        <a href="attendance-report-row-wise.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">View Attendance (ANDVH)</span> </a>
-        <a href="view-no-photo-attendance.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">View no photo Attendance</span> </a>
-        <a href="salary.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">Salary Report</span> </a>
-         -->
+        <!--<a href="view-attendance.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">View Attendance</span> </a>-->
+        <!--<a href="attendance-report-row-wise.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">View Attendance (ANDVH)</span> </a>-->
+        <!--<a href="view-no-photo-attendance.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">View no photo Attendance</span> </a>-->
+        <!--<a href="salary.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">Salary Report</span> </a>-->
+        
     </nav>
 
 </aside>

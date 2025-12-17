@@ -2,7 +2,6 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 // ******** API HEADERS ********
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
@@ -45,9 +44,15 @@ if ($user_id === "" || !is_numeric($user_id)) {
 // ******** FETCH REPORTS + USERS + STATION URL ********
 $sql = "
     SELECT 
-        r.reports_name,
+        r.type ,
+        r.app_link,
         r.link,
         u.PNR,
+        u.pnr_skip,
+        u.otp,
+        u.otp_skip,
+        u.photo,
+        u.photo_skip,
         u.station_id,
         s.url AS station_url
     FROM OBHS_reports AS r
@@ -72,12 +77,19 @@ if ($result->num_rows > 0) {
 
         // Reports list
         $reports[] = [
-            "reports_name" => $row['reports_name'],
+            "reports_name" => $row['app_link'],
+            "type" => $row['type'],
             "link" => $row['link']
+            
         ];
 
         // PNR
         $pnr = $row["PNR"];
+        $pnr_skip = $row["pnr_skip"];
+        $otp = $row["otp"];
+        $otp_skip = $row["otp_skip"];
+        $photo = $row["photo"];
+        $photo_skip = $row["photo_skip"];
 
         // Station URL
         $station_url = $row["station_url"];
@@ -89,7 +101,14 @@ if ($result->num_rows > 0) {
 
     // Separate PNR array
     $response["pnr"] = [
-        "PNR" => $pnr
+        "PNR" => $pnr ,
+        "pnr_skip" => $pnr_skip ,
+        "otp" => $otp ,
+        "otp_skip" => $otp_skip ,
+        "photo" => $photo ,
+        "photo_skip" => $photo_skip
+        
+        
     ];
 
     // Separate Station URL array

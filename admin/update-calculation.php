@@ -2,7 +2,7 @@
  <?php
 require_once __DIR__ . '/connection.php';
 //check session
-session_start();
+// session_start();
 // if (!isset($_SESSION['user_id'])) {
 //   header('Location: login.php');
 //   exit;
