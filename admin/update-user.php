@@ -91,6 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mobile = trim($_POST['mobile'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $pnr = isset($_POST['pnr']) ? (int) $_POST['pnr'] : 0;
+    $pnr_skip = isset($_POST['pnr_skip']) ? (int) $_POST['pnr_skip'] : 0;
+    $otp = isset($_POST['otp']) ? (int) $_POST['otp'] : 0;
+    $otp_skip = isset($_POST['otp_skip']) ? (int) $_POST['otp_skip'] : 0;
+    $photo = isset($_POST['photo']) ? (int) $_POST['photo'] : 0;
+    $photo_skip = isset($_POST['photo_skip']) ? (int) $_POST['photo_skip'] : 0;
+    $no_of_train = isset($_POST['no_of_train']) ? (int) $_POST['no_of_train'] : 0;
     $reports = $_POST['reports'] ?? [];
     $eng_questions = $_POST['eng_question'] ?? [];
     $hin_questions = $_POST['hin_question'] ?? [];
@@ -109,20 +115,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user_id_to_update = $editing_id;
 
         // Build update SQL depending on whether password provided
-        if ($password !== '') {
+            if ($password !== '') {
             $hashed = password_hash($password, PASSWORD_DEFAULT);
-            $update_sql = "UPDATE `OBHS_users` SET `organisation_name` = ?, `username` = ?, `mobile` = ?, `email` = ?, `station_id` = ?, `password` = ?, `start_date` = ?, `end_date` = ?, `type` = ?, `PNR` = ? WHERE `user_id` = ?";
+            $update_sql = "UPDATE `OBHS_users` SET `organisation_name` = ?, `username` = ?, `mobile` = ?, `email` = ?, `station_id` = ?, `password` = ?, `start_date` = ?, `end_date` = ?, `type` = ?, `PNR` = ?, `PNR_skip` = ?, `OTP` = ?, `OTP_skip` = ?, `photo` = ?, `photo_skip` = ?, `no_of_train` = ? WHERE `user_id` = ?";
             if ($ustmt = mysqli_prepare($conn, $update_sql)) {
-                mysqli_stmt_bind_param($ustmt, 'ssssisssiii', $organisation_name, $username, $mobile, $email, $station_id, $hashed, $start_date, $end_date, $type, $pnr, $user_id_to_update);
+                mysqli_stmt_bind_param($ustmt, 'ssssisssiiiiiiiii', $organisation_name, $username, $mobile, $email, $station_id, $hashed, $start_date, $end_date, $type, $pnr, $pnr_skip, $otp, $otp_skip, $photo, $photo_skip, $no_of_train, $user_id_to_update);
                 $ok = mysqli_stmt_execute($ustmt);
                 mysqli_stmt_close($ustmt);
             } else {
                 $ok = false;
             }
         } else {
-            $update_sql = "UPDATE `OBHS_users` SET `organisation_name` = ?, `username` = ?, `mobile` = ?, `email` = ?, `station_id` = ?, `start_date` = ?, `end_date` = ?, `type` = ?, `PNR` = ? WHERE `user_id` = ?";
+            $update_sql = "UPDATE `OBHS_users` SET `organisation_name` = ?, `username` = ?, `mobile` = ?, `email` = ?, `station_id` = ?, `start_date` = ?, `end_date` = ?, `type` = ?, `PNR` = ?, `PNR_skip` = ?, `OTP` = ?, `OTP_skip` = ?, `photo` = ?, `photo_skip` = ?, `no_of_train` = ? WHERE `user_id` = ?";
             if ($ustmt = mysqli_prepare($conn, $update_sql)) {
-                mysqli_stmt_bind_param($ustmt, 'ssssissiii', $organisation_name, $username, $mobile, $email, $station_id, $start_date, $end_date, $type, $pnr, $user_id_to_update);
+                mysqli_stmt_bind_param($ustmt, 'ssssissiiiiiiiii', $organisation_name, $username, $mobile, $email, $station_id, $start_date, $end_date, $type, $pnr, $pnr_skip, $otp, $otp_skip, $photo, $photo_skip, $no_of_train, $user_id_to_update);
                 $ok = mysqli_stmt_execute($ustmt);
                 mysqli_stmt_close($ustmt);
             } else {
@@ -169,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $type='Attendance';
                         } elseif ($r_name === 'Daily Attendance Report') {
                             $link = 'daily-attendance.php';
-                            $type='Attendance';
+                            $type='Attendance2';
                         } else {
                             $link = '';
                             $type='';
@@ -398,9 +404,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             </div>
                                         </div>
 
+                                                                                <div class="row g-3 mb-4">
+                                                                                    <div class="col-md-6">
+                                                                                        <label for="no_of_train" class="form-label">No. of Train Maximum Add</label>
+                                                                                        <input type="number" class="form-control" id="no_of_train" name="no_of_train" required value="<?php echo htmlspecialchars($existing_user['no_of_train'] ?? ''); ?>" />
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <p class="text-danger small mt-2">NOTE : After Submitting the form, please update Marks calculation if you select Round wise summary</p>
+                                                                                        <p class="text-danger small mt-2">NOTE : If PNR ,OTP , Photo Functionality is ON, User will be able to see related data.</p>
+                                                                                    </div>
+                                                                                </div>
+
 
                                         <div class="row g-3 mb-4">
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <label class="form-label">Type of Reports</label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="reports[]"
@@ -467,10 +484,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     </label>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!-- update pnr functionality -->
-                                        <div class="row g-3 mb-4">
-                                            <div class="col-md-12">
+                                            <div class="col-md-6" >
+                                                <div class="row g-3 mb-4">
+                                            <div class="col-md-2">
                                                 <label class="form-label">PNR Functionality</label>
                                                 <input type="hidden" name="pnr" value="0" />
                                                 <div class="form-check">
@@ -479,10 +495,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     <label class="form-check-label" for="pnr">
                                                         On / Off
                                                     </label>
+                                                </div><br><br>
+                                                 <label class="form-label">Skip PNR Functionality</label>
+                                                <input type="hidden" name="pnr_skip" value="0" />
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="pnr_skip" value="1"
+                                                        id="pnr_skip" <?php if (!empty($existing_user['PNR_skip']) && $existing_user['PNR_skip'] == 1) echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="pnr_skip">
+                                                        On / Off
+                                                    </label>
                                                 </div>
+                                                
+                                            </div>
+                                             <div class="col-md-2">
+                                                <label class="form-label">Mobile Otp Functionality</label>
+                                                <input type="hidden" name="otp" value="0" />
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="otp" value="1"
+                                                        id="otp" <?php if (!empty($existing_user['otp']) && $existing_user['otp'] == 1) echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="otp">
+                                                        On / Off
+                                                    </label>
+                                                </div><br><br>
+                                                 <label class="form-label">Skip OTP Functionality</label>
+                                                <input type="hidden" name="otp_skip" value="0" />
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="otp_skip" value="1"
+                                                        id="otp_skip" <?php if (!empty($existing_user['otp_skip']) && $existing_user['otp_skip'] == 1) echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="otp_skip">
+                                                        On / Off
+                                                    </label>
+                                                </div>
+                                                
+                                            </div>
+                                             <div class="col-md-2">
+                                                <label class="form-label">Photo Functionality</label>
+                                                <input type="hidden" name="photo" value="0" />
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="photo" value="1"
+                                                        id="photo" <?php if (!empty($existing_user['photo']) && $existing_user['photo'] == 1) echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="photo">
+                                                        On / Off
+                                                    </label>
+                                                </div><br><br>
+                                                 <label class="form-label">Skip Photo Functionality</label>
+                                                <input type="hidden" name="photo_skip" value="0" />
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="photo_skip" value="1"
+                                                        id="photo_skip" <?php if (!empty($existing_user['photo_skip']) && $existing_user['photo_skip'] == 1) echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="photo_skip">
+                                                        On / Off
+                                                    </label>
+                                                </div>
+                                                
                                             </div>
                                         </div>
 
+
+                                            </div>
+                                        </div>
+                                        <!-- update pnr functionality -->
+                                        
                                         <!-- Questions Section -->
                                         <div id="questionsSectionRoundWise"
                                             style="display: <?php echo in_array('Round Wise Summary', $existing_reports) ? 'block' : 'none'; ?>;">
