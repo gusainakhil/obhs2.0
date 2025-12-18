@@ -33,15 +33,18 @@ if ($editing_id > 0) {
         mysqli_stmt_close($ustmt);
     }
 
-    // load reports
-    $r_sql = "SELECT `reports_name` FROM `OBHS_reports` WHERE `user_id` = ?";
+    // load reports (include id and status)
+    $r_sql = "SELECT `id`, `reports_name`, COALESCE(`status`, 1) AS status FROM `OBHS_reports` WHERE `user_id` = ?";
     if ($rstmt = mysqli_prepare($conn, $r_sql)) {
         mysqli_stmt_bind_param($rstmt, 'i', $editing_id);
         mysqli_stmt_execute($rstmt);
         $rres = mysqli_stmt_get_result($rstmt);
         if ($rres) {
-            while ($rr = mysqli_fetch_assoc($rres))
+            while ($rr = mysqli_fetch_assoc($rres)) {
                 $existing_reports[] = $rr['reports_name'];
+                // create map for quick lookup with id/status
+                $existing_reports_map[$rr['reports_name']] = ['id' => (int)$rr['id'], 'status' => (int)$rr['status']];
+            }
         }
         mysqli_stmt_close($rstmt);
     }
@@ -421,67 +424,107 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <label class="form-label">Type of Reports</label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="reports[]"
-                                                        value="Round Wise Summary" id="roundwisesummary" <?php if (in_array('Round Wise Summary', $existing_reports))
-                                                            echo 'checked'; ?>>
+                                                        value="Round Wise Summary" id="roundwisesummary" <?php if (isset($existing_reports_map['Round Wise Summary'])) echo 'checked data-locked="1"'; elseif(in_array('Round Wise Summary', $existing_reports)) echo 'checked'; ?>>
                                                     <label class="form-check-label" for="roundwisesummary">
                                                         Round wise Summary Report
                                                     </label>
+                                                    <?php if (!empty($existing_reports_map['Round Wise Summary'])): ?>
+                                                        <?php $rep = $existing_reports_map['Round Wise Summary']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="reports[]"
-                                                        value="Photo Report" id="photoreportafterbefore" <?php if (in_array('Photo Report', $existing_reports))
-                                                            echo 'checked'; ?>>
+                                                        value="Photo Report" id="photoreportafterbefore" <?php if (isset($existing_reports_map['Photo Report'])) echo 'checked data-locked="1"'; elseif(in_array('Photo Report', $existing_reports)) echo 'checked'; ?>>
                                                     <label class="form-check-label" for="photoreportafterbefore">
                                                         Photo Report After Before
                                                     </label>
+                                                    <?php if (!empty($existing_reports_map['Photo Report'])): ?>
+                                                        <?php $rep = $existing_reports_map['Photo Report']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="reports[]"
-                                                        value="Photo Report Time Slot" id="photoReportTimeSlot" <?php if (in_array('Photo Report Time Slot', $existing_reports))
-                                                            echo 'checked'; ?>>
+                                                        value="Photo Report Time Slot" id="photoReportTimeSlot" <?php if (isset($existing_reports_map['Photo Report Time Slot'])) echo 'checked data-locked="1"'; elseif(in_array('Photo Report Time Slot', $existing_reports)) echo 'checked'; ?>>
                                                     <label class="form-check-label" for="photoReportTimeSlot">
                                                         Photo Report Time Slot
                                                     </label>
+                                                    <?php if (!empty($existing_reports_map['Photo Report Time Slot'])): ?>
+                                                        <?php $rep = $existing_reports_map['Photo Report Time Slot']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="reports[]"
-                                                        value="Photo Report Coach Wise" id="photoReportCoachWise" <?php if (in_array('Photo Report Coach Wise', $existing_reports))
-                                                            echo 'checked'; ?>>
+                                                        value="Photo Report Coach Wise" id="photoReportCoachWise" <?php if (isset($existing_reports_map['Photo Report Coach Wise'])) echo 'checked data-locked="1"'; elseif(in_array('Photo Report Coach Wise', $existing_reports)) echo 'checked'; ?>>
                                                     <label class="form-check-label" for="photoReportCoachWise">
                                                         Photo Report Coach Wise
                                                     </label>
+                                                    <?php if (!empty($existing_reports_map['Photo Report Coach Wise'])): ?>
+                                                        <?php $rep = $existing_reports_map['Photo Report Coach Wise']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
                                                 </div>
                                                    <div class="form-check">
                                                        <input class="form-check-input" type="checkbox" name="reports[]"
-                                                           value="Attendance Photo Report" id="attendancePhotoReport" <?php if (in_array('Attendance Photo Report', $existing_reports))
-                                                               echo 'checked'; ?>>
+                                                           value="Attendance Photo Report" id="attendancePhotoReport" <?php if (isset($existing_reports_map['Attendance Photo Report'])) echo 'checked data-locked="1"'; elseif(in_array('Attendance Photo Report', $existing_reports)) echo 'checked'; ?>>
                                                        <label class="form-check-label" for="attendancePhotoReport">
                                                            Attendance Photo Report
                                                        </label>
+                                                    <?php if (!empty($existing_reports_map['Attendance Photo Report'])): ?>
+                                                        <?php $rep = $existing_reports_map['Attendance Photo Report']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
                                                    </div>
                                                    <div class="form-check">
                                                        <input class="form-check-input" type="checkbox" name="reports[]"
-                                                           value="Time Interval Attendance" id="timeIntervalAttendance" <?php if (in_array('Time Interval Attendance', $existing_reports))
-                                                               echo 'checked'; ?>>
+                                                           value="Time Interval Attendance" id="timeIntervalAttendance" <?php if (isset($existing_reports_map['Time Interval Attendance'])) echo 'checked data-locked="1"'; elseif(in_array('Time Interval Attendance', $existing_reports)) echo 'checked'; ?>>
                                                        <label class="form-check-label" for="timeIntervalAttendance">
                                                            Time Interval Attendance
                                                        </label>
+                                                    <?php if (!empty($existing_reports_map['Time Interval Attendance'])): ?>
+                                                        <?php $rep = $existing_reports_map['Time Interval Attendance']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
                                                    </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="reports[]"
-                                                        value="Attendance Report" id="attendancereport" <?php if (in_array('Attendance Report', $existing_reports))
-                                                            echo 'checked'; ?>>
+                                                        value="Attendance Report" id="attendancereport" <?php if (isset($existing_reports_map['Attendance Report'])) echo 'checked data-locked="1"'; elseif(in_array('Attendance Report', $existing_reports)) echo 'checked'; ?>>
                                                     <label class="form-check-label" for="attendancereport">
                                                         Attendance Report
                                                     </label>
+                                                    <?php if (!empty($existing_reports_map['Attendance Report'])): ?>
+                                                        <?php $rep = $existing_reports_map['Attendance Report']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
                                                 </div>
                                                   <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="reports[]"
-                                                        value="Daily Attendance Report" id="dailyAttendanceReport" <?php if (in_array('Daily Attendance Report', $existing_reports))
-                                                            echo 'checked'; ?>>
+                                                        value="Daily Attendance Report" id="dailyAttendanceReport" <?php if (isset($existing_reports_map['Daily Attendance Report'])) echo 'checked data-locked="1"'; elseif(in_array('Daily Attendance Report', $existing_reports)) echo 'checked'; ?>>
                                                     <label class="form-check-label" for="dailyAttendanceReport">
                                                         Daily Attendance Report
                                                     </label>
+                                                    <?php if (!empty($existing_reports_map['Daily Attendance Report'])): ?>
+                                                        <?php $rep = $existing_reports_map['Daily Attendance Report']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                             <div class="col-md-6" >
@@ -684,6 +727,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                           `;
                                                 newQuestionsContainer.appendChild(questionItem);
+                                            });
+                                            // toggle-report button handler
+                                            document.querySelectorAll('.toggle-report').forEach(btn => {
+                                                btn.addEventListener('click', function () {
+                                                    const id = this.dataset.id;
+                                                    const self = this;
+                                                    const formData = new FormData();
+                                                    formData.append('id', id);
+                                                    fetch('toggle-report.php', { method: 'POST', body: formData })
+                                                        .then(r => r.json())
+                                                        .then(js => {
+                                                            if (js.status) {
+                                                                const newStatus = js.status_value;
+                                                                self.dataset.status = newStatus;
+                                                                self.textContent = newStatus == 1 ? 'Hide' : 'Unhide';
+                                                            } else {
+                                                                alert('Toggle failed: ' + js.message);
+                                                            }
+                                                        }).catch(e => alert('Request failed'));
+                                                });
+                                            });
+                                            // prevent unchecking of already assigned reports
+                                            document.querySelectorAll('input[type="checkbox"][data-locked="1"]').forEach(cb => {
+                                                cb.addEventListener('change', function () {
+                                                    if (!this.checked) {
+                                                        this.checked = true;
+                                                        alert('This report is already assigned. Use Hide/Unhide to change visibility.');
+                                                    }
+                                                });
                                             });
                                         });
                                     </script>

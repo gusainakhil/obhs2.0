@@ -58,10 +58,11 @@ while ($row = mysqli_fetch_assoc($res_q)) {
 
 
 $sql_m = "
-    SELECT category , value FROM OBHS_marking 
-    WHERE station_id = $station_id
+ SELECT category, value
+FROM OBHS_marking
+WHERE station_id = $station_id
      
-    ORDER BY id ASC
+    ORDER BY value DESC;
 ";
 $res_m = mysqli_query($mysqli, $sql_m);
 
