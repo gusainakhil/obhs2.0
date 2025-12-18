@@ -22,11 +22,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $end_date = $_POST['end_date'] ?? null;
   $mobile = trim($_POST['mobile'] ?? '');
   $email = trim($_POST['email'] ?? '');
-  $pnr = isset($_POST['pnr']) ? (int) $_POST['pnr'] : 1; // default to 1 (off)
+  $pnr = isset($_POST['pnr']) ? (int) $_POST['pnr'] : 1; // default to 1 (on)
+  $pnr_skip = isset($_POST['pnr_skip']) ? (int) $_POST['pnr_skip'] : 0; // default to 0 (off)
+  $otp = isset($_POST['otp']) ? (int) $_POST['otp'] : 1; // default to 1 (on)
+  $otp_skip = isset($_POST['otp_skip']) ? (int) $_POST['otp_skip'] : 0; // default to 0 (off)
+  $photo = isset($_POST['photo']) ? (int) $_POST['photo'] : 1; // default to 1 (on)
+  $photo_skip = isset($_POST['photo_skip']) ? (int) $_POST['photo_skip'] : 0; // default to 0 (off)
   $reports = $_POST['reports'] ?? [];
   $eng_questions = $_POST['eng_question'] ?? [];
   $hin_questions = $_POST['hin_question'] ?? [];
   $q_types = $_POST['q_type'] ?? [];
+  $no_of_train = isset($_POST['no_of_train']) ? (int) $_POST['no_of_train'] : 0;
+  // Basic validation
+  
 
   if ($username === '' || $organisation_name === '' || $password === '' || $email === '') {
     $form_error = 'Please fill required fields.';
@@ -35,9 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hashed = password_hash($password, PASSWORD_DEFAULT);
     $type = 2; // organisation
 
-    $insert_user_sql = "INSERT INTO `OBHS_users` (`organisation_name`, `username`, `mobile`, `email`, `station_id`, `password`, `start_date`, `end_date`, `type`, `PNR`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $insert_user_sql = "INSERT INTO `OBHS_users` (`organisation_name`, `username`, `mobile`, `email`, `station_id`, `password`, `start_date`, `end_date`, `type`, `PNR` , `PNR_skip`, `OTP`, `OTP_skip`, `photo`, `photo_skip`, `no_of_train`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     if ($stmt = mysqli_prepare($conn, $insert_user_sql)) {
-      mysqli_stmt_bind_param($stmt, 'ssssisssii', $organisation_name, $username, $mobile, $email, $station_id, $hashed, $start_date, $end_date, $type, $pnr);
+      mysqli_stmt_bind_param($stmt, 'ssssisssiiiiiiii', $organisation_name, $username, $mobile, $email, $station_id, $hashed, $start_date, $end_date, $type, $pnr , $pnr_skip, $otp, $otp_skip, $photo, $photo_skip, $no_of_train); ;
       if (mysqli_stmt_execute($stmt)) {
         $new_user_id = mysqli_insert_id($conn);
         mysqli_stmt_close($stmt);
@@ -58,32 +66,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
               if ($r_name === 'Round Wise Summary') {
                 $empty_link = 'round_wise_summary.php';
-                $type='Feedback';
+                $type = 'Feedback';
               } elseif ($r_name === 'Photo Report') {
                 $empty_link = 'photo_report_before_after.php';
-                $type='photo_report';
+                $type = 'photo_report';
               } elseif ($r_name === 'Photo Report Time Slot') {
                 $empty_link = 'photo_report.php';
-                $type='photo_report';
+                $type = 'photo_report';
               } elseif ($r_name === 'Photo Report Coach Wise') {
                 $empty_link = 'photo_report_coach_wise.php';
-                $type='photo_report';
+                $type = 'photo_report';
               } elseif ($r_name === 'Attendance Report') {
                 $empty_link = 'view-no-photo-attendance.php';
-                $type='Attendance';
+                $type = 'Attendance';
               } elseif ($r_name === 'Attendance Photo Report') {
                 $empty_link = 'view-attendance.php';
-                $type='Attendance';
+                $type = 'Attendance';
               } elseif ($r_name === 'Time Interval Attendance') {
                 $empty_link = 'attendance-report-row-wise.php';
-                $type='Attendance';
+                $type = 'Attendance';
               } elseif ($r_name === 'Daily Attendance Report') {
                 $empty_link = 'daily-attendance.php';
-                $type='Attendance';
+                $type = 'Attendance2';
               } else {
                 $empty_link = '';
               }
-              mysqli_stmt_bind_param($rstmt, 'isssi', $new_user_id, $r_name, $empty_link , $type, $station_id);
+              mysqli_stmt_bind_param($rstmt, 'isssi', $new_user_id, $r_name, $empty_link, $type, $station_id);
               mysqli_stmt_execute($rstmt);
               mysqli_stmt_close($rstmt);
             }
@@ -100,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($eng === '' && $hin === '')
               continue;
             if ($qstmt = mysqli_prepare($conn, $insert_q_sql)) {
-              mysqli_stmt_bind_param($qstmt, 'isssi', $new_user_id, $eng, $hin, $qt , $station_id);
+              mysqli_stmt_bind_param($qstmt, 'isssi', $new_user_id, $eng, $hin, $qt, $station_id);
               mysqli_stmt_execute($qstmt);
               mysqli_stmt_close($qstmt);
             }
@@ -272,10 +280,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="email" class="form-control" id="email" name="email" required />
                       </div>
                     </div>
+                    <div class="row g-3 mb-4">
+                      <div class="col-md-6">
+                        <label for="no_of_train" class="form-label">No. of Train Maximum Add</label>
+                        <input type="Number" class="form-control" id="no_of_train" name="no_of_train" required />
+                      </div>
+                      <div class="col-md-6">
+                        <p class="text-danger small mt-2">NOTE : After Submitting the form, please update Marks
+                          calculation if you select Round wise summary</p>
+                          <p class="text-danger small mt-2">NOTE : If PNR ,OTP , Photo Functionality is ON, User will be able to see
+                           related data.</p>
+                        
+                      </div>
+                    </div>
+
 
 
                     <div class="row g-3 mb-4">
-                     
+
                       <div class="col-md-6">
                         <label class="form-label">Type of Reports</label>
                         <div class="form-check">
@@ -299,7 +321,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             Photo Report Time Slot
                           </label>
                         </div>
-                          <div class="form-check">
+                        <div class="form-check">
                           <input class="form-check-input" type="checkbox" name="reports[]"
                             value="Photo Report Coach Wise" id="photoReportTimeSlot">
                           <label class="form-check-label" for="photoReportTimeSlot">
@@ -307,13 +329,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                           </label>
                         </div>
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" name="reports[]" value="Attendance Photo Report" id="attendancePhotoReport">
+                          <input class="form-check-input" type="checkbox" name="reports[]"
+                            value="Attendance Photo Report" id="attendancePhotoReport">
                           <label class="form-check-label" for="attendancePhotoReport">
                             Attendance Photo Report
                           </label>
                         </div>
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" name="reports[]" value="Time Interval Attendance" id="timeIntervalAttendance">
+                          <input class="form-check-input" type="checkbox" name="reports[]"
+                            value="Time Interval Attendance" id="timeIntervalAttendance">
                           <label class="form-check-label" for="timeIntervalAttendance">
                             Time Interval Attendance
                           </label>
@@ -326,25 +350,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                           </label>
                         </div>
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" name="reports[]" value="Daily Attendance Report"
-                            id="dailyAttendanceReport">
+                          <input class="form-check-input" type="checkbox" name="reports[]"
+                            value="Daily Attendance Report" id="dailyAttendanceReport">
                           <label class="form-check-label" for="dailyAttendanceReport">
                             Daily Attendance Report
                           </label>
                         </div>
 
                       </div>
-                        <div class="col-md-6">
+                      <div class="col-md-2">
                         <label for="pnr" class="form-label">PNR Functionality</label>
                         <!-- default = on (1). If user turns it Off the checkbox sends 0 -->
                         <input type="hidden" name="pnr" value="0" />
+                        <!-- ensure unchecked sends 0 for skip -->
+                        <input type="hidden" name="pnr_skip" value="0" />
                         <div class="form-check form-switch mt-2">
                           <input class="form-check-input" type="checkbox" id="pnr" name="pnr" value="1" checked>
                           <label class="form-check-label" for="pnr">On / Off </label>
                         </div>
-                        <p class="text-danger small mt-2">NOTE : If PNR Functionality is ON, User will be able to see PNR related data.</p>
-                        <p class="text-danger small mt-2">NOTE : After Submitting the form, please update Marks calculation if you select Round wise summary</p>
+                        <br><br>
+                         <label for="pnr_skip" class="form-label"> Skip PNR Functionality</label>
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="pnr_skip" name="pnr_skip" value="1" checked>
+                          <label class="form-check-label" for="pnr_skip">On / Off </label>
                         </div>
+
+                        
+                      </div>
+                       <div class="col-md-2">
+                        <label for="otp" class="form-label">Mobile OTP Functionality</label>
+                        <!-- default = on (1). If user turns it Off the checkbox sends 0 -->
+                        <input type="hidden" name="otp" value="0" />
+                        <!-- ensure unchecked sends 0 for skip -->
+                        <input type="hidden" name="otp_skip" value="0" />
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="otp" name="otp" value="1" checked>
+                          <label class="form-check-label" for="otp">On / Off </label>
+                        </div>
+                           <br><br>
+                         <label for="otp_skip" class="form-label"> Skip Mobile OTP Functionality</label>
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="otp_skip" name="otp_skip" value="1" checked>
+                          <label class="form-check-label" for="otp_skip">On / Off </label>
+                        </div>
+
+                        
+                      </div>
+                       <div class="col-md-2">
+                        <label for="photo" class="form-label">Photo  Functionality</label>
+                        <!-- default = on (1). If user turns it Off the checkbox sends 0 -->
+                        <input type="hidden" name="photo" value="0" />
+                        <!-- ensure unchecked sends 0 for skip -->
+                        <input type="hidden" name="photo_skip" value="0" />
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="photo" name="photo" value="1" checked>
+                          <label class="form-check-label" for="photo">On / Off </label>
+                        </div>
+                           <br><br>
+                         <label for="photo_skip" class="form-label"> Skip Photo Functionality</label>
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="photo_skip" name="photo_skip" value="1" checked>
+                          <label class="form-check-label" for="photo_skip">On / Off </label>
+                        </div>
+                        
+                        
+                      </div>
                     </div>
 
                     <!-- Questions Section -->
@@ -479,7 +549,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </main>
     <!--end::App Main-->
     <!--begin::Footer-->
-   <? include "footer.php" ?>
+    <? include "footer.php" ?>
     <!--end::Footer-->
   </div>
 
