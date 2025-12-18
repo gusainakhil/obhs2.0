@@ -64,11 +64,11 @@ $station_name = getStationName($_SESSION['station_id']);
                             <option value="C" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'C') ? 'selected' : ''; ?>>C - Wednesday</option>
                             <option value="D" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'D') ? 'selected' : ''; ?>>D - Thursday</option>
                             <option value="E" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'E') ? 'selected' : ''; ?>>E - Friday</option>
-                            <option value="F" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'F') ? 'selected' : ''; ?>>F - Friday</option>
-                            <option value="G" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'G') ? 'selected' : ''; ?>>G - Saturday</option>
+                            <option value="F" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'F') ? 'selected' : ''; ?>>F - Saturday</option>
+                            <option value="G" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'G') ? 'selected' : ''; ?>>G - Sunday</option>
                         </select>
                     </div>
-
+    
                     <?php
                     // Fetch train numbers for UP select
                     $train_query = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no ASC";

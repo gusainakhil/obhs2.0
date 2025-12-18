@@ -582,7 +582,7 @@ function get_passenger_details_data_coach_wise($coach_no, $train_no, $date_from,
                 p.grade,
                 f.feed_param,
                 SUM(f.value) AS total_feedback_sum,
-                GROUP_CONCAT(f.value ORDER BY f.id ASC SEPARATOR ', ') AS feedback_values
+                GROUP_CONCAT(f.value ORDER BY f.feed_param ASC SEPARATOR ', ') AS feedback_values
             FROM OBHS_passenger p
             JOIN OBHS_feedback f ON p.id = f.passenger_id
             WHERE p.train_no = ?
