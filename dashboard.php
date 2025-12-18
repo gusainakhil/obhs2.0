@@ -431,7 +431,7 @@ $stmt->close();
                         <i class="fas fa-chart-bar text-slate-400"></i>
                         <h2 class="text-sm font-semibold text-slate-700">Weekly Cleanliness Photos Count</h2>
                     </div>
-                    <div id="cleanlinessChart" style="width: 100%; height: 20</div></div>0px;"></div>
+                    <div id="cleanlinessChart" style="width: 100%; height: 200px;"></div>
                 </div>
 
                 <!-- Weekly Attendance Count -->
@@ -459,15 +459,15 @@ $stmt->close();
                     $feedback_data[$day] = 0;
                 }
 
-                // Get feedback count grouped by day of week for the last 7 days
+                // Get feedback count grouped by actual date for the last 7 days (ending today)
                 $feedback_query = "SELECT DATE(created_at) as date, DAYNAME(created_at) as day_name, COUNT(*) as count 
                                    FROM OBHS_passenger 
                                    WHERE station_id = ? 
-                                   AND created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                                   AND created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
                                    GROUP BY DATE(created_at), DAYNAME(created_at)
                                    ORDER BY date ASC";
                 $stmt = $mysqli->prepare($feedback_query);
-                $stmt->bind_param("s", $station_id);
+                $stmt->bind_param("i", $station_id);
                 $stmt->execute();
                 $result = $stmt->get_result();
                 while ($row = $result->fetch_assoc()) {
@@ -475,6 +475,11 @@ $stmt->close();
                     $feedback_data[$day_short] = (int)$row['count'];
                 }
                 $stmt->close();
+                // Build ordered days: last 7 days ending today (oldest to newest)
+                $ordered_days = [];
+                for ($i = 6; $i >= 0; $i--) {
+                    $ordered_days[] = date('D', strtotime("-{$i} day")); // e.g., Sat, Sun, Mon, ... Today
+                }
                 ?>
 
             </div>
@@ -575,16 +580,14 @@ $stmt->close();
 
         // Weekly Feedback Count Chart
         function drawFeedbackChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Day', 'Feedback Count'],
-                ['Sun', <?php echo $feedback_data['Sun']; ?>],
-                ['Mon', <?php echo $feedback_data['Mon']; ?>],
-                ['Tue', <?php echo $feedback_data['Tue']; ?>],
-                ['Wed', <?php echo $feedback_data['Wed']; ?>],
-                ['Thu', <?php echo $feedback_data['Thu']; ?>],
-                ['Fri', <?php echo $feedback_data['Fri']; ?>],
-                ['Sat', <?php echo $feedback_data['Sat']; ?>]
-            ]);
+            var rows = <?php echo json_encode(array_map(function($d) use ($feedback_data) {
+                return [$d, isset($feedback_data[$d]) ? (int)$feedback_data[$d] : 0];
+            }, $ordered_days)); ?>;
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Day');
+            data.addColumn('number', 'Feedback Count');
+            data.addRows(rows);
 
             var options = {
                 title: '',
