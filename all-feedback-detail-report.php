@@ -170,18 +170,18 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
         }
 
         .status-circle {
-            width: 22px;
-            height: 18px;
-            /* border-radius: 50%; */
-            display: inline-block;
-            text-align: center;
-            line-height: 18px;
-            font-size: 10px;
-            font-weight: 700;
-            color: white;
+                         width: 34px;
+    height: 24px;
+    border-radius: 20%;
+    display: inline-block;
+    text-align: center;
+    line-height: 22px;
+    font-size: 12px;
+    /* font-weight: 700; */
+    color: black;
         }
 
-        .status-excellent {
+        /* .status-excellent {
             background-color: #10b981;
         }
 
@@ -199,7 +199,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
         .status-poor {
             background-color: #ef4444;
-        }
+        } */
 
         .table-wrapper {
             overflow-x: auto;
@@ -314,7 +314,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Grade</th>
                                 <th colspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Passenger
                                     Details</th>
-                                <th colspan="5" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Feedback
+                                <th colspan="3" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Feedback
                                     Parameters</th>
                                 <th rowspan="2"
                                     style="border-bottom: 1px solid rgba(255,255,255,0.2); border-right: none;">

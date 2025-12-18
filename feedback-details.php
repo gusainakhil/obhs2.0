@@ -171,19 +171,19 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
         }
 
         .status-circle {
-            width: 22px;
-            height: 18px;
-            /* border-radius: 50%; */
-            display: inline-block;
-            text-align: center;
-            line-height: 18px;
-            font-size: 10px;
-            font-weight: 700;
-            color: white;
+              width: 34px;
+    height: 24px;
+    border-radius: 20%;
+    display: inline-block;
+    text-align: center;
+    line-height: 22px;
+    font-size: 12px;
+    /* font-weight: 700; */
+    color: black;
         }
 
-        .status-excellent {
-            background-color: #10b981;
+        /* .status-excellent {
+           background-color: #10b981; 
         }
 
         .status-verygood {
@@ -200,7 +200,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
         .status-poor {
             background-color: #ef4444;
-        }
+        } */
 
         .table-wrapper {
             overflow-x: auto;
@@ -322,7 +322,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Grade</th>
                                 <th colspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Passenger
                                     Details</th>
-                                <th colspan="5" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Feedback
+                                <th colspan="3" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Feedback
                                     Parameters</th>
                                 <th rowspan="2"
                                     style="border-bottom: 1px solid rgba(255,255,255,0.2); border-right: none;">
@@ -418,15 +418,15 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
                                     // Map PSI to status classes
                                     if ($psi >= 90) {
-                                        $status_class = 'status-excellent';
+                                        $status_class = '';
                                     } elseif ($psi >= 75) {
-                                        $status_class = 'status-verygood';
+                                        $status_class = '';
                                     } elseif ($psi >= 60) {
-                                        $status_class = 'status-good';
+                                        $status_class = '';
                                     } elseif ($psi >= 40) {
-                                        $status_class = 'status-average';
+                                        $status_class = '';
                                     } else {
-                                        $status_class = 'status-poor';
+                                        $status_class = '';
                                     }
 
                                     echo "<td><span class='status-circle {$status_class}'>{$psi_display}%</span></td>";
@@ -453,15 +453,15 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                         $psi_col_display = number_format($psi_col, 2) . '%';
 
                                         if ($psi_col >= 90) {
-                                            $status_class = 'status-excellent';
+                                            $status_class = '';
                                         } elseif ($psi_col >= 75) {
-                                            $status_class = 'status-verygood';
+                                            $status_class = '';
                                         } elseif ($psi_col >= 60) {
-                                            $status_class = 'status-good';
+                                            $status_class = '';
                                         } elseif ($psi_col >= 40) {
-                                            $status_class = 'status-average';
+                                            $status_class = '';
                                         } else {
-                                            $status_class = 'status-poor';
+                                            $status_class = '';
                                         }
 
                                         echo "<td><span class='status-circle {$status_class}'>{$psi_col_display}</span></td>";
@@ -473,15 +473,15 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                     $overall_display = number_format($overall_psi, 2) . '%';
 
                                     if ($overall_psi >= 90) {
-                                        $overall_class = 'status-excellent';
+                                        $overall_class = '';
                                     } elseif ($overall_psi >= 75) {
-                                        $overall_class = 'status-verygood';
+                                        $overall_class = '';
                                     } elseif ($overall_psi >= 60) {
-                                        $overall_class = 'status-good';
+                                        $overall_class = '';
                                     } elseif ($overall_psi >= 40) {
-                                        $overall_class = 'status-average';
+                                        $overall_class = '';
                                     } else {
-                                        $overall_class = 'status-poor';
+                                        $overall_class = '';
                                     }
 
                                     // replace the raw total cell with overall PSI percentage
