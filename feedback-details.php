@@ -324,9 +324,9 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                     Details</th>
                                 <th colspan="3" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Feedback
                                     Parameters</th>
-                                <th rowspan="2"
+                                <th rowspan="3"
                                     style="border-bottom: 1px solid rgba(255,255,255,0.2); border-right: none;">
-                                    Overall<br>Score</th>
+                                    Overall<br>Score %</th>
                             </tr>
                             <tr>
                                 <?php
@@ -408,15 +408,16 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
                                     
                                     $num_questions = count($feedback_array);
-                                    $max_score = $highest_marking;
-                                    $max_total =  $totalQuestions * $max_score;
+                                 $max_score = $highest_marking;
+                                   $max_total =  $totalQuestions * $max_score;
                                     $psi = 0;
                                     if ($max_total > 0) {
-                                        $psi = (intval($pd['total_feedback_sum']) / $max_total) * 100;
+                                      $pd['total_feedback_sum'];
+                                   $psi = (($pd['total_feedback_sum']) / $max_total) * 100;
                                     }
                                     $psi_display = number_format($psi, 2);
 
-                                    // Map PSI to status classes
+                                    
                                     if ($psi >= 90) {
                                         $status_class = '';
                                     } elseif ($psi >= 75) {
@@ -429,7 +430,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                         $status_class = '';
                                     }
 
-                                    echo "<td><span class='status-circle {$status_class}'>{$psi_display}%</span></td>";
+                                    echo "<td><span class='status-circle {$status_class}'>{$psi_display}</span></td>";
                                     echo "</tr>";
 
                                     $sr++;
@@ -437,7 +438,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
                                 // GRAND TOTAL ROW with same UI
                                 echo "<tr>";
-                                echo "<td colspan='9' style='text-align:center;font-weight:600;'>TOTAL</td>";
+                                // echo "<td colspan='9' style='text-align:center;font-weight:600;'>TOTAL</td>";
 
                                 // Calculate PSI per question and overall PSI for the total row
                                 $responses = is_array($passenger_details) ? count($passenger_details) : 0;
@@ -450,7 +451,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                         $t = intval($t);
                                         $max_for_col = $responses * $max_score;
                                         $psi_col = $max_for_col > 0 ? ($t / $max_for_col) * 100 : 0;
-                                        $psi_col_display = number_format($psi_col, 2) . '%';
+                                        $psi_col_display = number_format($psi_col, 2);
 
                                         if ($psi_col >= 90) {
                                             $status_class = '';
@@ -464,13 +465,13 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                             $status_class = '';
                                         }
 
-                                        echo "<td><span class='status-circle {$status_class}'>{$psi_col_display}</span></td>";
+                                        // echo "<td><span class='status-circle {$status_class}'>{$psi_col_display}</span></td>";
                                     }
 
                                     // Overall PSI
-                                    $max_total_overall = $responses * $total_questions * $max_score;
+                                  $max_total_overall = $responses * $total_questions * $max_score;
                                     $overall_psi = $max_total_overall > 0 ? ($total_feedback_sum_all / $max_total_overall) * 100 : 0;
-                                    $overall_display = number_format($overall_psi, 2) . '%';
+                                    $overall_display = number_format($overall_psi, 2);
 
                                     if ($overall_psi >= 90) {
                                         $overall_class = '';
@@ -485,13 +486,13 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                     }
 
                                     // replace the raw total cell with overall PSI percentage
-                                    echo "<td><span class='status-circle {$overall_class}'>{$overall_display}</span></td>";
+                                    // echo "<td><span class='status-circle {$overall_class}'>{$overall_display}</span></td>";
                                 } else {
                                     // Fallback: no responses or invalid max score — show zeros
                                     foreach ($feedback_totals as $t) {
-                                        echo "<td><span class='status-circle status-poor'>0.00%</span></td>";
+                                        echo "<td><span class='status-circle status-poor'>0.00</span></td>";
                                     }
-                                    echo "<td><span class='status-circle status-poor'>0.00%</span></td>";
+                                    echo "<td><span class='status-circle status-poor'>0.00</span></td>";
                                 }
 
                                 // echo "<td><span class='status-circle status-excellent'>{$total_feedback_sum_all}</span></td>";

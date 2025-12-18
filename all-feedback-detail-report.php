@@ -406,7 +406,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                     $max_total =  $totalQuestions * $max_score;
                                     $psi = 0;
                                     if ($max_total > 0) {
-                                        $psi = (intval($pd['total_feedback_sum']) / $max_total) * 100;
+                                        $psi = (($pd['total_feedback_sum']) / $max_total) * 100;
                                     }
                                     $psi_display = number_format($psi, 2);
 
@@ -423,7 +423,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                         $status_class = 'status-poor';
                                     }
 
-                                    echo "<td><span class='status-circle {$status_class}'>{$psi_display}%</span></td>";
+                                    echo "<td><span class='status-circle {$status_class}'>{$psi_display}</span></td>";
                                     echo "</tr>";
 
                                     $sr++;
@@ -431,7 +431,9 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
                                 // GRAND TOTAL ROW with same UI
                                 echo "<tr>";
-                                echo "<td colspan='9' style='text-align:center;font-weight:600;'>TOTAL</td>";
+
+                                //exta code
+                                // echo "<td colspan='9' style='text-align:center;font-weight:600;'>TOTAL</td>";
 
                                 // Calculate PSI per question and overall PSI for the total row
                                 // Use the coach-type passenger list (`$passenger_details_coach_type`) that we iterated above
@@ -459,7 +461,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                             $status_class = 'status-poor';
                                         }
 
-                                        echo "<td><span class='status-circle {$status_class}'>{$psi_col_display}</span></td>";
+                                        // echo "<td><span class='status-circle {$status_class}'>{$psi_col_display}</span></td>";
                                     }
 
                                     // Overall PSI (use the accumulated grand total `$grand_total_sum`)
@@ -480,17 +482,17 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                     }
 
                                     // replace the raw total cell with overall PSI percentage
-                                    echo "<td><span class='status-circle {$overall_class}'>{$overall_display}</span></td>";
+                                    // echo "<td><span class='status-circle {$overall_class}'>{$overall_display}</span></td>";
                                 } else {
                                     // Fallback: no responses or invalid max score — show zeros
                                     foreach ($feedback_totals as $t) {
-                                        echo "<td><span class='status-circle status-poor'>0.00%</span></td>";
+                                        // echo "<td><span class='status-circle status-poor'>0.00</span></td>";
                                     }
-                                    echo "<td><span class='status-circle status-poor'>0.00%</span></td>";
+                                    // echo "<td><span class='status-circle status-poor'>0.00</span></td>";
                                 }
 
                                 // echo "<td><span class='status-circle status-excellent'>{$total_feedback_sum_all}</span></td>";
-                                echo "</tr>";
+                                // echo "</tr>";
 
                             } else {
                                 echo "<tr><td colspan='15' style='text-align:center;color:red;'>No Data Found</td></tr>";
