@@ -354,7 +354,7 @@ require_once __DIR__ . '/connection.php';
                   <span class="info-box-icon"> <i class="bi bi-train-front-fill"></i> </span>
                   <div class="info-box-content">
                     <span class="info-box-text">Total Train </span>
-                    <span class="info-box-number">5,200</span>
+                    <span class="info-box-number"><?php  $sql = "SELECT COUNT(*) as count FROM `base_fb_target`"; $result = mysqli_query($conn, $sql); $row = mysqli_fetch_assoc($result); echo $row['count']; ?></span>
                   </div>
                   <!-- /.info-box-content -->
                 </div>
@@ -363,7 +363,7 @@ require_once __DIR__ . '/connection.php';
                   <span class="info-box-icon"> <i class="bi bi-person-badge-fill"></i> </span>
                   <div class="info-box-content">
                     <span class="info-box-text">Total Employee</span>
-                    <span class="info-box-number">92,050</span>
+                    <span class="info-box-number"><?php  $sql = "SELECT COUNT(*) as count FROM `base_employees`"; $result = mysqli_query($conn, $sql); $row = mysqli_fetch_assoc($result); echo $row['count']; ?></span>
                   </div>
                   <!-- /.info-box-content -->
                 </div>
@@ -372,7 +372,12 @@ require_once __DIR__ . '/connection.php';
                     <span class="info-box-icon"> <i class="bi bi-chat-left-text-fill"></i> </span>
                   <div class="info-box-content">
                     <span class="info-box-text">Today Feedback Count</span>
-                    <span class="info-box-number">114,381</span>
+                    <span class="info-box-number"><?php
+                    $sql = "SELECT COUNT(*) as count FROM `OBHS_passenger` WHERE DATE(created_at) = CURDATE()";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
+                    echo $row['count'];
+                    ?></span>
                   </div>
                   <!-- /.info-box-content -->
                 </div>
@@ -381,8 +386,13 @@ require_once __DIR__ . '/connection.php';
                   <span class="info-box-icon"> <i class="bi bi-calendar-month-fill"></i> </span>
                   <div class="info-box-content">
                     <span class="info-box-text">Monthly Feedback Count</span>
-                    <span class="info-box-number">1633,921</span>
-                  </div>
+                    <!-- <span class="info-box-number"><?php  $sql = "SELECT COUNT(*) as count FROM `OBHS_passenger`"; $result = mysqli_query($conn, $sql); $row = mysqli_fetch_assoc($result); echo $row['count']; ?></span> -->
+                  <?php
+                  $monthly_sql = "SELECT COUNT(*) AS monthly_count FROM `OBHS_passenger` WHERE YEAR(created_at) = YEAR(CURDATE()) AND MONTH(created_at) = MONTH(CURDATE())";
+                  $monthly_result = mysqli_query($conn, $monthly_sql);
+                  $monthly_row = mysqli_fetch_assoc($monthly_result);
+                  echo $monthly_row['monthly_count'];
+                  ?>
                   <!-- /.info-box-content -->
                 </div>
               </div>
