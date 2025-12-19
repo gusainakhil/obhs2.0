@@ -344,7 +344,7 @@ $stmt->close();
                             </div>
                             <div class="p-2 bg-slate-50 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500">Expires</p>
-                                <p class="font-semibold text-slate-800"><?php echo $end_date->format('M d'); ?></p>
+                                <p class="font-semibold text-slate-800"><?php echo $end_date->format('d M Y'); ?></p>
                             </div>
                         </div>
                         
