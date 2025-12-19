@@ -7,6 +7,13 @@ session_start();
 
 require_once "./includes/connection.php";
 
+//create a condition to check if user is logged in
+// if (isset($_SESSION['user_id'])) {
+//     // Redirect to dashboard if already logged in
+//     header("Location: dashboard.php");
+//     exit;
+// }
+
 
 $info = "";
 $error = "";
@@ -325,7 +332,7 @@ $mysqli->close();
                         <input type="checkbox" name="remember" class="w-4 h-4 text-emerald-500 rounded">
                         <span class="ml-2 text-sm text-slate-600">Remember me</span>
                     </label>
-                    <a href="#" class="text-sm text-emerald-600 hover:text-emerald-700 font-medium">Forgot Password?</a>
+                    <!-- <a href="#" class="text-sm text-emerald-600 hover:text-emerald-700 font-medium">Forgot Password?</a> -->
                 </div>
 
                 <!-- Login Button -->
