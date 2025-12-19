@@ -336,13 +336,13 @@ $mysqli->close();
             </form>
 
             <!-- Login Credentials Info (For Development) -->
-            <div class="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+            <!-- <div class="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
                 <p class="text-xs text-slate-500 font-semibold mb-2">
                     <i class="fas fa-info-circle mr-1"></i>Development Login Credentials:
                 </p>
                 <p class="text-xs text-slate-600">Username: <strong>jodhpur</strong></p>
                 <p class="text-xs text-slate-600">Password: <strong>123456</strong></p>
-            </div>
+            </div> -->
 
         </div>
 

@@ -41,19 +41,18 @@ foreach ($days as $day) {
 }
 
 // Get attendance count grouped by day of week for the last 7 days
-$attendance_query = "SELECT DATE(created_at) as date, DAYNAME(created_at) as day_name, COUNT(*) as count 
+$attendance_query = "SELECT DATE(created_at) as date, DATE_FORMAT(created_at, '%a') as day_name, COUNT(*) as count 
                      FROM base_attendance 
                      WHERE station_id = ? 
-                     AND created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-                     GROUP BY DATE(created_at), DAYNAME(created_at)
+                     AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+                     GROUP BY DATE(created_at)
                      ORDER BY date ASC";
 $stmt = $mysqli->prepare($attendance_query);
 $stmt->bind_param("i", $station_id);
 $stmt->execute();
 $result = $stmt->get_result();
 while ($row = $result->fetch_assoc()) {
-    $day_short = substr($row['day_name'], 0, 3); // Get first 3 characters (Sun, Mon, etc.)
-    $attendance_data[$day_short] = (int)$row['count'];
+    $attendance_data[$row['day_name']] = (int)$row['count'];
 }
 $stmt->close();
 
@@ -66,19 +65,18 @@ foreach ($days as $day) {
 }
 
 // Get photo report count grouped by day of week for the last 7 days
-$photo_query = "SELECT DATE(created_at) as date, DAYNAME(created_at) as day_name, COUNT(*) as count 
+$photo_query = "SELECT DATE(created_at) as date, DATE_FORMAT(created_at, '%a') as day_name, COUNT(*) as count 
                 FROM base_photo_report 
                 WHERE station_id = ? 
-                AND created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-                GROUP BY DATE(created_at), DAYNAME(created_at)
+                AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+                GROUP BY DATE(created_at)
                 ORDER BY date ASC";
 $stmt = $mysqli->prepare($photo_query);
 $stmt->bind_param("i", $station_id);
 $stmt->execute();
 $result = $stmt->get_result();
 while ($row = $result->fetch_assoc()) {
-    $day_short = substr($row['day_name'], 0, 3); // Get first 3 characters (Sun, Mon, etc.)
-    $photo_data[$day_short] = (int)$row['count'];
+    $photo_data[$row['day_name']] = (int)$row['count'];
 }
 $stmt->close();
 
@@ -460,19 +458,18 @@ $stmt->close();
                 }
 
                 // Get feedback count grouped by actual date for the last 7 days (ending today)
-                $feedback_query = "SELECT DATE(created_at) as date, DAYNAME(created_at) as day_name, COUNT(*) as count 
+                $feedback_query = "SELECT DATE(created_at) as date, DATE_FORMAT(created_at, '%a') as day_name, COUNT(*) as count 
                                    FROM OBHS_passenger 
                                    WHERE station_id = ? 
-                                   AND created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-                                   GROUP BY DATE(created_at), DAYNAME(created_at)
+                                   AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+                                   GROUP BY DATE(created_at)
                                    ORDER BY date ASC";
                 $stmt = $mysqli->prepare($feedback_query);
                 $stmt->bind_param("i", $station_id);
                 $stmt->execute();
                 $result = $stmt->get_result();
                 while ($row = $result->fetch_assoc()) {
-                    $day_short = substr($row['day_name'], 0, 3); // Get first 3 characters (Sun, Mon, etc.)
-                    $feedback_data[$day_short] = (int)$row['count'];
+                    $feedback_data[$row['day_name']] = (int)$row['count'];
                 }
                 $stmt->close();
                 // Build ordered days: last 7 days ending today (oldest to newest)
@@ -506,21 +503,19 @@ $stmt->close();
 
         // Weekly Cleanliness Photos Count Chart
         function drawCleanlinessChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Day', 'Photos Count'],
-                ['Sun', <?php echo $photo_data['Sun']; ?>],
-                ['Mon', <?php echo $photo_data['Mon']; ?>],
-                ['Tue', <?php echo $photo_data['Tue']; ?>],
-                ['Wed', <?php echo $photo_data['Wed']; ?>],
-                ['Thu', <?php echo $photo_data['Thu']; ?>],
-                ['Fri', <?php echo $photo_data['Fri']; ?>],
-                ['Sat', <?php echo $photo_data['Sat']; ?>]
-            ]);
+            var rows = <?php echo json_encode(array_map(function($d) use ($photo_data) {
+                return [$d, isset($photo_data[$d]) ? (int)$photo_data[$d] : 0];
+            }, $ordered_days)); ?>;
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Day');
+            data.addColumn('number', 'Photos Count');
+            data.addRows(rows);
 
             var options = {
                 title: '',
                 chartArea: { width: '80%', height: '70%' },
-                colors: ['#94a3b8'],
+                colors: ['#f59e0b'],
                 legend: { position: 'none' },
                 vAxis: {
                     minValue: 0,
@@ -543,21 +538,19 @@ $stmt->close();
 
         // Weekly Attendance Count Chart
         function drawAttendanceChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Day', 'Attendance'],
-                ['Sun', <?php echo $attendance_data['Sun']; ?>],
-                ['Mon', <?php echo $attendance_data['Mon']; ?>],
-                ['Tue', <?php echo $attendance_data['Tue']; ?>],
-                ['Wed', <?php echo $attendance_data['Wed']; ?>],
-                ['Thu', <?php echo $attendance_data['Thu']; ?>],
-                ['Fri', <?php echo $attendance_data['Fri']; ?>],
-                ['Sat', <?php echo $attendance_data['Sat']; ?>]
-            ]);
+            var rows = <?php echo json_encode(array_map(function($d) use ($attendance_data) {
+                return [$d, isset($attendance_data[$d]) ? (int)$attendance_data[$d] : 0];
+            }, $ordered_days)); ?>;
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Day');
+            data.addColumn('number', 'Attendance');
+            data.addRows(rows);
 
             var options = {
                 title: '',
                 chartArea: { width: '80%', height: '70%' },
-                colors: ['#3b82f6'],
+                colors: ['#8b5cf6'],
                 legend: { position: 'none' },
                 vAxis: {
                     minValue: 0,
