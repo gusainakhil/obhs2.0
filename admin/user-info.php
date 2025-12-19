@@ -779,9 +779,9 @@ $is_active = $end_date > $today;
                                             <div class="info-row">
                                                 <span class="info-label"><i class="bi bi-box-arrow-up-right"></i> How to
                                                     Login </span>
-                                                <span class="info-value"><a href="https://beatleanalytics.com/"
+                                                <span class="info-value"><a href="http://obhs.beatleanalytics.in/"
                                                         target="_blank"
-                                                        class="link-display">https://obhs.beatleanalytics.in/ -> Login
+                                                        class="link-display">http://obhs.beatleanalytics.in// -> Login
                                                         -> BeatleAnalytics OBHS</a></span>
                                             </div>
                                             <div class="info-row">
@@ -851,8 +851,8 @@ $is_active = $end_date > $today;
                                                     Functionality</span>
                                                 <span class="info-value">
                                                     <?php
-                                                    $photo = isset($user['photo']) ? (int) $user['photo'] : 0;
-                                                    echo $photo === 1 ? '<span class="badge badge-custom-active"><i class="bi bi-check-circle-fill"></i> ON</span>' : '<span class="badge bg-secondary"><i class="bi bi-x-circle-fill"></i> OFF</span>';
+                                                    $photo_skip = isset($user['photo_skip']) ? (int) $user['photo_skip'] : 0;
+                                                    echo $photo_skip === 1 ? '<span class="badge badge-custom-active"><i class="bi bi-check-circle-fill"></i> ON</span>' : '<span class="badge bg-secondary"><i class="bi bi-x-circle-fill"></i> OFF</span>';
                                                     ?>
                                                 </span>
                                             </div>
@@ -861,8 +861,8 @@ $is_active = $end_date > $today;
                                                     Functionality</span>
                                                 <span class="info-value">
                                                     <?php
-                                                    $photo_skip = isset($user['photo_skip']) ? (int) $user['photo_skip'] : 0;
-                                                    echo $photo_skip === 1 ? '<span class="badge badge-custom-active"><i class="bi bi-check-circle-fill"></i> ON</span>' : '<span class="badge bg-secondary"><i class="bi bi-x-circle-fill"></i> OFF</span>';
+                                                    $photo = isset($user['photo']) ? (int) $user['photo'] : 0;
+                                                    echo $photo === 1 ? '<span class="badge badge-custom-active"><i class="bi bi-check-circle-fill"></i> ON</span>' : '<span class="badge bg-secondary"><i class="bi bi-x-circle-fill"></i> OFF</span>';
                                                     ?>
                                                 </span>
                                             </div>
