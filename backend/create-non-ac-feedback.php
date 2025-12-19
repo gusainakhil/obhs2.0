@@ -1,3 +1,9 @@
+<?php
+session_start();
+include '../includes/connection.php';
+include '../includes/helpers.php';
+$station_id=$_SESSION['station_id'];
+$stationName = getStationName($station_id); ?>
 <?php include 'header.php';
 // php debug code
 ini_set('display_errors', 1);
@@ -7,7 +13,6 @@ error_reporting(E_ALL);
 // Set timezone to Asia/Kolkata (Indian Standard Time)
 date_default_timezone_set('Asia/Kolkata');
 
-include '../includes/connection.php';
 // Ensure station id is available for initial page render
 $station_id = $_SESSION['station_id'] ?? 0;
 

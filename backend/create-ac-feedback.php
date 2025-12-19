@@ -1,4 +1,12 @@
+<?php
+session_start();
+include '../includes/connection.php';
+include '../includes/helpers.php';
+$station_id=$_SESSION['station_id'];
+$stationName = getStationName($station_id); ?>
 <?php include 'header.php';
+
+
 // php debug code
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

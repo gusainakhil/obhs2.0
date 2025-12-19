@@ -1,3 +1,23 @@
+<?php
+session_start();
+include '../includes/connection.php';
+include '../includes/helpers.php';
+
+// Enable error reporting for development
+$debug = true; // set to false in production
+if ($debug) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+}
+
+// Check login
+checkLogin();
+
+// Get station information
+$station_name = getStationName($_SESSION['station_id']);
+$station_id = $_SESSION['station_id'];
+?>
 <?php $pageTitle = "Dashboard"; ?>
 <?php include 'header.php'; ?>
 
