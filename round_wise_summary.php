@@ -59,16 +59,23 @@ $station_name = getStationName($_SESSION['station_id']);
                         <label for="gradeFilter">Grade</label>
                         <select id="gradeFilter" name="grade" class="filter-select">
                             <option value="">-- All --</option>
-                            <option value="A" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'A') ? 'selected' : ''; ?>>A - Monday</option>
-                            <option value="B" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'B') ? 'selected' : ''; ?>>B - Tuesday</option>
-                            <option value="C" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'C') ? 'selected' : ''; ?>>C - Wednesday</option>
-                            <option value="D" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'D') ? 'selected' : ''; ?>>D - Thursday</option>
-                            <option value="E" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'E') ? 'selected' : ''; ?>>E - Friday</option>
-                            <option value="F" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'F') ? 'selected' : ''; ?>>F - Saturday</option>
-                            <option value="G" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'G') ? 'selected' : ''; ?>>G - Sunday</option>
+                            <option value="A" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'A') ? 'selected' : ''; ?>>A -
+                                Monday</option>
+                            <option value="B" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'B') ? 'selected' : ''; ?>>B -
+                                Tuesday</option>
+                            <option value="C" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'C') ? 'selected' : ''; ?>>C -
+                                Wednesday</option>
+                            <option value="D" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'D') ? 'selected' : ''; ?>>D -
+                                Thursday</option>
+                            <option value="E" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'E') ? 'selected' : ''; ?>>E -
+                                Friday</option>
+                            <option value="F" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'F') ? 'selected' : ''; ?>>F -
+                                Saturday</option>
+                            <option value="G" <?php echo (isset($_GET['grade']) && $_GET['grade'] === 'G') ? 'selected' : ''; ?>>G -
+                                Sunday</option>
                         </select>
                     </div>
-    
+
                     <?php
                     // Fetch train numbers for UP select
                     $train_query = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no ASC";
@@ -199,6 +206,8 @@ $station_name = getStationName($_SESSION['station_id']);
                             <th rowspan="2">Train No.</th>
                             <th colspan="2">Target Coaches</th>
                             <th colspan="2">Target Coach Feedbacks</th>
+                            <th colspan="2">AC</th>
+                            <th colspan="2">Non-AC</th>
                             <th rowspan="2">Target TTE</th>
                             <th rowspan="2">Achieved Target TTE</th>
                             <th rowspan="2">Total Feedback Target</th>
@@ -211,6 +220,12 @@ $station_name = getStationName($_SESSION['station_id']);
                             <th>Achieved</th>
                             <th>Total</th>
                             <th>Achieved</th>
+                            <th>Total</th>
+                            <th>Achieved</th>
+                            <th>Total</th>
+                            <th>Achieved</th>
+
+
 
                         </tr>
                     </thead>
@@ -229,6 +244,13 @@ $station_name = getStationName($_SESSION['station_id']);
                                 echo $trainUpData['total_feed'];
                             } ?></td>
                             <td><?php echo $uptrainachivedata['ac_non_ac']; ?></td>
+
+                            <td><?php echo $trainUpData['ac']; ?></td>
+                            <td><?php echo $uptrainachivedata['ac_achived_coaches']; ?></td>
+
+                            <td><?php echo $trainUpData['non_ac']; ?></td>
+                            <td><?php echo $uptrainachivedata['non_ac_achived_coaches']; ?></td>
+
                             <td><?php echo $trainUpData['tte']; ?></td>
                             <td><?php echo $uptrainachivedata['tte']; ?></td>
                             <td><?php echo $trainUpData['total_feed'] + $trainUpData['tte']; ?></td>
@@ -310,25 +332,34 @@ $station_name = getStationName($_SESSION['station_id']);
                             ?>
                             </td>
                         </tr>
-                           <tr>
-                            <td>1</td>
-                            <td><a href="<?php echo 'train-report.php?' . http_build_query(['train_no' => $up, 'grade' => $grade, 'from_date' => $from_date, 'to_date' => $to_date]); ?>"
+                        <tr>
+                            <td>2</td>
+                            <td><a href="<?php echo 'train-report.php?' . http_build_query(['train_no' => $down, 'grade' => $grade, 'from_date' => $from_date, 'to_date' => $to_date]); ?>"
                                     target="_blank" rel="noopener noreferrer"
-                                    class="train-link"><?php echo htmlspecialchars($up); ?></a></td>
-                            <td><?php $traindownData = get_coach_count($up);
+                                    class="train-link"><?php echo htmlspecialchars($down); ?></a></td>
+                            <td><?php $traindownData = get_coach_count($down);
                             echo $traindownData['total']; ?> </td>
-                            <td><?php $downtrainachivedata = acheived_feedback($up, $from_date, $to_date, $grade);
-                            echo $uptrainachivedata['distinct_coach']; ?>
+                            <td><?php $downtrainachivedata = acheived_feedback($down, $from_date, $to_date, $grade);
+                            echo $downtrainachivedata['distinct_coach']; ?>
                             </td>
                             <td><?php if ($traindownData['total_feed'] > 0) {
                                 echo $traindownData['total_feed'];
                             } ?></td>
-                            <td><?php echo $uptrainachivedata['ac_non_ac']; ?></td>
+                            <td><?php echo $downtrainachivedata['ac_non_ac']; ?></td>
+                            <!-- add here -->
+                            <td><?php echo $trainUpData['ac']; ?></td>
+                            <td><?php echo $downtrainachivedata['ac_achived_coaches']; ?></td>
+
+                            <td><?php echo $trainUpData['non_ac']; ?></td>
+                            <td><?php echo $downtrainachivedata['non_ac_achived_coaches']; ?></td>
+                            <!-- end here -->
+
+
                             <td><?php echo $traindownData['tte']; ?></td>
-                            <td><?php echo $uptrainachivedata['tte']; ?></td>
+                            <td><?php echo $downtrainachivedata['tte']; ?></td>
                             <td><?php echo $traindownData['total_feed'] + $traindownData['tte']; ?></td>
-                            <td><?php echo $uptrainachivedata['tte'] + $uptrainachivedata['ac_non_ac']; ?></td>
-                            <td><?php $down_train_psi = psi_calculation($up, $from_date, $to_date, $grade);
+                            <td><?php echo $downtrainachivedata['tte'] + $downtrainachivedata['ac_non_ac']; ?></td>
+                            <td><?php $down_train_psi = psi_calculation($down, $from_date, $to_date, $grade);
 
 
                             ($down_train_psi['feedback_sum'] ?? 0) . "<br>";
@@ -336,65 +367,65 @@ $station_name = getStationName($_SESSION['station_id']);
                             $down_train_question_count_ac_non_Ac['ac_questions'] . "<br>";
                             $down_train_question_count_ac_non_Ac['non_ac_questions'] . "<br>";
                             $down_train_question_count_ac_non_Ac['total_questions'] . "<br>";
-                            $uptrainachivedata['ac'] . "<br>";
-                            $uptrainachivedata['non_ac'] . "<br>";
-                            $uptrainachivedata['tte'] . "<br>";
+                            $downtrainachivedata['ac'] . "<br>";
+                            $downtrainachivedata['non_ac'] . "<br>";
+                            $downtrainachivedata['tte'] . "<br>";
                             $highest_marking = isset($down_train_psi['highest_marking']) ? (int) $down_train_psi['highest_marking'] : 'N/A';
                             (int) $highest_marking . " (integer) — original: " . var_export($highest_marking, true) . " (" . gettype($highest_marking) . ")<br>";
-                            $up_total_target = (isset($traindownData['total_feed']) ? $traindownData['total_feed'] : 0) + (isset($traindownData['tte']) ? $traindownData['tte'] : 0);
-                            $up_total_achieved = (isset($uptrainachivedata['tte']) ? $uptrainachivedata['tte'] : 0) + (isset($uptrainachivedata['ac_non_ac']) ? $uptrainachivedata['ac_non_ac'] : 0);
+                            $down_total_target = (isset($traindownData['total_feed']) ? $traindownData['total_feed'] : 0) + (isset($traindownData['tte']) ? $traindownData['tte'] : 0);
+                            $down_total_achieved = (isset($downtrainachivedata['tte']) ? $downtrainachivedata['tte'] : 0) + (isset($downtrainachivedata['ac_non_ac']) ? $downtrainachivedata['ac_non_ac'] : 0);
 
                             // Calculate PSI based on feedback count
                             
-                            if ($traindownData['tte'] == 1 && $uptrainachivedata['tte'] == 0) {
+                            if ($traindownData['tte'] == 1 && $downtrainachivedata['tte'] == 0) {
                                 $totalfeedbackup = $traindownData['total_feed'] + $traindownData['tte'];
-                                $achievedfeedbackup = $uptrainachivedata['ac_non_ac'] + $uptrainachivedata['tte'];
+                                $achievedfeedbackup = $downtrainachivedata['ac_non_ac'] + $downtrainachivedata['tte'];
 
                                 if ($totalfeedbackup < $achievedfeedbackup) {
-                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['ac'];
-                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['non_ac'];
-                                    $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['tte'];
+                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['ac'];
+                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['non_ac'];
+                                    $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['tte'];
                                     $psi_down = ($down_train_psi['feedback_sum'] / ($acpsi + $nonacpsi + $ttepsi)) * 66.66;
                                     echo "<br>" . number_format($psi_down, 2) . "%<br>";
                                 } elseif ($totalfeedbackup >= $achievedfeedbackup) {
-                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['ac'];
-                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['non_ac'];
-                                    $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['tte'];
+                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['ac'];
+                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['non_ac'];
+                                    $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['tte'];
                                     $psi_down = ($down_train_psi['feedback_sum'] / ($acpsi + $nonacpsi + $ttepsi)) * 66.66;
                                     echo "<br>" . number_format($psi_down, 2) . "%<br>";
 
                                 }
-                            } elseif ($traindownData['tte'] == 1 && $uptrainachivedata['tte'] == 1) {
+                            } elseif ($traindownData['tte'] == 1 && $downtrainachivedata['tte'] == 1) {
                                 $totalfeedbackup = $traindownData['total_feed'] + $traindownData['tte'];
-                                $achievedfeedbackup = $uptrainachivedata['ac_non_ac'] + $uptrainachivedata['tte'];
+                                $achievedfeedbackup = $downtrainachivedata['ac_non_ac'] + $downtrainachivedata['tte'];
                                 if ($totalfeedbackup < $achievedfeedbackup) {
-                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['ac'];
-                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['non_ac'];
-                                    $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['tte'];
+                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['ac'];
+                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['non_ac'];
+                                    $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['tte'];
                                     $psi_down = ($down_train_psi['feedback_sum'] / ($acpsi + $nonacpsi + $ttepsi)) * 100;
                                     echo "<br>" . number_format($psi_down, 2) . "%<br>";
                                 } elseif ($totalfeedbackup >= $achievedfeedbackup) {
-                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['ac'];
-                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['non_ac'];
-                                    $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['tte'];
+                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['ac'];
+                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['non_ac'];
+                                    $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['tte'];
                                     $psi_down = ($down_train_psi['feedback_sum'] / ($acpsi + $nonacpsi + $ttepsi)) * 100;
                                     echo "<br>" . number_format($psi_down, 2) . "%<br>";
 
                                 }
-                            } elseif ($traindownData['tte'] == 0 && $uptrainachivedata['tte'] == 0) {
+                            } elseif ($traindownData['tte'] == 0 && $downtrainachivedata['tte'] == 0) {
                                 $totalfeedbackup = $traindownData['total_feed'];
-                                $achievedfeedbackup = $uptrainachivedata['ac_non_ac'];
+                                $achievedfeedbackup = $downtrainachivedata['ac_non_ac'];
                                 if ($totalfeedbackup < $achievedfeedbackup) {
-                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['ac'];
-                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['non_ac'];
-                                    // $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['tte'];
+                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['ac'];
+                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['non_ac'];
+                                    // $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['tte'];
                                     $psi_down = ($down_train_psi['feedback_sum'] / ($acpsi + $nonacpsi)) * 100;
                                     echo "<br>" . number_format($psi_down, 2) . "%<br>";
 
                                 } elseif ($totalfeedbackup >= $achievedfeedbackup) { // 
-                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['ac'];
-                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['non_ac'];
-                                    //  $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $uptrainachivedata['tte'];
+                                    $acpsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['ac'];
+                                    $nonacpsi = $down_train_question_count_ac_non_Ac['non_ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['non_ac'];
+                                    //  $ttepsi = $down_train_question_count_ac_non_Ac['ac_questions'] * $down_train_psi['highest_marking'] * $downtrainachivedata['tte'];
                                     $psi_down = ($down_train_psi['feedback_sum'] / ($acpsi + $nonacpsi)) * 100;
                                     echo "<br>" . number_format($psi_down, 2) . "%<br>";
                                 }
@@ -410,17 +441,37 @@ $station_name = getStationName($_SESSION['station_id']);
                     <tfoot>
                         <tr>
                             <td colspan="2">Total</td>
-                            <td><?php echo (isset($trainUpData['total']) ? $trainUpData['total'] : 0) + (isset($traindownData['total']) ? $traindownData['total'] : 0); ?></td>
-                            <td><?php echo (isset($uptrainachivedata['distinct_coach']) ? $uptrainachivedata['distinct_coach'] : 0) + (isset($downtrainachivedata['distinct_coach']) ? $downtrainachivedata['distinct_coach'] : 0); ?></td>
-                            <td><?php echo (isset($trainUpData['total_feed']) ? $trainUpData['total_feed'] : 0) + (isset($traindownData['total_feed']) ? $traindownData['total_feed'] : 0); ?></td>
-                            <td><?php echo (isset($uptrainachivedata['ac_non_ac']) ? $uptrainachivedata['ac_non_ac'] : 0) + (isset($downtrainachivedata['ac_non_ac']) ? $downtrainachivedata['ac_non_ac'] : 0); ?></td>
-                            <td><?php echo (isset($trainUpData['tte']) ? $trainUpData['tte'] : 0) + (isset($traindownData['tte']) ? $traindownData['tte'] : 0); ?></td>
-                            <td><?php echo (isset($uptrainachivedata['tte']) ? $uptrainachivedata['tte'] : 0) + (isset($downtrainachivedata['tte']) ? $downtrainachivedata['tte'] : 0); ?></td>
-                            <td><?php echo ((isset($trainUpData['total_feed']) ? $trainUpData['total_feed'] : 0) + (isset($traindownData['total_feed']) ? $traindownData['total_feed'] : 0) + (isset($trainUpData['tte']) ? $trainUpData['tte'] : 0) + (isset($traindownData['tte']) ? $traindownData['tte'] : 0)); ?></td>
-                            <td><?php echo ((isset($uptrainachivedata['ac_non_ac']) ? $uptrainachivedata['ac_non_ac'] : 0) + (isset($downtrainachivedata['ac_non_ac']) ? $downtrainachivedata['ac_non_ac'] : 0) + (isset($uptrainachivedata['tte']) ? $uptrainachivedata['tte'] : 0) + (isset($downtrainachivedata['tte']) ? $downtrainachivedata['tte'] : 0)); ?></td>
+                            <td><?php echo (isset($trainUpData['total']) ? $trainUpData['total'] : 0) + (isset($traindownData['total']) ? $traindownData['total'] : 0); ?>
+                            </td>
+                            <td><?php echo (isset($uptrainachivedata['distinct_coach']) ? $uptrainachivedata['distinct_coach'] : 0) + (isset($downtrainachivedata['distinct_coach']) ? $downtrainachivedata['distinct_coach'] : 0); ?>
+                            </td>
+                            <td><?php echo (isset($trainUpData['total_feed']) ? $trainUpData['total_feed'] : 0) + (isset($traindownData['total_feed']) ? $traindownData['total_feed'] : 0); ?>
+                            </td>
+                            <td><?php echo (isset($uptrainachivedata['ac_non_ac']) ? $uptrainachivedata['ac_non_ac'] : 0) + (isset($downtrainachivedata['ac_non_ac']) ? $downtrainachivedata['ac_non_ac'] : 0); ?>
+                            </td>
+                            <td><?php echo (isset($trainUpData['tte']) ? $trainUpData['tte'] : 0) + (isset($traindownData['tte']) ? $traindownData['tte'] : 0); ?>
+                            </td>
+
+
+
+                            <td><?php echo (isset($trainUpData['ac']) ? $trainUpData['ac'] : 0) + (isset($traindownData['ac']) ? $traindownData['ac'] : 0); ?>
+                            </td>
+                            <td><?php echo (isset($trainUpData['ac_achived_coaches']) ? $trainUpData['ac_achived_coaches'] : 0) + (isset($traindownData['ac_achived_coaches']) ? $traindownData['ac_achived_coaches'] : 0); ?>
+                            </td>
+                            <td><?php echo (isset($trainUpData['non_ac']) ? $trainUpData['non_ac'] : 0) + (isset($traindownData['non_ac']) ? $traindownData['non_ac'] : 0); ?>
+                            </td>
+                            <td><?php echo (isset($trainUpData['non_ac_achived_coaches']) ? $trainUpData['non_ac_achived_coaches'] : 0) + (isset($traindownData['non_ac_achived_coaches']) ? $traindownData['non_ac_achived_coaches'] : 0); ?>
+                            </td>
+
+                            <td><?php echo (isset($uptrainachivedata['tte']) ? $uptrainachivedata['tte'] : 0) + (isset($downtrainachivedata['tte']) ? $downtrainachivedata['tte'] : 0); ?>
+                            </td>
+                            <td><?php echo ((isset($trainUpData['total_feed']) ? $trainUpData['total_feed'] : 0) + (isset($traindownData['total_feed']) ? $traindownData['total_feed'] : 0) + (isset($trainUpData['tte']) ? $trainUpData['tte'] : 0) + (isset($traindownData['tte']) ? $traindownData['tte'] : 0)); ?>
+                            </td>
+                            <td><?php echo ((isset($uptrainachivedata['ac_non_ac']) ? $uptrainachivedata['ac_non_ac'] : 0) + (isset($downtrainachivedata['ac_non_ac']) ? $downtrainachivedata['ac_non_ac'] : 0) + (isset($uptrainachivedata['tte']) ? $uptrainachivedata['tte'] : 0) + (isset($downtrainachivedata['tte']) ? $downtrainachivedata['tte'] : 0)); ?>
+                            </td>
                             <td><?php
-                            $upVal = isset($psi_up) ? (float)$psi_up : 0.0;
-                            $downVal = isset($psi_down) ? (float)$psi_down : 0.0;
+                            $upVal = isset($psi_up) ? (float) $psi_up : 0.0;
+                            $downVal = isset($psi_down) ? (float) $psi_down : 0.0;
                             $avgPsi = ($upVal + $downVal) / 2;
                             echo number_format($avgPsi, 2) . '%';
                             ?></td>

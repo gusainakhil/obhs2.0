@@ -264,6 +264,8 @@ function acheived_feedback($train_no, $date_from, $date_to , $grade)
 
     $sql = "SELECT 
     COUNT(DISTINCT CASE WHEN coach_type != 'TTE' THEN coach_no END) AS distinct_coaches,
+    COUNT(DISTINCT CASE WHEN coach_type = 'AC' THEN coach_no END) AS Ac_achived_coaches,
+    COUNT(DISTINCT CASE WHEN coach_type = 'NON-AC' THEN coach_no END) AS Non_ac_achived_coaches,
     COUNT(*) AS total_count,
     COUNT(CASE WHEN coach_type = 'AC' THEN 1 END) AS ac_count,
     COUNT(CASE WHEN coach_type = 'NON-AC' THEN 1 END) AS non_ac_count,
@@ -295,6 +297,8 @@ WHERE train_no = ?
 
 
         return [
+            'ac_achived_coaches' => $row['Ac_achived_coaches'],
+            'non_ac_achived_coaches' => $row['Non_ac_achived_coaches'],
             'distinct_coach'   => $row['distinct_coaches'],
             'ac'               => $row['ac_count'],
             'non_ac'           => $row['non_ac_count'],
