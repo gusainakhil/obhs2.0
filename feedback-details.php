@@ -314,9 +314,10 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Coach<br>No</th>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Customer<br>Name
                                 </th>
-                                <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">PNR No</th>
-                                <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">
+                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">
                                     Customer<br>Phone</th>
+                                <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">PNR No</th>
+                               
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Train<br>No.
                                 </th>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Grade</th>
