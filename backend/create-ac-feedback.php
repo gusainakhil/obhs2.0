@@ -215,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       
                     </div>
                     <div class="form-row">
-                        <!-- generate table where we show ac question from  OBHS_questions table    -->
+                      
                         <table>
                             <thead>
                                 <tr>
