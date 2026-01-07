@@ -170,15 +170,15 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
         }
 
         .status-circle {
-                         width: 34px;
-    height: 24px;
-    border-radius: 20%;
-    display: inline-block;
-    text-align: center;
-    line-height: 22px;
-    font-size: 12px;
-    /* font-weight: 700; */
-    color: black;
+            width: 34px;
+            height: 24px;
+            border-radius: 20%;
+            display: inline-block;
+            text-align: center;
+            line-height: 22px;
+            font-size: 12px;
+            /* font-weight: 700; */
+            color: black;
         }
 
         /* .status-excellent {
@@ -215,42 +215,43 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
         .customer-link:hover {
             text-decoration: underline;
         }
-       @media print {
 
-   /* A4 Landscape with no margin */
-   @page {
-      size: A4 landscape;
-      margin: 0;
-   }
+        @media print {
 
-   /* Hide everything */
-   body * {
-      visibility: hidden;
-   }
+            /* A4 Landscape with no margin */
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
 
-   /* Only print this DIV */
-   .table-wrapper, 
-   .table-wrapper * {
-      visibility: visible;
-   }
+            /* Hide everything */
+            body * {
+                visibility: hidden;
+            }
 
-   /* Position cleanly for print */
-   .table-wrapper {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      padding: 10px;
-      font-size: 11px;
-      line-height: 1.2;
-   }
+            /* Only print this DIV */
+            .table-wrapper,
+            .table-wrapper * {
+                visibility: visible;
+            }
 
-   /* Hide print button */
-   button {
-      display: none !important;
-   }
-}
-</style>
+            /* Position cleanly for print */
+            .table-wrapper {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 10px;
+                font-size: 11px;
+                line-height: 1.2;
+            }
+
+            /* Hide print button */
+            button {
+                display: none !important;
+            }
+        }
+    </style>
 
     </style>
 </head>
@@ -288,13 +289,14 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                 }
                 ?>
                 <!-- <button class="badge badge-excellent" onclick="exportExcel()">Excel</button> -->
-                <button type="button" class="badge" style="background: #0ea5e9;" onclick="window.print()" aria-label="Print">Print</button>
+                <button type="button" class="badge" style="background: #0ea5e9;" onclick="window.print()"
+                    aria-label="Print">Print</button>
                 <br>
                 <br>
 
-    
-                    
-                     <?php $highest_marking=check_highest_marking($_SESSION['station_id']); ?>
+
+
+                <?php $highest_marking = check_highest_marking($_SESSION['station_id']); ?>
                 <!-- Table -->
                 <div class="table-wrapper">
                     <table class="feedback-table">
@@ -304,12 +306,15 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Date</th>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Seat<br>No</th>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Coach<br>No</th>
-                                <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Customer<br>Name
-                                </th>
+                               
+                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Customer<br>Name</th>
+                                
+                             <?php if($_SESSION['station_id'] != 16): ?>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">
                                     Customer<br>Phone</th>
+                                    <?php endif; ?>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">PNR No</th>
-                                
+
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Train<br>No.
                                 </th>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Grade</th>
@@ -327,7 +332,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 $OBHS_question = get_questions_data($_SESSION['station_id'], $coach_type);
 
                                 if (!empty($OBHS_question)) {
-                                    $totalQuestions = count($OBHS_question); 
+                                    $totalQuestions = count($OBHS_question);
                                     foreach ($OBHS_question as $q) {
 
                                         $eng = htmlspecialchars($q['eng_question']);
@@ -351,11 +356,11 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 $to_date
                             );
 
-                        
-                    
 
-                           // print_r($passenger_details_coach_type);
 
+
+                            // print_r($passenger_details_coach_type);
+                            
                             if (!empty($passenger_details_coach_type)) {
                                 $sr = 1;
                                 $feedback_totals = [];      // To store total per feedback column
@@ -381,30 +386,32 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                     echo "<td>{$pd['seat_no']}</td>";
                                     echo "<td>{$pd['coach_no']}</td>";
                                     echo "<td><a href='employee-card.php?passenger_id={$pd['passenger_id']}"
-                                . "&station_id={$_SESSION['station_id']}"
-                                . "&train_no={$pd['train_no']}"
-                                . "&coach_no={$pd['coach_no']}"
-                                 . "&phone={$pd['ph_number']}"
-                                . "&pnr_number={$pd['pnr_number']}"
-                                . "&name={$pd['name']}"
-                                . "&grade={$pd['grade']}"
-                                . "&seat_no={$pd['seat_no']}"
-                                . "&date_from={$from_date}"
-                                . "&date_to={$to_date}' class='customer-link' target='_blank'>"
-                                . "{$pd['name']}</a></td>";
-                                    echo "<td>{$pd['ph_number']}</td>";
+                                        . "&station_id={$_SESSION['station_id']}"
+                                        . "&train_no={$pd['train_no']}"
+                                        . "&coach_no={$pd['coach_no']}"
+                                        . "&phone={$pd['ph_number']}"
+                                        . "&pnr_number={$pd['pnr_number']}"
+                                        . "&name={$pd['name']}"
+                                        . "&grade={$pd['grade']}"
+                                        . "&seat_no={$pd['seat_no']}"
+                                        . "&date_from={$from_date}"
+                                        . "&date_to={$to_date}' class='customer-link' target='_blank'>"
+                                        . "{$pd['name']}</a></td>";
+                                        if ($_SESSION['station_id'] != 16) {
+                                            echo "  <td>{$pd['ph_number']}</td>";
+                                        }
                                     echo "<td>{$pd['pnr_number']}</td>";
                                     echo "<td>{$pd['train_no']}</td>";
                                     echo "<td>{$pd['grade']}</td>";
 
-                                   foreach ($feedback_array as $fv) {
+                                    foreach ($feedback_array as $fv) {
                                         echo "<td><span class='status-circle status-excellent'>{$fv}</span></td>";
                                     }
 
-                                    
+
                                     $num_questions = count($feedback_array);
                                     $max_score = $highest_marking;
-                                    $max_total =  $totalQuestions * $max_score;
+                                    $max_total = $totalQuestions * $max_score;
                                     $psi = 0;
                                     if ($max_total > 0) {
                                         $psi = (($pd['total_feedback_sum']) / $max_total) * 100;
@@ -435,7 +442,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
                                 //exta code
                                 // echo "<td colspan='9' style='text-align:center;font-weight:600;'>TOTAL</td>";
-
+                            
                                 // Calculate PSI per question and overall PSI for the total row
                                 // Use the coach-type passenger list (`$passenger_details_coach_type`) that we iterated above
                                 $responses = is_array($passenger_details_coach_type) ? count($passenger_details_coach_type) : 0;
@@ -494,7 +501,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
                                 // echo "<td><span class='status-circle status-excellent'>{$total_feedback_sum_all}</span></td>";
                                 // echo "</tr>";
-
+                            
                             } else {
                                 echo "<tr><td colspan='15' style='text-align:center;color:red;'>No Data Found</td></tr>";
                             }

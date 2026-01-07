@@ -5,31 +5,46 @@ error_reporting(E_ALL);
 
 header("Content-Type: application/json");
 
-// Database connection
-require_once "../includes/connection.php"; // this file sets $mysqli
+require_once "../includes/connection.php";
 
-// SQL JOIN to get station_name for ALL employees
-$sql = "SELECT b.id, b.employee_id, b.name, b.desination, b.station_id,
-               s.station_name
-        FROM base_employees b
-        LEFT JOIN OBHS_station s ON b.station_id = s.station_id";
+// Get stationId from query param
+$stationId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Decide table based on conditionstation_id
+if ($stationId === 17) {
+    $table = "base_employees_jodhpur";
+} else {
+    $table = "base_employees";
+}
+
+// SQL JOIN
+$sql = "
+    SELECT b.id, b.employee_id, b.name, b.desination, b.station_id,
+           s.station_name
+    FROM $table b
+    LEFT JOIN OBHS_station s 
+        ON b.station_id = s.station_id
+";
+
+// Filter if stationId given
+if ($stationId > 0) {
+    $sql .= " WHERE b.station_id = $stationId";
+}
 
 $result = $mysqli->query($sql);
 
-// Check if records found
-if ($result->num_rows > 0) {
+if ($result && $result->num_rows > 0) {
 
     $employees = [];
 
     while ($row = $result->fetch_assoc()) {
-
         $employees[] = [
-            "desination"   => $row["desination"],
-            "employee_id"  => $row["name"],
             "id"           => intval($row["id"]),
-            "name"         => $row["employee_id"],
-            "station_name" => $row["station_name"],
-            "station_id"   => intval($row["station_id"])
+            "employee_id"  => $row["employee_id"],
+            "name"         => $row["name"],
+            "desination"   => $row["desination"],
+            "station_id"   => intval($row["station_id"]),
+            "station_name" => $row["station_name"]
         ];
     }
 
@@ -40,7 +55,6 @@ if ($result->num_rows > 0) {
     ]);
 
 } else {
-
     echo json_encode([
         "status" => "not_found",
         "message" => "No employees found"

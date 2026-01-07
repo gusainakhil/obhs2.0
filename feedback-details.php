@@ -312,10 +312,13 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Date</th>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Seat<br>No</th>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Coach<br>No</th>
-                                <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Customer<br>Name
-                                </th>
+                               
+                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Customer<br>Name</th>
+                                
+          <!-- #region -->           <?php if($_SESSION['station_id'] != 16): ?>
                                  <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">
                                     Customer<br>Phone</th>
+                                    <?php endif; ?>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">PNR No</th>
                                
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Train<br>No.
@@ -398,7 +401,9 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 . "&date_to={$to_date}' class='customer-link' target='_blank'>"
                                 . "{$pd['name']}</a></td>";
 
-                                    echo "<td>{$pd['ph_number']}</td>";
+                                    if ($_SESSION['station_id'] != 16) {
+                                            echo "  <td>{$pd['ph_number']}</td>";
+                                        }
                                     echo "<td>{$pd['pnr_number']}</td>";
                                     echo "<td>{$pd['train_no']}</td>";
                                     echo "<td>{$pd['grade']}</td>";
