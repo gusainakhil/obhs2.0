@@ -37,26 +37,28 @@ $selected_train_to = $_REQUEST['trainTo'] ?? '';
 $date_from = $_REQUEST['dateFrom'] ?? date('Y-m-01');
 $date_to = $_REQUEST['dateTo'] ?? date('Y-m-d');
 
-// Fetch attendance data with photos
+// Fetch attendance data with photos (optimized with LEFT JOIN to avoid N+1 query)
 $attendance_data = [];
 if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_train_to)) {
     $query = "SELECT 
-                employee_id,
-                employee_name,
-                train_no,
-                type_of_attendance,
-                location,
-                photo,
-                created_at
-              FROM base_attendance 
-              WHERE station_id = ?
-              AND grade = ?
-              AND train_no IN (?, ?)
-              AND DATE(created_at) BETWEEN ? AND ?
-              ORDER BY employee_name, train_no, FIELD(type_of_attendance, 'Start of journey', 'Mid of journey', 'End of journey')";
+                ba.employee_id,
+                ba.employee_name,
+                ba.train_no,
+                ba.type_of_attendance,
+                ba.location,
+                ba.photo,
+                ba.created_at,
+                be.photo as employee_photo
+              FROM base_attendance ba
+              LEFT JOIN base_employees be ON ba.employee_id = be.employee_id AND be.station = ?
+              WHERE ba.station_id = ?
+              AND ba.grade = ?
+              AND ba.train_no IN (?, ?)
+              AND DATE(ba.created_at) BETWEEN ? AND ?
+              ORDER BY ba.employee_name, ba.train_no, FIELD(ba.type_of_attendance, 'Start of journey', 'Mid of journey', 'End of journey')";
     
     $stmt = $mysqli->prepare($query);
-    $stmt->bind_param("ssssss", $station_id, $selected_grade, $selected_train_from, $selected_train_to, $date_from, $date_to);
+    $stmt->bind_param("sssssss", $station_id, $station_id, $selected_grade, $selected_train_from, $selected_train_to, $date_from, $date_to);
     $stmt->execute();
     $result = $stmt->get_result();
     
@@ -65,17 +67,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
         $emp_id = $row['employee_id'];
         
         if (!isset($attendance_data[$emp_id])) {
-            // Fetch employee photo from base_employeess table
-            $employee_photo = '';
-            $emp_query = "SELECT photo FROM base_employees WHERE employee_id = ? AND station = ?";
-            $emp_stmt = $mysqli->prepare($emp_query);
-            $emp_stmt->bind_param("si", $emp_id, $station_id);
-            $emp_stmt->execute();
-            $emp_result = $emp_stmt->get_result();
-            if ($emp_row = $emp_result->fetch_assoc()) {
-                $employee_photo = $emp_row['photo'];
-            }
-            $emp_stmt->close();
+            $employee_photo = $row['employee_photo'] ?? '';
             
             // Debug: Log if no photo found
             if ($debug && empty($employee_photo)) {
@@ -116,7 +108,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance with Photos - <?php echo htmlspecialchars($station_name); ?></title>
+    <title>Attendance with Photos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -228,6 +220,12 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
 
         .attendance-table tbody tr {
             border-bottom: 1px solid #e2e8f0;
+            transition: box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+
+        .attendance-table tbody tr:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f8fafc;
         }
 
         .attendance-table tbody td {
@@ -244,8 +242,9 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
         }
 
         .employee-cell {
-            text-align: left !important;
-            padding-left: 16px !important;
+            text-align: center !important;
+            padding: 12px 16px !important;
+            min-width: 200px;
         }
 
         .employee-photo {
@@ -256,24 +255,67 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
             border: 2px solid #e2e8f0;
             display: block;
             margin: 0 auto;
+            flex-shrink: 0;
         }
 
         .employee-info {
             display: flex;
-            align-items: center;
+            flex-direction: row;
+            align-items: flex-start;
             gap: 12px;
+            justify-content: center;
+        }
+
+        .employee-photo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .employee-details {
+            flex: 1;
+            width: 100%;
+            text-align: center;
         }
 
         .employee-name {
             font-weight: 600;
             color: #1e293b;
-            font-size: 16px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .employee-name .counter {
+            color: #0ea5e9;
+            margin-right: 4px;
+        }
+
+        .counter-badge {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0ea5e9;
+            background: #f0f9ff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #0ea5e9;
+            flex-shrink: 0;
         }
 
         .employee-id {
-            color: #64748b;
-            font-size: 14px;
-            margin-top: 4px;
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 15px;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .employee-id strong {
+            color: #1e293b;
         }
 
         .location-text {
@@ -288,6 +330,11 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
             color: #475569;
             line-height: 1.6;
             font-weight: 500;
+            max-width: 140px;
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow-wrap: break-word;
+            margin: 0 auto;
         }
 
         .date-time {
@@ -299,8 +346,8 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
         }
 
         .report-icon {
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             cursor: pointer;
             transition: transform 0.2s ease;
             display: block;
@@ -311,7 +358,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
         }
 
         .report-icon:hover {
-            transform: scale(1.1);
+            transform: scale(1.4);
         }
 
         .journey-header {
@@ -322,19 +369,49 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
             letter-spacing: 0.5px;
         }
 
+        @media (max-width: 1024px) {
+            .attendance-table tbody td {
+                padding: 12px 8px;
+            }
+
+            .report-icon {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
         @media (max-width: 768px) {
             .attendance-table {
-                font-size: 10px;
+                font-size: 11px;
+            }
+
+            .attendance-table tbody td {
+                padding: 10px 6px;
             }
 
             .employee-photo {
-                width: 45px;
-                height: 45px;
+                width: 60px;
+                height: 60px;
             }
             
             .report-icon {
                 width: 80px;
                 height: 80px;
+                margin: 0 auto 6px auto;
+            }
+
+            .coordinates {
+                font-size: 11px;
+                max-width: 120px;
+            }
+
+            .date-time {
+                font-size: 11px;
+            }
+
+            .employee-cell {
+                min-width: 150px;
+                padding: 10px 8px !important;
             }
         }
     </style>
@@ -456,20 +533,32 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                             <?php foreach ($attendance_data as $emp_id => $employee): ?>
                                 <tr>
                                     <td class="employee-cell">
-                                        <div class="employee-info">
-                                            <?php 
-                                            $employee_photo = 'uploads/employee/' . $employee['employee_photo'];
-                                            if (empty($employee['employee_photo']) || !file_exists($employee_photo)) {
-                                                $employee_photo = 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png';
-                                            }
-                                            ?>
-                                            <img src="<?php echo htmlspecialchars($employee_photo); ?>" alt="Photo" class="employee-photo">
-                                            <div>
-                                                <div class="employee-name"><?php echo $counter++; ?>. <?php echo htmlspecialchars($employee['employee_name']); ?></div>
-                                                <div class="employee-id"><?php echo htmlspecialchars($employee['employee_id']); ?></div>
-                                            </div>
-                                        </div>
-                                    </td>
+    <div class="employee-info">
+        <div class="counter-badge"><?php echo $counter++; ?></div>
+        
+        <div class="employee-photo-wrapper">
+            <?php 
+            $employee_photo = 'uploads/employee/' . $employee['employee_photo'];
+            if (empty($employee['employee_photo']) || !file_exists($employee_photo)) {
+                $employee_photo = 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png';
+            }
+            ?>
+            
+            <img src="<?php echo htmlspecialchars($employee_photo); ?>" alt="Photo" class="employee-photo">
+
+            <div class="employee-details">
+                <div class="employee-name">
+                    <strong>Emp Name:</strong> <?php echo htmlspecialchars($employee['employee_name']); ?>
+                </div>
+
+                <div class="employee-id">
+                    <strong>Emp ID:</strong> <strong><?php echo htmlspecialchars($employee['employee_id']); ?></strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</td>
+
                                     
                                     <?php 
                                     $checkpoints = ['Start of journey', 'Mid of journey', 'End of journey'];
@@ -483,9 +572,37 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                 if (!file_exists($photo_path)) {
                                                     $photo_path = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
                                                 }
+                                                
+                                                // Parse location data
+                                                $location = $data['location'];
+                                                $latitude = '';
+                                                $longitude = '';
+                                                $location_name = '';
+                                                
+                                                // Format 1: 'lati: 21.1312829 longi: 79.0843243 Nagpur'
+                                                if (preg_match('/lati:\s*([\d.]+)\s+longi:\s*([\d.]+)\s*(.+)/', $location, $matches)) {
+                                                    $latitude = $matches[1];
+                                                    $longitude = $matches[2];
+                                                    $location_name = trim($matches[3]);
+                                                }
+                                                // Format 2: '16.3016563,80.4446609,Guntur'
+                                                else if (preg_match('/^([\d.]+),([\d.]+),(.+)$/', $location, $matches)) {
+                                                    $latitude = $matches[1];
+                                                    $longitude = $matches[2];
+                                                    $location_name = trim($matches[3]);
+                                                }
+                                                else {
+                                                    $location_name = $location;
+                                                }
                                                 ?>
                                                 <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report" class="report-icon">
-                                                <div class="coordinates"><?php echo htmlspecialchars($data['location']); ?></div>
+                                                <div class="coordinates">
+                                                    <?php if (!empty($latitude)): ?>
+                                                        Lati: <?php echo htmlspecialchars($latitude); ?><br>
+                                                        Longi: <?php echo htmlspecialchars($longitude); ?><br>
+                                                    <?php endif; ?>
+                                                    <?php echo htmlspecialchars($location_name); ?>
+                                                </div>
                                                 <div class="date-time">Date: <?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></div>
                                             <?php else: ?>
                                                 <div style="color: #94a3b8;">No Data</div>
@@ -503,9 +620,37 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                 if (!file_exists($photo_path)) {
                                                     $photo_path = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
                                                 }
+                                                
+                                                // Parse location data
+                                                $location = $data['location'];
+                                                $latitude = '';
+                                                $longitude = '';
+                                                $location_name = '';
+                                                
+                                                // Format 1: 'lati: 21.1312829 longi: 79.0843243 Nagpur'
+                                                if (preg_match('/lati:\s*([\d.]+)\s+longi:\s*([\d.]+)\s*(.+)/', $location, $matches)) {
+                                                    $latitude = $matches[1];
+                                                    $longitude = $matches[2];
+                                                    $location_name = trim($matches[3]);
+                                                }
+                                                // Format 2: '16.3016563,80.4446609,Guntur'
+                                                else if (preg_match('/^([\d.]+),([\d.]+),(.+)$/', $location, $matches)) {
+                                                    $latitude = $matches[1];
+                                                    $longitude = $matches[2];
+                                                    $location_name = trim($matches[3]);
+                                                }
+                                                else {
+                                                    $location_name = $location;
+                                                }
                                                 ?>
                                                 <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report" class="report-icon">
-                                                <div class="coordinates"><?php echo htmlspecialchars($data['location']); ?></div>
+                                                <div class="coordinates">
+                                                    <?php if (!empty($latitude)): ?>
+                                                        Lati: <?php echo htmlspecialchars($latitude); ?><br>
+                                                        Longi: <?php echo htmlspecialchars($longitude); ?><br>
+                                                    <?php endif; ?>
+                                                    <?php echo htmlspecialchars($location_name); ?>
+                                                </div>
                                                 <div class="date-time">Date: <?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></div>
                                             <?php else: ?>
                                                 <div style="color: #94a3b8;">No Data</div>
