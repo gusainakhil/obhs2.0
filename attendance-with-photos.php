@@ -11,7 +11,7 @@ if ($debug) {
     error_reporting(E_ALL);
 }
 
-// Call reusable login check
+
 checkLogin();
 
 // Now fetch station name
