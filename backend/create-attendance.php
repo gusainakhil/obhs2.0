@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_attendance']))
     $grades = $_POST['grade'] ?? [];
     $designations = $_POST['designation'] ?? [];
     $tocs = $_POST['toc'] ?? [];
+    $created_ats = $_POST['created_at'] ?? [];
     
     $upload_dir = '../uploads/attendence/';
     if (!file_exists($upload_dir)) {
@@ -94,13 +95,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_attendance']))
             }
         }
         
-        // Insert into database
+        // Created at conversion (datetime-local -> MySQL DATETIME)
+        $created_at_input = $created_ats[$i] ?? '';
+        $created_at_mysql = !empty($created_at_input) ? str_replace('T', ' ', $created_at_input) : date('Y-m-d H:i:s');
+        if (strlen($created_at_mysql) === 16) {
+            $created_at_mysql .= ':00';
+        }
+
+        // Insert into database with provided created_at
         $insert_query = "INSERT INTO base_attendance 
                         (station_id, employee_id, employee_name, train_no, type_of_attendance, location, grade, desination, toc, photo, created_at) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $mysqli->prepare($insert_query);
-        $stmt->bind_param("ssssssssss", $station_id, $employee_id, $employee_name, $train_no, $type_of_attendance, $location, $grade, $designation, $toc, $photo_filename);
+        $stmt->bind_param("sssssssssss", $station_id, $employee_id, $employee_name, $train_no, $type_of_attendance, $location, $grade, $designation, $toc, $photo_filename, $created_at_mysql);
         
         if ($stmt->execute()) {
             $success_count++;
@@ -229,6 +237,11 @@ $pageTitle = "Create Attendance";
                                     <input type="file" name="photo[]" accept="image/*" required>
                                     <small style="color: #666; font-size: 12px;">Required: Upload attendance photo</small>
                                 </div>
+                                <div class="form-group">
+                                    <label>Created At:</label>
+                                    <input type="datetime-local" name="created_at[]" required>
+                                    <small style="color: #666; font-size: 12px;">Specify local date & time</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -261,7 +274,7 @@ $pageTitle = "Create Attendance";
             newRow.querySelector('.row-number').textContent = rowCount;
             
             // Clear all input values
-            newRow.querySelectorAll('input[type="text"], input[type="file"], input[type="hidden"]').forEach(input => {
+            newRow.querySelectorAll('input[type="text"], input[type="file"], input[type="hidden"], input[type="datetime-local"]').forEach(input => {
                 input.value = '';
             });
             newRow.querySelectorAll('select').forEach(select => {

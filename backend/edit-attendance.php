@@ -43,10 +43,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
 // Handle update request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_attendance'])) {
     $update_id = $_POST['update_id'];
+    $employee_name = $_POST['employee_name'];
+    $employee_id = $_POST['employee_id'];
+    $desination = $_POST['desination'];
+    $toc = $_POST['toc'];
     $train_no = $_POST['train_no'];
     $type_of_attendance = $_POST['type_of_attendance'];
     $location = $_POST['location'];
     $grade = $_POST['grade'];
+    // Created at (datetime-local -> MySQL DATETIME)
+    $created_at_input = $_POST['created_at'] ?? '';
+    $created_at_mysql = null;
+    if (!empty($created_at_input)) {
+        // Convert "YYYY-MM-DDTHH:MM" to "YYYY-MM-DD HH:MM:SS"
+        $created_at_mysql = str_replace('T', ' ', $created_at_input);
+        if (strlen($created_at_mysql) === 16) {
+            $created_at_mysql .= ':00';
+        }
+    }
     
     // Handle photo upload
     $photo_filename = null;
@@ -70,16 +84,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_attendance']))
     // Update query with or without photo
     if ($photo_filename) {
         $update_query = "UPDATE base_attendance 
-                         SET train_no = ?, type_of_attendance = ?, location = ?, grade = ?, photo = ? 
+                         SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, grade = ?, photo = ?, created_at = ? 
                          WHERE id = ? AND station_id = ?";
         $stmt = $mysqli->prepare($update_query);
-        $stmt->bind_param("sssssis", $train_no, $type_of_attendance, $location, $grade, $photo_filename, $update_id, $station_id);
+        $stmt->bind_param("ssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $grade, $photo_filename, $created_at_mysql, $update_id, $station_id);
     } else {
         $update_query = "UPDATE base_attendance 
-                         SET train_no = ?, type_of_attendance = ?, location = ?, grade = ? 
+                         SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, grade = ?, created_at = ? 
                          WHERE id = ? AND station_id = ?";
         $stmt = $mysqli->prepare($update_query);
-        $stmt->bind_param("ssssis", $train_no, $type_of_attendance, $location, $grade, $update_id, $station_id);
+        $stmt->bind_param("sssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $grade, $created_at_mysql, $update_id, $station_id);
     }
     
     $stmt->execute();
@@ -136,6 +150,8 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                 id,
                 employee_id,
                 employee_name,
+                desination,
+                toc,
                 train_no,
                 type_of_attendance,
                 location,
@@ -183,6 +199,8 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
         if ($row['train_no'] == $selected_train_from) {
             $attendance_data[$emp_id]['train_from'][$row['type_of_attendance']] = [
                 'id' => $row['id'],
+                'desination' => $row['desination'],
+                'toc' => $row['toc'],
                 'location' => $row['location'],
                 'photo' => $row['photo'],
                 'created_at' => $row['created_at']
@@ -190,6 +208,8 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
         } elseif ($row['train_no'] == $selected_train_to) {
             $attendance_data[$emp_id]['train_to'][$row['type_of_attendance']] = [
                 'id' => $row['id'],
+                'desination' => $row['desination'],
+                'toc' => $row['toc'],
                 'location' => $row['location'],
                 'photo' => $row['photo'],
                 'created_at' => $row['created_at']
@@ -379,6 +399,26 @@ $pageTitle = "Edit Attendance";
                 <input type="hidden" name="update_id" id="edit_id">
                 
                 <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Employee Name:</label>
+                    <input type="text" name="employee_name" id="edit_employee_name" required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Employee ID:</label>
+                    <input type="text" name="employee_id" id="edit_employee_id" required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Desination:</label>
+                    <input type="text" name="desination" id="edit_desination" required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>TOC:</label>
+                    <input type="text" name="toc" id="edit_toc" required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
                     <label>Train No:</label>
                     <select name="train_no" id="edit_train_no" required>
                         <?php foreach ($trains as $train): ?>
@@ -413,6 +453,11 @@ $pageTitle = "Edit Attendance";
                         <option value="G">G</option>
                     </select>
                 </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Created At:</label>
+                    <input type="datetime-local" name="created_at" id="edit_created_at" required>
+                </div>
                 
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label>Upload New Photo (Optional):</label>
@@ -431,6 +476,52 @@ $pageTitle = "Edit Attendance";
     </div>
 
     <script>
+        // Function definitions - must be available regardless of data
+        function editRecord(id) {
+            const record = records.find(r => r.id == id);
+            if (record) {
+                document.getElementById('edit_id').value = record.id;
+                document.getElementById('edit_employee_name').value = record.employee_name;
+                document.getElementById('edit_employee_id').value = record.employee_id;
+                document.getElementById('edit_desination').value = record.desination;
+                document.getElementById('edit_toc').value = record.toc;
+                document.getElementById('edit_train_no').value = record.train_no;
+                document.getElementById('edit_type').value = record.type_of_attendance;
+                document.getElementById('edit_location').value = record.location;
+                document.getElementById('edit_grade').value = record.grade;
+                document.getElementById('edit_created_at').value = toDatetimeLocal(record.created_at);
+                
+                document.getElementById('editModal').style.display = 'flex';
+            } else {
+                console.error('Record not found with id:', id);
+                console.log('Available records:', records);
+            }
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            document.getElementById('edit_photo').value = '';
+            document.getElementById('preview_img').style.display = 'none';
+        }
+        
+        function deleteRecord(id) {
+            if (confirm('Are you sure you want to delete this attendance record?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.innerHTML = '<input type="hidden" name="delete_id" value="' + id + '">';
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Convert "YYYY-MM-DD HH:MM:SS" to "YYYY-MM-DDTHH:MM" for datetime-local
+        function toDatetimeLocal(value) {
+            if (!value) return '';
+            // Replace space with 'T' and trim seconds
+            const v = value.replace(' ', 'T');
+            return v.length >= 16 ? v.slice(0, 16) : v;
+        }
+
         // Flatten attendance data for editing
         const records = [];
         <?php if (!empty($attendance_data)): ?>
@@ -443,10 +534,15 @@ $pageTitle = "Edit Attendance";
                 ?>
                 records.push({
                     id: <?php echo $data['id']; ?>,
-                    train_no: '<?php echo addslashes($selected_train_from); ?>',
-                    type_of_attendance: '<?php echo addslashes($checkpoint); ?>',
-                    location: '<?php echo addslashes($data['location']); ?>',
-                    grade: '<?php echo addslashes($selected_grade); ?>'
+                    employee_name: <?php echo json_encode($employee['employee_name']); ?>,
+                    employee_id: <?php echo json_encode($employee['employee_id']); ?>,
+                    desination: <?php echo json_encode($data['desination']); ?>,
+                    toc: <?php echo json_encode($data['toc']); ?>,
+                    train_no: <?php echo json_encode($selected_train_from); ?>,
+                    type_of_attendance: <?php echo json_encode($checkpoint); ?>,
+                    location: <?php echo json_encode($data['location']); ?>,
+                    grade: <?php echo json_encode($selected_grade); ?>,
+                    created_at: <?php echo json_encode($data['created_at']); ?>
                 });
                 <?php 
                     endif;
@@ -459,36 +555,25 @@ $pageTitle = "Edit Attendance";
                 ?>
                 records.push({
                     id: <?php echo $data['id']; ?>,
-                    train_no: '<?php echo addslashes($selected_train_to); ?>',
-                    type_of_attendance: '<?php echo addslashes($checkpoint); ?>',
-                    location: '<?php echo addslashes($data['location']); ?>',
-                    grade: '<?php echo addslashes($selected_grade); ?>'
+                    employee_name: <?php echo json_encode($employee['employee_name']); ?>,
+                    employee_id: <?php echo json_encode($employee['employee_id']); ?>,
+                    desination: <?php echo json_encode($data['desination']); ?>,
+                    toc: <?php echo json_encode($data['toc']); ?>,
+                    train_no: <?php echo json_encode($selected_train_to); ?>,
+                    type_of_attendance: <?php echo json_encode($checkpoint); ?>,
+                    location: <?php echo json_encode($data['location']); ?>,
+                    grade: <?php echo json_encode($selected_grade); ?>,
+                    created_at: <?php echo json_encode($data['created_at']); ?>
                 });
                 <?php 
                     endif;
                 endforeach; 
                 ?>
             <?php endforeach; ?>
+            console.log('Records loaded:', records.length);
+        <?php else: ?>
+            console.log('No attendance data available');
         <?php endif; ?>
-        
-        function editRecord(id) {
-            const record = records.find(r => r.id == id);
-            if (record) {
-                document.getElementById('edit_id').value = record.id;
-                document.getElementById('edit_train_no').value = record.train_no;
-                document.getElementById('edit_type').value = record.type_of_attendance;
-                document.getElementById('edit_location').value = record.location;
-                document.getElementById('edit_grade').value = record.grade;
-                
-                document.getElementById('editModal').style.display = 'flex';
-            }
-        }
-        
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
-            document.getElementById('edit_photo').value = '';
-            document.getElementById('preview_img').style.display = 'none';
-        }
         
         // Photo preview functionality
         document.getElementById('edit_photo').addEventListener('change', function(e) {
@@ -503,16 +588,6 @@ $pageTitle = "Edit Attendance";
                 reader.readAsDataURL(file);
             }
         });
-        
-        function deleteRecord(id) {
-            if (confirm('Are you sure you want to delete this attendance record?')) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.innerHTML = '<input type="hidden" name="delete_id" value="' + id + '">';
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
         
         // Close modal when clicking outside
         document.getElementById('editModal').addEventListener('click', function(e) {
