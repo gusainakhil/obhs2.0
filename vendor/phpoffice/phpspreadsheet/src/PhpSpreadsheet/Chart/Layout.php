@@ -2,111 +2,139 @@
 
 namespace PhpOffice\PhpSpreadsheet\Chart;
 
-use PhpOffice\PhpSpreadsheet\Style\Font;
-
 class Layout
 {
     /**
      * layoutTarget.
+     *
+     * @var ?string
      */
-    private ?string $layoutTarget = null;
+    private $layoutTarget;
 
     /**
      * X Mode.
+     *
+     * @var ?string
      */
-    private ?string $xMode = null;
+    private $xMode;
 
     /**
      * Y Mode.
+     *
+     * @var ?string
      */
-    private ?string $yMode = null;
+    private $yMode;
 
     /**
      * X-Position.
+     *
+     * @var ?float
      */
-    private ?float $xPos = null;
+    private $xPos;
 
     /**
      * Y-Position.
+     *
+     * @var ?float
      */
-    private ?float $yPos = null;
+    private $yPos;
 
     /**
      * width.
+     *
+     * @var ?float
      */
-    private ?float $width = null;
+    private $width;
 
     /**
      * height.
+     *
+     * @var ?float
      */
-    private ?float $height = null;
+    private $height;
 
     /**
      * Position - t=top.
+     *
+     * @var string
      */
-    private string $dLblPos = '';
+    private $dLblPos = '';
 
-    private string $numFmtCode = '';
+    /** @var string */
+    private $numFmtCode = '';
 
-    private bool $numFmtLinked = false;
+    /** @var bool */
+    private $numFmtLinked = false;
 
     /**
      * show legend key
      * Specifies that legend keys should be shown in data labels.
+     *
+     * @var ?bool
      */
-    private ?bool $showLegendKey = null;
+    private $showLegendKey;
 
     /**
      * show value
      * Specifies that the value should be shown in a data label.
+     *
+     * @var ?bool
      */
-    private ?bool $showVal = null;
+    private $showVal;
 
     /**
      * show category name
      * Specifies that the category name should be shown in the data label.
+     *
+     * @var ?bool
      */
-    private ?bool $showCatName = null;
+    private $showCatName;
 
     /**
      * show data series name
      * Specifies that the series name should be shown in the data label.
+     *
+     * @var ?bool
      */
-    private ?bool $showSerName = null;
+    private $showSerName;
 
     /**
      * show percentage
      * Specifies that the percentage should be shown in the data label.
+     *
+     * @var ?bool
      */
-    private ?bool $showPercent = null;
+    private $showPercent;
 
     /**
      * show bubble size.
+     *
+     * @var ?bool
      */
-    private ?bool $showBubbleSize = null;
+    private $showBubbleSize;
 
     /**
      * show leader lines
      * Specifies that leader lines should be shown for the data label.
+     *
+     * @var ?bool
      */
-    private ?bool $showLeaderLines = null;
+    private $showLeaderLines;
 
-    private ?ChartColor $labelFillColor = null;
+    /** @var ?ChartColor */
+    private $labelFillColor;
 
-    private ?ChartColor $labelBorderColor = null;
+    /** @var ?ChartColor */
+    private $labelBorderColor;
 
-    private ?Font $labelFont = null;
-
-    private ?Properties $labelEffects = null;
+    /** @var ?ChartColor */
+    private $labelFontColor;
 
     /**
      * Create a new Layout.
-     *
-     * @param array<mixed> $layout
      */
     public function __construct(array $layout = [])
     {
-        /** @var array{layoutTarget?: string, xMode?: string, yMode?: string, x?: float, y?: float, w?:float, h?:float, dLblPos?: string, labelFont?: ?mixed, labelFontColor?: ?mixed, labelEffects?: ?mixed, numFmtCode?: string} $layout */
         if (isset($layout['layoutTarget'])) {
             $this->layoutTarget = $layout['layoutTarget'];
         }
@@ -144,21 +172,9 @@ class Layout
         $this->initBoolean($layout, 'numFmtLinked');
         $this->initColor($layout, 'labelFillColor');
         $this->initColor($layout, 'labelBorderColor');
-        $labelFont = $layout['labelFont'] ?? null;
-        if ($labelFont instanceof Font) {
-            $this->labelFont = $labelFont;
-        }
-        $labelFontColor = $layout['labelFontColor'] ?? null;
-        if ($labelFontColor instanceof ChartColor) {
-            $this->setLabelFontColor($labelFontColor);
-        }
-        $labelEffects = $layout['labelEffects'] ?? null;
-        if ($labelEffects instanceof Properties) {
-            $this->labelEffects = $labelEffects;
-        }
+        $this->initColor($layout, 'labelFontColor');
     }
 
-    /** @param mixed[] $layout */
     private function initBoolean(array $layout, string $name): void
     {
         if (isset($layout[$name])) {
@@ -166,7 +182,6 @@ class Layout
         }
     }
 
-    /** @param mixed[] $layout */
     private function initColor(array $layout, string $name): void
     {
         if (isset($layout[$name]) && $layout[$name] instanceof ChartColor) {
@@ -176,8 +191,10 @@ class Layout
 
     /**
      * Get Layout Target.
+     *
+     * @return ?string
      */
-    public function getLayoutTarget(): ?string
+    public function getLayoutTarget()
     {
         return $this->layoutTarget;
     }
@@ -185,9 +202,11 @@ class Layout
     /**
      * Set Layout Target.
      *
+     * @param ?string $target
+     *
      * @return $this
      */
-    public function setLayoutTarget(?string $target): static
+    public function setLayoutTarget($target)
     {
         $this->layoutTarget = $target;
 
@@ -196,8 +215,10 @@ class Layout
 
     /**
      * Get X-Mode.
+     *
+     * @return ?string
      */
-    public function getXMode(): ?string
+    public function getXMode()
     {
         return $this->xMode;
     }
@@ -205,9 +226,11 @@ class Layout
     /**
      * Set X-Mode.
      *
+     * @param ?string $mode
+     *
      * @return $this
      */
-    public function setXMode(?string $mode): static
+    public function setXMode($mode)
     {
         $this->xMode = (string) $mode;
 
@@ -216,8 +239,10 @@ class Layout
 
     /**
      * Get Y-Mode.
+     *
+     * @return ?string
      */
-    public function getYMode(): ?string
+    public function getYMode()
     {
         return $this->yMode;
     }
@@ -225,9 +250,11 @@ class Layout
     /**
      * Set Y-Mode.
      *
+     * @param ?string $mode
+     *
      * @return $this
      */
-    public function setYMode(?string $mode): static
+    public function setYMode($mode)
     {
         $this->yMode = (string) $mode;
 
@@ -236,8 +263,10 @@ class Layout
 
     /**
      * Get X-Position.
+     *
+     * @return null|float|int
      */
-    public function getXPosition(): null|float|int
+    public function getXPosition()
     {
         return $this->xPos;
     }
@@ -245,19 +274,23 @@ class Layout
     /**
      * Set X-Position.
      *
+     * @param ?float $position
+     *
      * @return $this
      */
-    public function setXPosition(float $position): static
+    public function setXPosition($position)
     {
-        $this->xPos = $position;
+        $this->xPos = (float) $position;
 
         return $this;
     }
 
     /**
      * Get Y-Position.
+     *
+     * @return null|float
      */
-    public function getYPosition(): ?float
+    public function getYPosition()
     {
         return $this->yPos;
     }
@@ -265,19 +298,23 @@ class Layout
     /**
      * Set Y-Position.
      *
+     * @param ?float $position
+     *
      * @return $this
      */
-    public function setYPosition(float $position): static
+    public function setYPosition($position)
     {
-        $this->yPos = $position;
+        $this->yPos = (float) $position;
 
         return $this;
     }
 
     /**
      * Get Width.
+     *
+     * @return ?float
      */
-    public function getWidth(): ?float
+    public function getWidth()
     {
         return $this->width;
     }
@@ -285,9 +322,11 @@ class Layout
     /**
      * Set Width.
      *
+     * @param ?float $width
+     *
      * @return $this
      */
-    public function setWidth(?float $width): static
+    public function setWidth($width)
     {
         $this->width = $width;
 
@@ -296,8 +335,10 @@ class Layout
 
     /**
      * Get Height.
+     *
+     * @return null|float
      */
-    public function getHeight(): ?float
+    public function getHeight()
     {
         return $this->height;
     }
@@ -305,9 +346,11 @@ class Layout
     /**
      * Set Height.
      *
+     * @param ?float $height
+     *
      * @return $this
      */
-    public function setHeight(?float $height): static
+    public function setHeight($height)
     {
         $this->height = $height;
 
@@ -450,39 +493,14 @@ class Layout
         return $this;
     }
 
-    public function getLabelFont(): ?Font
-    {
-        return $this->labelFont;
-    }
-
-    public function setLabelFont(?Font $labelFont): self
-    {
-        $this->labelFont = $labelFont;
-
-        return $this;
-    }
-
-    public function getLabelEffects(): ?Properties
-    {
-        return $this->labelEffects;
-    }
-
     public function getLabelFontColor(): ?ChartColor
     {
-        if ($this->labelFont === null) {
-            return null;
-        }
-
-        return $this->labelFont->getChartColor();
+        return $this->labelFontColor;
     }
 
     public function setLabelFontColor(?ChartColor $chartColor): self
     {
-        if ($this->labelFont === null) {
-            $this->labelFont = new Font();
-            $this->labelFont->setSize(null, true);
-        }
-        $this->labelFont->setChartColorFromObject($chartColor);
+        $this->labelFontColor = $chartColor;
 
         return $this;
     }
@@ -521,16 +539,5 @@ class Layout
         $this->numFmtLinked = $numFmtLinked;
 
         return $this;
-    }
-
-    /**
-     * Implement PHP __clone to create a deep clone, not just a shallow copy.
-     */
-    public function __clone()
-    {
-        $this->labelFillColor = ($this->labelFillColor === null) ? null : clone $this->labelFillColor;
-        $this->labelBorderColor = ($this->labelBorderColor === null) ? null : clone $this->labelBorderColor;
-        $this->labelFont = ($this->labelFont === null) ? null : clone $this->labelFont;
-        $this->labelEffects = ($this->labelEffects === null) ? null : clone $this->labelEffects;
     }
 }

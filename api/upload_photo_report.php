@@ -56,7 +56,7 @@ if (!in_array($mime, $allowedMime)) jsonErr('Invalid file type. Only JPG/PNG all
 // build filename: YYYYMMDD_His_rand.ext
 $ext = pathinfo($f['name'], PATHINFO_EXTENSION) ?: ($mime === 'image/png' ? 'png' : 'jpg');
 $ext = strtolower(preg_replace('/[^a-z0-9]/', '', $ext));
-$filename = date('Ymd_His') . '_' . substr(bin2hex(random_bytes(6)), 0, 12) . '.' . $ext;
+$filename = $station_id . '_' . date('Ymd_His') . '_' . substr(bin2hex(random_bytes(6)), 0, 12) . '.' . $ext;
 if (strlen($filename) > 100) $filename = substr($filename, 0, 96) . '.' . $ext;
 
 $dest = $uploadDir . $filename;

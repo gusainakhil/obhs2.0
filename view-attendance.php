@@ -42,18 +42,22 @@ $attendance_data = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($selected_grade)) {
     // Build the query to get attendance data
     $query = "SELECT 
-                employee_id,
-                employee_name,
-                SUM(CASE WHEN train_no = ? AND type_of_attendance = 'Start of journey' THEN 1 ELSE 0 END) as trip1_start,
-                SUM(CASE WHEN train_no = ? AND type_of_attendance = 'Mid of journey' THEN 1 ELSE 0 END) as trip1_mid,
-                SUM(CASE WHEN train_no = ? AND type_of_attendance = 'End of journey' THEN 1 ELSE 0 END) as trip1_end,
-                SUM(CASE WHEN train_no = ? AND type_of_attendance = 'Start of journey' THEN 1 ELSE 0 END) as trip2_start,
-                SUM(CASE WHEN train_no = ? AND type_of_attendance = 'Mid of journey' THEN 1 ELSE 0 END) as trip2_mid,
-                SUM(CASE WHEN train_no = ? AND type_of_attendance = 'End of journey' THEN 1 ELSE 0 END) as trip2_end
-              FROM base_attendance 
-              WHERE station_id = ?
-              AND grade = ?
-              AND DATE(created_at) BETWEEN ? AND ?";
+    employee_id,
+    employee_name,
+
+    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Start of journey' THEN 1 ELSE 0 END) AS trip1_start,
+    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Mid of journey' THEN 1 ELSE 0 END)   AS trip1_mid,
+    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'End of journey' THEN 1 ELSE 0 END)   AS trip1_end,
+
+    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Start of journey' THEN 1 ELSE 0 END) AS trip2_start,
+    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Mid of journey' THEN 1 ELSE 0 END)   AS trip2_mid,
+    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'End of journey' THEN 1 ELSE 0 END)   AS trip2_end
+
+FROM base_attendance
+WHERE station_id = ?
+AND grade = ?
+AND DATE(created_at) BETWEEN ? AND ?
+";
     
     // Build parameters array - 6 train parameters (3 for each train) + 3 base parameters
     $bind_params = [
@@ -120,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($selected_grade)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Attendance - <?php echo htmlspecialchars($station_name); ?></title>
+    <title>View Attendance</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">

@@ -4,22 +4,39 @@ namespace PhpOffice\PhpSpreadsheet\Style\ConditionalFormatting;
 
 class ConditionalDataBar
 {
-    private ?bool $showValue = null;
+    /** <dataBar> attribute  */
 
-    private ?ConditionalFormatValueObject $minimumConditionalFormatValueObject = null;
+    /** @var null|bool */
+    private $showValue;
 
-    private ?ConditionalFormatValueObject $maximumConditionalFormatValueObject = null;
+    /** <dataBar> children */
 
-    private string $color = '';
+    /** @var ?ConditionalFormatValueObject */
+    private $minimumConditionalFormatValueObject;
 
-    private ?ConditionalFormattingRuleExtension $conditionalFormattingRuleExt = null;
+    /** @var ?ConditionalFormatValueObject */
+    private $maximumConditionalFormatValueObject;
 
-    public function getShowValue(): ?bool
+    /** @var string */
+    private $color;
+
+    /** <extLst> */
+
+    /** @var ?ConditionalFormattingRuleExtension */
+    private $conditionalFormattingRuleExt;
+
+    /**
+     * @return null|bool
+     */
+    public function getShowValue()
     {
         return $this->showValue;
     }
 
-    public function setShowValue(bool $showValue): self
+    /**
+     * @param bool $showValue
+     */
+    public function setShowValue($showValue)
     {
         $this->showValue = $showValue;
 
@@ -31,7 +48,7 @@ class ConditionalDataBar
         return $this->minimumConditionalFormatValueObject;
     }
 
-    public function setMinimumConditionalFormatValueObject(ConditionalFormatValueObject $minimumConditionalFormatValueObject): self
+    public function setMinimumConditionalFormatValueObject(ConditionalFormatValueObject $minimumConditionalFormatValueObject)
     {
         $this->minimumConditionalFormatValueObject = $minimumConditionalFormatValueObject;
 
@@ -43,7 +60,7 @@ class ConditionalDataBar
         return $this->maximumConditionalFormatValueObject;
     }
 
-    public function setMaximumConditionalFormatValueObject(ConditionalFormatValueObject $maximumConditionalFormatValueObject): self
+    public function setMaximumConditionalFormatValueObject(ConditionalFormatValueObject $maximumConditionalFormatValueObject)
     {
         $this->maximumConditionalFormatValueObject = $maximumConditionalFormatValueObject;
 
@@ -67,7 +84,7 @@ class ConditionalDataBar
         return $this->conditionalFormattingRuleExt;
     }
 
-    public function setConditionalFormattingRuleExt(ConditionalFormattingRuleExtension $conditionalFormattingRuleExt): self
+    public function setConditionalFormattingRuleExt(ConditionalFormattingRuleExtension $conditionalFormattingRuleExt)
     {
         $this->conditionalFormattingRuleExt = $conditionalFormattingRuleExt;
 

@@ -668,3 +668,98 @@ function check_highest_marking($station_id)
 
     return (int) ($row['highest_marking'] ?? 0);
 }
+
+
+function calculateCoachWisePercentage(
+    string $train,
+    string $from_date,
+    string $to_date,
+    string $coach_type,
+    string $grade
+): array {
+
+    $data = feedback_calculation_coach_wise(
+        $train,
+        $from_date,
+        $to_date,
+        $coach_type,
+        $grade
+    );
+
+    $coachList = $data['coach_wise'] ?? [];
+    $targets   = $data['targets'] ?? [];
+
+    // Pick correct target key
+    if ($coach_type === 'AC') {
+        $target_per_coach = $targets['ac_coach_target'] ?? 0;
+    } elseif ($coach_type === 'NON-AC') {
+        $target_per_coach = $targets['non_ac_coach_target'] ?? 0;
+    } else { // TTE
+        $target_per_coach = $targets['tte_target'] ?? 0;
+    }
+
+    $total_questions = $data['total_questions'] ?? 0;
+    $highest_marking = $data['highest_marking'] ?? 0;
+
+    $total_percentage = 0.0;
+    $total_coaches = count($coachList);
+
+    foreach ($coachList as $coach_no => $row) {
+
+        $feedback_sum = $row['feedback_sum'] ?? 0;
+        $passenger_count = $row['total_passenger_count'] ?? 0;
+
+        $percentage = 0.0;
+
+        if ($total_questions > 0 && $highest_marking > 0) {
+
+            $effective_target = ($passenger_count <= $target_per_coach && $target_per_coach > 0)
+                ? $target_per_coach
+                : $passenger_count;
+
+            $denom = $total_questions * $highest_marking * $effective_target;
+
+            if ($denom > 0) {
+                $percentage = ($feedback_sum / $denom) * 100;
+            }
+        }
+
+        $total_percentage += $percentage;
+    }
+
+    return [
+        'avg_percentage' => number_format(
+            $total_percentage / max($total_coaches, 1),
+            2
+        ),
+        'total_coaches' => $total_coaches
+    ];
+}
+
+function calculateFinalPSI(array $sections): float
+{
+    $sum = 0.0;
+    $count = 0;
+
+    foreach ($sections as $item) {
+
+        // total must exist AND be > 0
+        if (
+            isset($item['total'], $item['percent']) &&
+            $item['total'] > 0
+        ) {
+            $sum += (float) $item['percent'];
+            $count++;
+        }
+    }
+
+    // ALL ZERO → return 0
+    if ($count === 0) {
+        return 0.0;
+    }
+
+    // AUTO divide by 1 / 2 / 3
+    return round($sum / $count, 2);
+}
+
+

@@ -1,5 +1,4 @@
-
-    <?php
+<?php
     // DEBUG: Output all unique feed_param values (must be first!)
     if (isset($_GET['debug_params'])) {
         include './includes/connection.php';
@@ -23,7 +22,7 @@
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-    checkLogin(); 
+    checkLogin();
 
     $station_name = getStationName($_SESSION['station_id']);
     $train_no = isset($_GET['train']) ? $_GET['train'] : null;

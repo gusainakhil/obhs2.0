@@ -502,7 +502,8 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                         <button type="submit" class="btn-submit">
                             <i class="fas fa-search mr-2"></i>Submit
                         </button>
-                        <button type="button" class="btn-print" onclick="window.print()">
+                        <!--<button type="button" class="btn-print" onclick="window.print()">-->
+                        <button type="button" class="btn-print" onclick="printAttendance()">
                             <i class="fas fa-print mr-2"></i>Print Attendance
                         </button>
                     </div>
@@ -704,6 +705,32 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
             sidebar.classList.add('-translate-x-full');
             sidebarOverlay.classList.add('hidden');
         });
+        
+        
+        
+        // Print Attendance Function
+        function printAttendance() {
+            const grade = document.getElementById('grade').value;
+            const trainFrom = document.getElementById('trainFrom').value;
+            const trainTo = document.getElementById('trainTo').value;
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+
+            if (!grade || !trainFrom || !trainTo) {
+                alert('Please select all required filters before printing.');
+                return;
+            }
+
+            const params = new URLSearchParams({
+                grade: grade,
+                trainFrom: trainFrom,
+                trainTo: trainTo,
+                dateFrom: dateFrom,
+                dateTo: dateTo
+            });
+
+             window.open('print-attendance.php?' + params.toString(), '_blank');
+        }
 </script>
 
 </body>

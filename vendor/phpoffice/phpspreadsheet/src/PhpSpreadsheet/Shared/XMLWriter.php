@@ -2,11 +2,10 @@
 
 namespace PhpOffice\PhpSpreadsheet\Shared;
 
-use PhpOffice\PhpSpreadsheet\Exception as SpreadsheetException;
-
 class XMLWriter extends \XMLWriter
 {
-    public static bool $debugEnabled = false;
+    /** @var bool */
+    public static $debugEnabled = false;
 
     /** Temporary storage method */
     const STORAGE_MEMORY = 1;
@@ -14,16 +13,18 @@ class XMLWriter extends \XMLWriter
 
     /**
      * Temporary filename.
+     *
+     * @var string
      */
-    private string $tempFileName = '';
+    private $tempFileName = '';
 
     /**
      * Create a new XMLWriter instance.
      *
      * @param int $temporaryStorage Temporary storage location
-     * @param ?string $temporaryStorageFolder Temporary storage folder
+     * @param string $temporaryStorageFolder Temporary storage folder
      */
-    public function __construct(int $temporaryStorage = self::STORAGE_MEMORY, ?string $temporaryStorageFolder = null)
+    public function __construct($temporaryStorage = self::STORAGE_MEMORY, $temporaryStorageFolder = null)
     {
         // Open temporary storage
         if ($temporaryStorage == self::STORAGE_MEMORY) {
@@ -39,10 +40,6 @@ class XMLWriter extends \XMLWriter
             if (empty($this->tempFileName) || $this->openUri($this->tempFileName) === false) {
                 // Fallback to memory...
                 $this->openMemory();
-                if ($this->tempFileName != '') {
-                    @unlink($this->tempFileName);
-                }
-                $this->tempFileName = '';
             }
         }
 
@@ -60,22 +57,17 @@ class XMLWriter extends \XMLWriter
         // Unlink temporary files
         // There is nothing reasonable to do if unlink fails.
         if ($this->tempFileName != '') {
+            /** @scrutinizer ignore-unhandled */
             @unlink($this->tempFileName);
         }
     }
 
-    /** @param mixed[] $data */
-    public function __unserialize(array $data): void
-    {
-        $this->tempFileName = '';
-
-        throw new SpreadsheetException('Unserialize not permitted');
-    }
-
     /**
      * Get written data.
+     *
+     * @return string
      */
-    public function getData(): string
+    public function getData()
     {
         if ($this->tempFileName == '') {
             return $this->outputMemory(true);
@@ -89,13 +81,15 @@ class XMLWriter extends \XMLWriter
      * Wrapper method for writeRaw.
      *
      * @param null|string|string[] $rawTextData
+     *
+     * @return bool
      */
-    public function writeRawData($rawTextData): bool
+    public function writeRawData($rawTextData)
     {
         if (is_array($rawTextData)) {
             $rawTextData = implode("\n", $rawTextData);
         }
 
-        return $this->text($rawTextData ?? '');
+        return $this->writeRaw(htmlspecialchars($rawTextData ?? ''));
     }
 }

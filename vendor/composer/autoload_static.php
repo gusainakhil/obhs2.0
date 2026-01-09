@@ -6,6 +6,10 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit2d5a0d1578a9de9a3528565cf562f7a9
 {
+    public static $files = array (
+        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'Z' => 
         array (
@@ -20,11 +24,11 @@ class ComposerStaticInit2d5a0d1578a9de9a3528565cf562f7a9
         ),
         'M' => 
         array (
+            'MyCLabs\\Enum\\' => 13,
             'Matrix\\' => 7,
         ),
         'C' => 
         array (
-            'Composer\\Pcre\\' => 14,
             'Complex\\' => 8,
         ),
     );
@@ -51,13 +55,13 @@ class ComposerStaticInit2d5a0d1578a9de9a3528565cf562f7a9
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
+        'MyCLabs\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
+        ),
         'Matrix\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
-        ),
-        'Composer\\Pcre\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
         'Complex\\' => 
         array (
@@ -65,8 +69,19 @@ class ComposerStaticInit2d5a0d1578a9de9a3528565cf562f7a9
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'H' => 
+        array (
+            'HTMLPurifier' => 
+            array (
+                0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
+            ),
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Stringable' => __DIR__ . '/..' . '/myclabs/php-enum/stubs/Stringable.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -74,6 +89,7 @@ class ComposerStaticInit2d5a0d1578a9de9a3528565cf562f7a9
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit2d5a0d1578a9de9a3528565cf562f7a9::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit2d5a0d1578a9de9a3528565cf562f7a9::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit2d5a0d1578a9de9a3528565cf562f7a9::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit2d5a0d1578a9de9a3528565cf562f7a9::$classMap;
 
         }, null, ClassLoader::class);

@@ -15,9 +15,18 @@ checkLogin();
 $station_name = getStationName($_SESSION['station_id']);
 $station_id = $_SESSION['station_id'];
 
+
+
+// Decide employee table based on station
+$employeeTable = 'base_employees';
+if ($station_id == 17) {
+    $employeeTable = 'base_employees_jodhpur';
+}
+
+
 // Fetch employees for the station
 $employees = [];
-$emp_query = "SELECT employee_id, name, desination FROM base_employees WHERE station_id = ? ORDER BY name";
+$emp_query = "SELECT employee_id, name, desination FROM $employeeTable WHERE station_id = ? ORDER BY name";
 $stmt = $mysqli->prepare($emp_query);
 $stmt->bind_param("i", $station_id);
 $stmt->execute();
@@ -86,8 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_attendance']))
         $photo_filename = '';
         if (isset($_FILES['photo']['name'][$i]) && $_FILES['photo']['error'][$i] === UPLOAD_ERR_OK) {
             $file_extension = pathinfo($_FILES['photo']['name'][$i], PATHINFO_EXTENSION);
-            $photo_filename = uniqid() . '_' . time() . '_' . $i . '.' . $file_extension;
-            $upload_path = $upload_dir . $photo_filename;
+$photo_filename =
+    $station_id . '_' .
+    date('Ymd_His') . '_' .
+    uniqid() . '.' . $file_extension;
+$upload_path = $upload_dir . $photo_filename;
             
             if (!move_uploaded_file($_FILES['photo']['tmp_name'][$i], $upload_path)) {
                 $error_count++;
@@ -207,7 +219,7 @@ $pageTitle = "Create Attendance";
                                 </div>
                                 <div class="form-group">
                                     <label>Location:</label>
-                                    <input type="text" name="location[]" placeholder="e.g., 28.6139,77.2090,New Delhi" required>
+                                    <input type="text" name="location[]" placeholder="e.g., lati: 26.2174382 longi: 78.1831218 Gwalior" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Grade:</label>
@@ -239,7 +251,7 @@ $pageTitle = "Create Attendance";
                                 </div>
                                 <div class="form-group">
                                     <label>Created At:</label>
-                                    <input type="datetime-local" name="created_at[]" required>
+                                    <input type="datetime-local" name="created_at[]" step="1" required>
                                     <small style="color: #666; font-size: 12px;">Specify local date & time</small>
                                 </div>
                             </div>

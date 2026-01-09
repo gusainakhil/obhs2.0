@@ -134,8 +134,8 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                     <button type="button" class="btn-export" onclick="window.print()">
                         <i class="fas fa-print mr-2"></i>Print
                     </button>
-                    <button class="btn-export" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="exportExcel()">
-                        <i class="fas fa-file-excel mr-2"></i>Excel
+                    <button class="btn-export"  onclick="exportExcel()">
+                        <i class="fas fa-file-excel mr-2"></i>Export To Excel
                     </button>
                 </div>
 

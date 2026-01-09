@@ -71,8 +71,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_attendance']))
         }
         
         $file_extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
-        $photo_filename = 'attendance_' . $update_id . '_' . time() . '.' . $file_extension;
-        $target_path = $upload_dir . $photo_filename;
+
+$photo_filename =
+    $station_id . '_' .
+    date('Ymd_His') . '_' .
+    uniqid() . '.' . $file_extension;
+
+$target_path = $upload_dir . $photo_filename;
         
         if (move_uploaded_file($_FILES['photo']['tmp_name'], $target_path)) {
             // Photo uploaded successfully
@@ -338,7 +343,7 @@ $pageTitle = "Edit Attendance";
                                                 ?>
                                                 <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto 5px;">
                                                 <small style="display: block; color: #666; margin-bottom: 3px;"><?php echo htmlspecialchars($data['location']); ?></small>
-                                                <small style="display: block; font-weight: bold;"><?php echo date('d-m-Y H:i', strtotime($data['created_at'])); ?></small>
+                                                <small style="display: block; font-weight: bold;"><?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></small>
                                                 <div style="margin-top: 5px;">
                                                     <button class="action-btn edit-btn" style="padding: 4px 8px; font-size: 11px;" onclick="editRecord(<?php echo $data['id']; ?>)">Edit</button>
                                                     <button class="action-btn delete-btn" style="padding: 4px 8px; font-size: 11px;" onclick="deleteRecord(<?php echo $data['id']; ?>)">Delete</button>
@@ -362,7 +367,7 @@ $pageTitle = "Edit Attendance";
                                                 ?>
                                                 <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto 5px;">
                                                 <small style="display: block; color: #666; margin-bottom: 3px;"><?php echo htmlspecialchars($data['location']); ?></small>
-                                                <small style="display: block; font-weight: bold;"><?php echo date('d-m-Y H:i', strtotime($data['created_at'])); ?></small>
+                                                <small style="display: block; font-weight: bold;"><?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></small>
                                                 <div style="margin-top: 5px;">
                                                     <button class="action-btn edit-btn" style="padding: 4px 8px; font-size: 11px;" onclick="editRecord(<?php echo $data['id']; ?>)">Edit</button>
                                                     <button class="action-btn delete-btn" style="padding: 4px 8px; font-size: 11px;" onclick="deleteRecord(<?php echo $data['id']; ?>)">Delete</button>
@@ -456,7 +461,7 @@ $pageTitle = "Edit Attendance";
 
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label>Created At:</label>
-                    <input type="datetime-local" name="created_at" id="edit_created_at" required>
+                    <input type="datetime-local" name="created_at" id="edit_created_at" step="1" required>
                 </div>
                 
                 <div class="form-group" style="margin-bottom: 20px;">

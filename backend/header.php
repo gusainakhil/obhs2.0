@@ -21,5 +21,5 @@
     ?>
 </h1>
 
-        <a href="../backend/dashboard.php"><button class="logout-btn">User Dashboard</button></a>
+        <a href="../dashboard.php"><button class="logout-btn">User Dashboard</button></a>
     </div>

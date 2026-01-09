@@ -148,6 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST")
         .time-section {
             border-right: 1px solid #e2e8f0;
             padding: 16px;
+            overflow: visible;
         }
 
         .time-section:last-child {
@@ -177,27 +178,40 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST")
 
         .photo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, 150px);
+            gap: 8px;
+            justify-content: start;
+            overflow: visible;
         }
 
         .photo-item {
             border: 1px solid #e2e8f0;
             border-radius: 6px;
-            overflow: hidden;
+            overflow: visible;
             background: #f8fafc;
+            position: relative;
+        }
+
+        .photo-item:hover {
+            z-index: 100;
         }
 
         .photo-img {
-            width: 100%;
-            height: 120px;
+            width: 150px;
+            height: 150px;
             object-fit: cover;
             cursor: pointer;
             transition: transform 0.2s ease;
         }
 
+        .photo-img {
+            border-radius: 6px 6px 0 0;
+        }
+
         .photo-img:hover {
-            transform: scale(1.05);
+            transform: scale(2.0);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
         }
 
         .photo-info {
@@ -398,11 +412,11 @@ $gradeDays = [
                                 
                                 if ($before_result->num_rows > 0):
                                     while ($photo = $before_result->fetch_assoc()):
-                                        // Extract latitude and longitude
+                                        // Extract latitude and longitude from CSV format
                                         $location_str = $photo['location'];
-                                        preg_match('/lati:\s*([-\d\.]+)\s*longi:\s*([-\d\.]+)/', $location_str, $matches);
-                                        $latitude = isset($matches[1]) ? $matches[1] : 'N/A';
-                                        $longitude = isset($matches[2]) ? $matches[2] : 'N/A';
+                                        $location_parts = explode(',', $location_str);
+                                        $latitude = isset($location_parts[0]) ? trim($location_parts[0]) : 'N/A';
+                                        $longitude = isset($location_parts[1]) ? trim($location_parts[1]) : 'N/A';
                                         $photo_path = 'uploads/photos/' . $photo['photo'];
                                         if (!file_exists($photo_path)) {
                                             $photo_path = 'https://via.placeholder.com/150x120/94a3b8/ffffff?text=No+Image';
@@ -452,9 +466,9 @@ $gradeDays = [
                                 if ($after_result->num_rows > 0):
                                     while ($photo = $after_result->fetch_assoc()):
                                         $location_str = $photo['location'];
-                                        preg_match('/lati:\s*([-\d\.]+)\s*longi:\s*([-\d\.]+)/', $location_str, $matches);
-                                        $latitude = isset($matches[1]) ? $matches[1] : 'N/A';
-                                        $longitude = isset($matches[2]) ? $matches[2] : 'N/A';
+                                        $location_parts = explode(',', $location_str);
+                                        $latitude = isset($location_parts[0]) ? trim($location_parts[0]) : 'N/A';
+                                        $longitude = isset($location_parts[1]) ? trim($location_parts[1]) : 'N/A';
                                         $photo_path = 'uploads/photos/' . $photo['photo'];
                                         if (!file_exists($photo_path)) {
                                             $photo_path = 'https://via.placeholder.com/150x120/94a3b8/ffffff?text=No+Image';

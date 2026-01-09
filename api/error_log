@@ -59,3 +59,883 @@ Stack trace:
 [13-Dec-2025 14:05:13 UTC] PHP Warning:  Undefined array key "reports_name" in /home/obhsbeatleanalyt/public_html/api/get_reports_api.php on line 74
 [13-Dec-2025 14:05:13 UTC] PHP Warning:  Undefined array key "reports_name" in /home/obhsbeatleanalyt/public_html/api/get_reports_api.php on line 74
 [13-Dec-2025 14:05:13 UTC] PHP Warning:  Undefined array key "reports_name" in /home/obhsbeatleanalyt/public_html/api/get_reports_api.php on line 74
+[18-Dec-2025 06:10:21 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: '' for column `obhsbeatleanalyt_OBHS`.`OBHS_passenger`.`seat_no` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php:52
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php(52): mysqli_query(Object(mysqli), 'INSERT INTO OBH...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php on line 52
+[18-Dec-2025 06:10:26 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: '' for column `obhsbeatleanalyt_OBHS`.`OBHS_passenger`.`seat_no` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php:52
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php(52): mysqli_query(Object(mysqli), 'INSERT INTO OBH...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php on line 52
+[18-Dec-2025 06:10:36 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: '' for column `obhsbeatleanalyt_OBHS`.`OBHS_passenger`.`seat_no` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php:52
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php(52): mysqli_query(Object(mysqli), 'INSERT INTO OBH...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php on line 52
+[18-Dec-2025 06:11:31 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: '' for column `obhsbeatleanalyt_OBHS`.`OBHS_passenger`.`seat_no` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php:52
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php(52): mysqli_query(Object(mysqli), 'INSERT INTO OBH...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php on line 52
+[02-Jan-2026 04:33:09 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[02-Jan-2026 04:33:26 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[02-Jan-2026 04:33:42 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[02-Jan-2026 04:33:57 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[02-Jan-2026 04:35:01 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[02-Jan-2026 04:35:28 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[02-Jan-2026 04:36:02 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[02-Jan-2026 04:40:10 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[02-Jan-2026 04:44:34 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[02-Jan-2026 04:46:43 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[02-Jan-2026 04:47:49 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[03-Jan-2026 01:21:55 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[03-Jan-2026 01:22:59 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:124
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(124): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 124
+[06-Jan-2026 17:21:50 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:21:51 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:21:59 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:00 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:01 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:02 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:03 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:04 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:05 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:06 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:06 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:07 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:08 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:09 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:10 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:11 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:32 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:42 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:43 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:44 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:54 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:22:55 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:23:06 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:23:11 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:24:19 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:24:21 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:24:22 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:24:22 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:25:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:26:35 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:26:38 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:26:48 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:26:53 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:27:33 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:28:11 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:29:40 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:29:42 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:29:45 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:29:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:29:49 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[06-Jan-2026 17:29:51 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'b.station_id' in 'SELECT' in /home/obhsbeatleanalyt/public_html/api/employee_list.php:34
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee_list.php(34): mysqli->query('\n    SELECT b.i...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/employee_list.php on line 34
+[07-Jan-2026 05:04:18 UTC] PHP Warning:  Undefined variable $response in /home/obhsbeatleanalyt/public_html/api/get_round_wise_summary.php on line 111
+[07-Jan-2026 06:42:15 UTC] PHP Warning:  Undefined variable $response in /home/obhsbeatleanalyt/public_html/api/get_round_wise_summary.php on line 111
+[07-Jan-2026 06:42:50 UTC] PHP Warning:  Undefined variable $response in /home/obhsbeatleanalyt/public_html/api/get_round_wise_summary.php on line 111
+[07-Jan-2026 06:43:24 UTC] PHP Warning:  Undefined variable $response in /home/obhsbeatleanalyt/public_html/api/get_round_wise_summary.php on line 111
+[07-Jan-2026 07:06:16 UTC] PHP Warning:  Undefined variable $response in /home/obhsbeatleanalyt/public_html/api/get_round_wise_summary.php on line 111
+[07-Jan-2026 16:15:11 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: '' for column `obhsbeatleanalyt_OBHS`.`OBHS_passenger`.`seat_no` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php:52
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php(52): mysqli_query(Object(mysqli), 'INSERT INTO OBH...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php on line 52
+[08-Jan-2026 02:14:10 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:132
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(132): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 132
+[08-Jan-2026 02:14:13 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:132
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(132): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 132
+[08-Jan-2026 02:14:22 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: 'undefined' for column `obhsbeatleanalyt_OBHS`.`base_attendance`.`station_id` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php:132
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(132): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 132
+[08-Jan-2026 04:08:35 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: '' for column `obhsbeatleanalyt_OBHS`.`OBHS_passenger`.`seat_no` at row 1 in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php:52
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php(52): mysqli_query(Object(mysqli), 'INSERT INTO OBH...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php on line 52
+[08-Jan-2026 05:07:44 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050744_695f3ba092550.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:07:44 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpwylHDT&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050744_695f3ba092550.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:07:47 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050747_695f3ba35c783.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:07:47 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpZe66D4&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050747_695f3ba35c783.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:07:51 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050751_695f3ba7c20a6.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:07:51 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpf58uPy&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050751_695f3ba7c20a6.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:08 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050808_695f3bb86329b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:08 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpJYu86Y&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050808_695f3bb86329b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:16 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050816_695f3bc0f3ff4.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:16 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php9N86DO&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050816_695f3bc0f3ff4.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:25 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050825_695f3bc97599c.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:25 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpuDpIsS&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050825_695f3bc97599c.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:33 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050833_695f3bd1348db.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:33 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpmv9nYd&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050833_695f3bd1348db.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:37 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050837_695f3bd58fe1c.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:37 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpBWTT6p&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050837_695f3bd58fe1c.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:37 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050837_695f3bd5c68cc.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:37 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpRq3hLM&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050837_695f3bd5c68cc.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:43 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050843_695f3bdb31163.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:43 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php090H22&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050843_695f3bdb31163.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:47 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050847_695f3bdfdbb9b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:47 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpUPPq2J&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050847_695f3bdfdbb9b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:58 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050858_695f3beae40e1.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:08:58 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php50N9nf&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050858_695f3beae40e1.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:04 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050904_695f3bf06fdac.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:04 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpfD1COY&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050904_695f3bf06fdac.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:18 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050918_695f3bfec24e6.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:18 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpZHrOb1&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050918_695f3bfec24e6.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:26 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050926_695f3c0691331.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:26 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpdOupk3&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050926_695f3c0691331.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:32 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050932_695f3c0c916a6.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:32 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php9LR8Km&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050932_695f3c0c916a6.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:40 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_050940_695f3c14e53e7.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:40 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpiNNmY0&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_050940_695f3c14e53e7.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:45 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_050945_695f3c1983609.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:45 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpNooOny&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_050945_695f3c1983609.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:53 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_050953_695f3c2167680.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:53 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpYqkfhJ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_050953_695f3c2167680.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:57 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050957_695f3c25c826c.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:09:57 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpj3NBBp&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_050957_695f3c25c826c.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:04 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051004_695f3c2cf10a6.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:04 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpHPI9v5&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051004_695f3c2cf10a6.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:11 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051011_695f3c333c63f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:11 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpaEa9FQ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051011_695f3c333c63f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:12 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051012_695f3c34cf5bf.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:12 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpbcRmvt&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051012_695f3c34cf5bf.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:22 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051022_695f3c3eb316f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:22 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpA1otwD&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051022_695f3c3eb316f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:27 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051027_695f3c43ce2dd.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:27 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpnJUlK4&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051027_695f3c43ce2dd.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:30 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051030_695f3c4628594.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:30 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php74OT0H&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051030_695f3c4628594.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:38 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051038_695f3c4ee6e4c.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:38 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpdtSFyn&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051038_695f3c4ee6e4c.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:42 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051042_695f3c5202f5c.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:42 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phps6isg7&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051042_695f3c5202f5c.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:51 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051051_695f3c5bb8208.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:51 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpvykp4N&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051051_695f3c5bb8208.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:59 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051059_695f3c63bd949.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:10:59 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpZEd0lJ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051059_695f3c63bd949.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:11:05 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051105_695f3c69b0f5d.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:11:05 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phplHE94z&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051105_695f3c69b0f5d.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:11:07 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051107_695f3c6b16309.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:11:07 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpLBqB9n&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051107_695f3c6b16309.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:11:23 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051123_695f3c7b99d06.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:11:23 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpLSG91K&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051123_695f3c7b99d06.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:11:30 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051130_695f3c829f76c.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:11:30 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpNCC3Pg&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051130_695f3c829f76c.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:11:50 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051150_695f3c9697a9f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:11:50 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpIyseAh&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051150_695f3c9697a9f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:12:07 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051207_695f3ca7c4b36.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:12:07 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpReQcEN&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051207_695f3ca7c4b36.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:12:32 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051232_695f3cc0e5004.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:12:32 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpeqpbEs&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051232_695f3cc0e5004.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:12:45 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051245_695f3ccd5b1c6.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:12:45 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpnTpXXt&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051245_695f3ccd5b1c6.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:12:55 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051255_695f3cd7527fb.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:12:55 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php5TigmD&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051255_695f3cd7527fb.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:13:07 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051307_695f3ce38b5e1.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:13:07 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpj45yZ9&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051307_695f3ce38b5e1.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:13:12 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051312_695f3ce888bdc.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:13:12 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpf84uTy&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051312_695f3ce888bdc.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:13:53 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051353_695f3d1113f53.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:13:53 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpouPjF3&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051353_695f3d1113f53.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:13:59 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051359_695f3d172115b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:13:59 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpb9uEnX&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051359_695f3d172115b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:14:08 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051408_695f3d20d77fc.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:14:08 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpWavNGH&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051408_695f3d20d77fc.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:14:32 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051432_695f3d38f34b2.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:14:32 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpR9a5i6&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051432_695f3d38f34b2.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:14:53 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051453_695f3d4d46232.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:14:53 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpx8R5Ih&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051453_695f3d4d46232.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:14:55 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051455_695f3d4f1460a.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:14:55 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpB6wHRY&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051455_695f3d4f1460a.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:14:58 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051458_695f3d522a736.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:14:58 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpxj3jvl&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051458_695f3d522a736.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:03 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051503_695f3d5718bc9.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:03 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpJMhm1j&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051503_695f3d5718bc9.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:05 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051505_695f3d59cd2b7.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:05 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpnFJwGN&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051505_695f3d59cd2b7.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:08 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051508_695f3d5cb8cf1.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:08 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpe6S9aa&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051508_695f3d5cb8cf1.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:09 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051509_695f3d5d0de08.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:09 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpVzf2kh&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051509_695f3d5d0de08.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:13 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051513_695f3d6173db3.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:13 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpoU9hhV&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051513_695f3d6173db3.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:13 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051513_695f3d61a1c4e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:13 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpKI0zTZ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051513_695f3d61a1c4e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:15 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051515_695f3d63bdb64.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:15 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phphgLOZu&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051515_695f3d63bdb64.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:17 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051517_695f3d65d7784.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:17 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpIV39dk&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051517_695f3d65d7784.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:20 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051520_695f3d68222dc.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:20 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php22Hpox&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051520_695f3d68222dc.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:23 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051523_695f3d6b0ecaf.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:23 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpokUu3w&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051523_695f3d6b0ecaf.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:25 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051525_695f3d6da5897.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:25 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php533lcn&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051525_695f3d6da5897.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:25 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051525_695f3d6ddc712.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:25 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpfR7pFy&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051525_695f3d6ddc712.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:34 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051534_695f3d7641167.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:34 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpEwjcA4&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051534_695f3d7641167.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:37 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051537_695f3d79734b0.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:37 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpXxFh3t&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051537_695f3d79734b0.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:41 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051541_695f3d7d4066a.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:41 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpIkhbOy&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051541_695f3d7d4066a.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:55 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051555_695f3d8b2e387.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:15:55 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpk0CWYF&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051555_695f3d8b2e387.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:29 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051629_695f3dad6981b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:29 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php3U4cwZ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051629_695f3dad6981b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:34 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051634_695f3db2dabb0.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:34 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpmxL9tP&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051634_695f3db2dabb0.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:39 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051639_695f3db7063d8.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:39 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpDFQSO9&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051639_695f3db7063d8.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:41 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051641_695f3db9d8154.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:41 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php91WoSL&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051641_695f3db9d8154.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:44 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051644_695f3dbc4cd3f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:44 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpeiWPF8&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051644_695f3dbc4cd3f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:47 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051647_695f3dbf11114.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:47 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpT1Um4Y&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051647_695f3dbf11114.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:49 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051649_695f3dc16d2ef.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:49 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpL470NC&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051649_695f3dc16d2ef.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:52 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051652_695f3dc47bb67.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:52 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpNVUVSn&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051652_695f3dc47bb67.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:59 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051659_695f3dcb014bc.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:59 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpzuK6T2&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051659_695f3dcb014bc.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:59 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051659_695f3dcb2a020.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:16:59 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php7drQNV&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051659_695f3dcb2a020.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:18 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051718_695f3dde4fd85.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:18 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpFH9P7y&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051718_695f3dde4fd85.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:24 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051724_695f3de4c154e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:24 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpirij94&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051724_695f3de4c154e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:45 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051745_695f3df9becf8.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:45 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpvsiLXo&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051745_695f3df9becf8.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:47 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051747_695f3dfbc816f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:47 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php24KjFX&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051747_695f3dfbc816f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:56 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051756_695f3e0488f9e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:56 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpWMgocG&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051756_695f3e0488f9e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:57 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051757_695f3e0560101.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:57 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpiMaNWp&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051757_695f3e0560101.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:58 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051758_695f3e0641c2f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:17:58 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpf8zja4&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051758_695f3e0641c2f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:05 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051805_695f3e0d1d0d4.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:05 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpw7bKdZ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051805_695f3e0d1d0d4.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:09 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051809_695f3e11ee03a.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:09 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpbNeAiv&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051809_695f3e11ee03a.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:10 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051810_695f3e1240f21.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:10 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpI2DkKi&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051810_695f3e1240f21.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:16 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051816_695f3e18bb1b7.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:16 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpbMcA4A&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051816_695f3e18bb1b7.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:20 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051820_695f3e1c5806e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:20 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpV5VjPT&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051820_695f3e1c5806e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:29 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051829_695f3e250580b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:29 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpjZ9sdY&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051829_695f3e250580b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:30 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051830_695f3e2660ebc.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:30 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php2KDV1o&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051830_695f3e2660ebc.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:33 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051833_695f3e290a802.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:33 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phptmN74O&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051833_695f3e290a802.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:36 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051836_695f3e2c9163e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:36 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpb4Gw3C&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051836_695f3e2c9163e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:56 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051856_695f3e40ec9ac.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:18:56 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php8Ir3Lu&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051856_695f3e40ec9ac.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:10 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051910_695f3e4e55bb2.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:10 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpVtFPFT&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051910_695f3e4e55bb2.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:13 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051913_695f3e51ca1fa.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:13 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpj0vnw7&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051913_695f3e51ca1fa.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:15 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051915_695f3e536cf22.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:15 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php5JsB1C&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051915_695f3e536cf22.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:18 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051918_695f3e5699e6f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:18 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpyYV1ug&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051918_695f3e5699e6f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:20 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051920_695f3e58b4723.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:20 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpJREknu&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051920_695f3e58b4723.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:24 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051924_695f3e5cd8274.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:24 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpSfVexC&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051924_695f3e5cd8274.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:28 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051928_695f3e603c1cd.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:28 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpIsMMAx&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_051928_695f3e603c1cd.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:33 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051933_695f3e65603fd.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:33 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php61WzWY&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051933_695f3e65603fd.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:35 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051935_695f3e675843e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:35 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php0Zw6FW&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_051935_695f3e675843e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:47 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051947_695f3e73387b3.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:47 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php2Ctbmz&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051947_695f3e73387b3.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:56 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051956_695f3e7ca80b4.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:19:56 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpUUW90S&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_051956_695f3e7ca80b4.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:00 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052000_695f3e808ba7e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:00 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpxjpZnJ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052000_695f3e808ba7e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:12 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052012_695f3e8c0cb7d.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:12 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpbJfRkw&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052012_695f3e8c0cb7d.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:16 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052016_695f3e904c14f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:16 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpvmbcyi&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052016_695f3e904c14f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:19 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052019_695f3e93b186e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:19 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpqwrdUn&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052019_695f3e93b186e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:20 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_052020_695f3e94c0a9b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:20 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpyAZ0ke&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_052020_695f3e94c0a9b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:23 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052023_695f3e975cf5b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:23 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpxOLcSH&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052023_695f3e975cf5b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:30 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052030_695f3e9e117d7.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:30 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpHJBGgQ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052030_695f3e9e117d7.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:33 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_052033_695f3ea113d12.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:20:33 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php4s9GV5&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_052033_695f3ea113d12.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:21:25 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052125_695f3ed50e955.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:21:25 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpcDLr16&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052125_695f3ed50e955.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:21:31 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052131_695f3edb47953.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:21:31 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpSdlYMs&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052131_695f3edb47953.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:21:34 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_052134_695f3ede112eb.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:21:34 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpsJex2z&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_052134_695f3ede112eb.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:22:38 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052238_695f3f1eed4b5.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:22:38 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php2qZgOt&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052238_695f3f1eed4b5.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:22:44 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052244_695f3f24939eb.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:22:44 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php0dwjEz&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052244_695f3f24939eb.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:22:49 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052249_695f3f2918343.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:22:49 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpwZtdyG&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_052249_695f3f2918343.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:25:23 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_052523_695f3fc39de39.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:25:23 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpUxj0NV&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/24_20260108_052523_695f3fc39de39.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:28:03 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_052803_695f40638c07a.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:28:03 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phprjAYJD&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_052803_695f40638c07a.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:28:08 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_052808_695f4068a1d95.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:28:08 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpRyCRpX&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_052808_695f4068a1d95.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:30:31 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_053031_695f40f7e0c84.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:30:31 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php7BjtJg&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_053031_695f40f7e0c84.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:30:37 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_053037_695f40fdd0d94.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:30:37 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpFAEeEE&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_053037_695f40fdd0d94.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:34:24 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_053424_695f41e09db2d.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:34:24 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpS7cL83&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_053424_695f41e09db2d.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:34:47 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_053447_695f41f776131.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:34:47 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpwglp1v&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_053447_695f41f776131.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:34:53 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_053453_695f41fd27e25.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:34:53 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php4F0jd3&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_053453_695f41fd27e25.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:36:00 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053600_695f4240c5c58.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:36:00 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php3zxLbt&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053600_695f4240c5c58.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:36:22 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053622_695f425635435.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:36:22 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpSD1UJf&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053622_695f425635435.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:36:40 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053640_695f42681f87c.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:36:40 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php9lvWLh&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053640_695f42681f87c.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:36:54 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053654_695f42765e563.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:36:54 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpDh75x8&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053654_695f42765e563.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:37:05 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053705_695f4281742d5.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:37:05 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpJQ27ij&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053705_695f4281742d5.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:37:15 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053715_695f428b4f3ea.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:37:15 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpwIx1Wn&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053715_695f428b4f3ea.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:37:28 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053728_695f429834009.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:37:28 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php9dQA5v&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053728_695f429834009.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:38:02 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053802_695f42ba35fb3.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:38:02 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php7dilcJ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053802_695f42ba35fb3.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:39:37 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_053937_695f431978d6e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:39:37 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpUJAGar&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_053937_695f431978d6e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:39:49 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_053949_695f4325833cb.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:39:49 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpFUUrPh&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_053949_695f4325833cb.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:39:55 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053955_695f432bda33b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:39:55 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpylVtLi&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_053955_695f432bda33b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:40:07 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_054007_695f43374f15b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:40:07 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpMQTOkD&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_054007_695f43374f15b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:40:18 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_054018_695f43421572d.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:40:18 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php6w2z2d&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_054018_695f43421572d.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:40:51 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_054051_695f43630a3cd.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:40:51 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpKgEmRu&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_054051_695f43630a3cd.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:40:52 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_054052_695f436420310.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:40:52 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpjnAXX4&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_054052_695f436420310.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:41:00 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_054100_695f436c175dc.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:41:00 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpSZzl0g&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_054100_695f436c175dc.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:43:45 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_054345_695f44115ccb9.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:43:45 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpyd3rFk&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_054345_695f44115ccb9.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:43:50 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_054350_695f441655788.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:43:50 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpGpzRUX&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_054350_695f441655788.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:46:12 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054612_695f44a470354.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:46:12 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php6HRFMG&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054612_695f44a470354.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:46:17 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054617_695f44a90f35f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:46:17 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpzqWWWA&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054617_695f44a90f35f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:46:56 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054656_695f44d0e5c48.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:46:56 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpD9wCg6&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054656_695f44d0e5c48.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:47:00 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054700_695f44d4d47a7.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:47:00 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpGpi34x&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054700_695f44d4d47a7.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:48:30 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054830_695f452eb2fe4.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:48:30 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpK6lCEH&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054830_695f452eb2fe4.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:49:47 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054947_695f457b1b209.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:49:47 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php7t9scD&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054947_695f457b1b209.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:49:52 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054952_695f45805e716.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:49:52 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpoThOSj&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_054952_695f45805e716.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:52:25 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055225_695f46192c543.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:52:25 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php6FjY5d&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055225_695f46192c543.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:52:30 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055230_695f461e9f3d2.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:52:30 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpqzOVBd&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055230_695f461e9f3d2.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:52:36 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055236_695f46248dc21.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:52:36 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phppI4QwJ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055236_695f46248dc21.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:53:16 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055316_695f464cb3fa4.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:53:16 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpB9zpnI&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055316_695f464cb3fa4.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:53:34 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055334_695f465e4b5e3.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:53:34 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpAm5Sr7&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055334_695f465e4b5e3.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:53:41 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055341_695f4665398c4.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:53:41 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php80jpfw&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055341_695f4665398c4.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:54:26 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055426_695f4692bf3ae.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:54:26 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php3fJJoA&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055426_695f4692bf3ae.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:54:55 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055455_695f46afec16c.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:54:55 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpNXg3ea&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055455_695f46afec16c.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:55:14 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055514_695f46c271336.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:55:14 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpT38afS&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055514_695f46c271336.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:55:24 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055524_695f46ccc1a4f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:55:24 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpQMPROc&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055524_695f46ccc1a4f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:55:26 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055526_695f46cea3787.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:55:26 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpRYm9UD&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055526_695f46cea3787.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:56:02 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055602_695f46f244a8f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:56:02 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpLeTUvg&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055602_695f46f244a8f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:56:12 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055612_695f46fcf2b8f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:56:12 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpgfaCGT&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_055612_695f46fcf2b8f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:56:36 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_055636_695f4714e6399.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:56:36 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phppqG4n0&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_055636_695f4714e6399.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:57:11 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055711_695f47377bad2.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:57:11 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpvNdK4q&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055711_695f47377bad2.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:57:15 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055715_695f473b7b8c1.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:57:15 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpqOoMwV&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055715_695f473b7b8c1.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:57:20 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055720_695f4740f241e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:57:20 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpIgcu86&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055720_695f4740f241e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:57:29 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055729_695f47493e98a.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:57:29 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpZZt6h1&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055729_695f47493e98a.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:58:00 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055800_695f47681026b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:58:00 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpFYt1US&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055800_695f47681026b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:58:04 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055804_695f476c8d350.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 05:58:04 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpgKKBVo&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_055804_695f476c8d350.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:00:02 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060002_695f47e23fa90.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:00:02 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php4p79vw&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060002_695f47e23fa90.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:00:05 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060005_695f47e5cd52e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:00:05 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpkM0sLQ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060005_695f47e5cd52e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:00:11 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060011_695f47ebf35b0.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:00:11 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpBgXpgD&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060011_695f47ebf35b0.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:00:18 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060018_695f47f2764dd.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:00:18 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpnBUllF&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060018_695f47f2764dd.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:00:23 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060023_695f47f741b82.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:00:23 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpOaRJ0U&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060023_695f47f741b82.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:01:20 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060120_695f4830dd953.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:01:20 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpb8H4Rw&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060120_695f4830dd953.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:01:25 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060125_695f48351e316.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:01:25 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php4vbp8x&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060125_695f48351e316.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:01:29 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060129_695f4839b514b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:01:29 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpc6pUD0&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060129_695f4839b514b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:01:39 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060139_695f484377a4c.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:01:39 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpNJCIFA&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060139_695f484377a4c.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:02:44 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060244_695f488498704.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:02:44 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpXrKWt7&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060244_695f488498704.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:03:51 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060351_695f48c70d08f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:03:51 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpKbrrln&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060351_695f48c70d08f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:04:15 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060415_695f48dfc0267.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:04:15 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpP6NaA1&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060415_695f48dfc0267.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:04:25 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060425_695f48e9696c7.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:04:25 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpC6UYtx&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060425_695f48e9696c7.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:04:30 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060430_695f48ee32c6e.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:04:30 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phptXwLKa&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060430_695f48ee32c6e.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:04:39 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060439_695f48f7dcebb.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:04:39 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpf7Farv&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/25_20260108_060439_695f48f7dcebb.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:04:42 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060442_695f48fac98c9.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:04:42 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpPfluYl&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060442_695f48fac98c9.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:05:01 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060501_695f490da553d.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:05:01 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php7fjECU&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060501_695f490da553d.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:05:58 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060558_695f494681408.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:05:58 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpx3At4Z&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060558_695f494681408.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:05:59 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060559_695f4947080ab.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:05:59 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php3YcwxI&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060559_695f4947080ab.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:07 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060607_695f494fb9d3f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:07 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpnGU4oF&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060607_695f494fb9d3f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:17 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060616_695f49590076d.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:17 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpdkmTI5&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060616_695f49590076d.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:19 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060619_695f495bade6b.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:19 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpRDE1a6&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060619_695f495bade6b.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:25 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060625_695f4961f25bc.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:25 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php8hn1b0&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060625_695f4961f25bc.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:32 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060632_695f4968e9405.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:32 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpWMQD1N&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060632_695f4968e9405.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:37 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060637_695f496d17e27.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:37 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpgQPOt2&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060637_695f496d17e27.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:46 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060646_695f497673ae8.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:06:46 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpqln6bX&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060646_695f497673ae8.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:07:04 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060704_695f49886dfd2.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:07:04 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpnehMzJ&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060704_695f49886dfd2.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:07:25 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060725_695f499d2c9ce.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:07:25 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpFCgBJh&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060725_695f499d2c9ce.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:07:35 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060735_695f49a74d94f.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:07:35 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpfCdE9E&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060735_695f49a74d94f.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:08:29 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060829_695f49dd8c5e8.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:08:29 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpBZsjRt&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060829_695f49dd8c5e8.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:08:36 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060836_695f49e47cf75.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:08:36 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpXaYIQD&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060836_695f49e47cf75.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:09:02 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060902_695f49fe4b2d3.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:09:02 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpiKWb3l&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060902_695f49fe4b2d3.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:09:26 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060926_695f4a1667137.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:09:26 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpfxBF0C&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060926_695f4a1667137.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:09:26 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060926_695f4a16deaf5.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:09:26 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpdRkuWt&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_060926_695f4a16deaf5.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:09:51 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060951_695f4a2fd1a64.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:09:51 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpg2mNwv&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_060951_695f4a2fd1a64.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:10:00 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_061000_695f4a3855445.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:10:00 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpq3yQuf&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_061000_695f4a3855445.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:10:04 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061004_695f4a3c1671d.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:10:04 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phppnkkEB&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061004_695f4a3c1671d.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:10:10 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061010_695f4a426b62a.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:10:10 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php4eFel6&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061010_695f4a426b62a.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:10:20 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061020_695f4a4c13216.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:10:20 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpR8ZOLz&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061020_695f4a4c13216.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:10:31 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_061031_695f4a576a3de.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:10:31 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phprlPeZG&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/17_20260108_061031_695f4a576a3de.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:11:01 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061101_695f4a7509347.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:11:01 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/php0QWCrW&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061101_695f4a7509347.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:11:35 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061135_695f4a97bf7e4.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:11:35 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpq4uXlE&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061135_695f4a97bf7e4.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:11:48 UTC] PHP Warning:  move_uploaded_file(/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061148_695f4aa4454c5.jpg): Failed to open stream: Permission denied in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 06:11:48 UTC] PHP Warning:  move_uploaded_file(): Unable to move &quot;/tmp/phpDyiugl&quot; to &quot;/home/obhsbeatleanalyt/public_html/api/../uploads/attendence/16_20260108_061148_695f4aa4454c5.jpg&quot; in /home/obhsbeatleanalyt/public_html/api/submit_attendence.php on line 75
+[08-Jan-2026 17:36:35 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_reports_api.php(16): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:36:35 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_app_version.php(6): require()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:36:39 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_reports_api.php(16): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:36:39 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_app_version.php(6): require()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:36:42 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee.php(8): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:36:42 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_train_no.php(17): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:36:57 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_train_no.php(17): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:36:57 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee.php(8): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:25 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_round_wise_parameters.php(7): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:26 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(6): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:34 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_train_no.php(17): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:34 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/employee.php(8): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:35 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_round_wise_parameters.php(7): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:36 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php(7): require()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:37 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_app_version.php(6): require()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:37 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_reports_api.php(16): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:39 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_round_wise_data.php(7): require()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:45 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/submit_attendence.php(6): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:47 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_reports_api.php(16): require_once()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[08-Jan-2026 17:38:47 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /home/obhsbeatleanalyt/public_html/includes/connection.php:8
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/get_app_version.php(6): require()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/includes/connection.php on line 8
+[09-Jan-2026 06:06:16 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Data too long for column 'location' at row 1 in /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php:93
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php(93): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php on line 93
+[09-Jan-2026 06:07:19 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Data too long for column 'location' at row 1 in /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php:93
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php(93): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php on line 93
+[09-Jan-2026 06:07:24 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Data too long for column 'location' at row 1 in /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php:93
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php(93): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php on line 93
+[09-Jan-2026 06:07:33 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Data too long for column 'location' at row 1 in /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php:93
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php(93): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php on line 93
+[09-Jan-2026 06:08:04 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Data too long for column 'location' at row 1 in /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php:93
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php(93): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/api/upload_photo_report.php on line 93
+[09-Jan-2026 07:09:06 UTC] PHP Warning:  Undefined variable $response in /home/obhsbeatleanalyt/public_html/api/get_round_wise_summary.php on line 111

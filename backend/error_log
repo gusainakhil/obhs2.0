@@ -460,3 +460,28 @@ Stack trace:
 [19-Dec-2025 10:59:32 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/obhsbeatleanalyt/public_html/backend/index.php on line 3
 [19-Dec-2025 10:59:32 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 17
 [19-Dec-2025 10:59:32 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/obhsbeatleanalyt/public_html/backend/index.php:1) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 22
+[03-Jan-2026 06:35:16 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'designation' in 'SELECT' in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php:167
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php(167): mysqli->prepare('SELECT \r\n      ...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php on line 167
+[03-Jan-2026 06:37:10 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'designation' in 'SELECT' in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php:167
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php(167): mysqli->prepare('SELECT \r\n      ...')
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php on line 167
+[03-Jan-2026 06:37:27 UTC] PHP Deprecated:  addslashes(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php on line 515
+[03-Jan-2026 06:37:27 UTC] PHP Deprecated:  addslashes(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php on line 494
+[03-Jan-2026 06:37:27 UTC] PHP Deprecated:  addslashes(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php on line 494
+[03-Jan-2026 06:37:48 UTC] PHP Deprecated:  addslashes(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php on line 515
+[03-Jan-2026 06:37:48 UTC] PHP Deprecated:  addslashes(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php on line 494
+[03-Jan-2026 06:37:48 UTC] PHP Deprecated:  addslashes(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php on line 494
+[03-Jan-2026 06:45:05 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php:90
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php(90): mysqli_stmt->bind_param('sssssssssssis', 'AAKASH SINGH', '722', 'JANITOR', 'AC', '07011', 'Start of journe...', '16.8613586,78.1...', 'B', 'attendance_5252...', '2026-01-03 13:1...', '52524', 25)
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/backend/edit-attendance.php on line 90
+[05-Jan-2026 00:38:16 UTC] PHP Warning:  Undefined array key "station_id" in /home/obhsbeatleanalyt/public_html/backend/edit-passenger-feedback.php on line 5
+[09-Jan-2026 03:28:19 UTC] PHP Warning:  Undefined array key "station_id" in /home/obhsbeatleanalyt/public_html/backend/edit-passenger-feedback.php on line 5
+[09-Jan-2026 03:28:20 UTC] PHP Warning:  Undefined array key "station_id" in /home/obhsbeatleanalyt/public_html/backend/edit-passenger-feedback.php on line 5
+[09-Jan-2026 03:28:20 UTC] PHP Warning:  Undefined array key "station_id" in /home/obhsbeatleanalyt/public_html/backend/edit-passenger-feedback.php on line 5

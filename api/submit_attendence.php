@@ -34,6 +34,23 @@ $grade              = $_POST['grade']              ?? '';
 $location           = $_POST['location']           ?? '';
 $toc                = $_POST['toc']                ?? '';
 
+// -------------------------------------------------
+// ONLY CHANGE: FORMAT LOCATION
+// -------------------------------------------------
+$formatted_location = $location;
+
+if (!empty($location)) {
+    $parts = array_map('trim', explode(',', $location));
+
+    if (count($parts) >= 3) {
+        $lat  = $parts[0];
+        $long = $parts[1];
+        $place = implode(', ', array_slice($parts, 2));
+
+        $formatted_location = "lati: {$lat} longi: {$long} {$place}";
+    }
+}
+
 // -----------------------------------------
 // HANDLE PHOTO
 // -----------------------------------------
@@ -46,14 +63,13 @@ if (!empty($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE
     if ($f['error'] !== UPLOAD_ERR_OK) jsonErr('Upload error.');
     if ($f['size'] > $maxSize) jsonErr('File too large.');
 
-    // mime detect
     $mime = @getimagesize($f['tmp_name'])['mime'] ?? '';
     if (!in_array($mime, $allowed)) jsonErr('Invalid file type.');
 
     $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
     if ($ext == '') $ext = ($mime === 'image/png') ? 'png' : 'jpg';
 
-    $filename = date('Ymd_His') . '_' . uniqid() . '.' . $ext;
+    $filename = $station_id . '_' . date('Ymd_His') . '_' . uniqid() . '.' . $ext;
     $dest     = $uploadDir . $filename;
 
     if (!move_uploaded_file($f['tmp_name'], $dest)) {
@@ -63,20 +79,13 @@ if (!empty($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE
     $photo_filename = $filename;
 }
 
-
 // UNIQUE EMPLOYEE NAME LOGIC 
+$employeeNameUnique = $employee_id;
 
-
-$employeeNameUnique = $employee_id; // default
-
-if (
-    strcasecmp($type_of_attendance, 'Start Of journey') === 0 
-) {
-    // generate unique
+if (strcasecmp($type_of_attendance, 'Start Of journey') === 0) {
     $employeeNameUnique = 'EMP-' . $employee_name . '-' . time() . '-' . bin2hex(random_bytes(4));
-}
-else {
-    // fetch last from base_attendance
+} else {
+
     $stmt = $mysqli->prepare("
         SELECT employee_name_unique 
         FROM base_attendance 
@@ -98,7 +107,6 @@ else {
 // -----------------------------------------------------------
 // INSERT INTO base_attendance
 // -----------------------------------------------------------
-
 $sql = "INSERT INTO base_attendance
     (employee_name, employee_id, station_id, type_of_attendance, train_no, desination, grade, location, photo, toc, employee_name_unique, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
@@ -115,7 +123,7 @@ $stmt->bind_param(
     $train_no,
     $desination,
     $grade,
-    $location,
+    $formatted_location, // ONLY CHANGE USED HERE
     $photo_filename,
     $toc,
     $employeeNameUnique
