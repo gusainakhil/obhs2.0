@@ -27,7 +27,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Train Report - <?php echo htmlspecialchars($station_name); ?></title>
@@ -134,9 +134,9 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                     <button type="button" class="btn-export" onclick="window.print()">
                         <i class="fas fa-print mr-2"></i>Print
                     </button>
-                    <!-- <button class="btn-export" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="exportExcel()">
+                    <button class="btn-export" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="exportExcel()">
                         <i class="fas fa-file-excel mr-2"></i>Excel
-                    </button> -->
+                    </button>
                 </div>
 
                 <!-- Report Header -->
@@ -516,7 +516,14 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
             alert('PDF export is a placeholder in this demo.');
         }
         function exportExcel() {
-            alert('Excel export is a placeholder in this demo.');
+            // Build query string from current filters
+            const params = new URLSearchParams({
+                grade: '<?php echo $grade; ?>',
+                from_date: '<?php echo $from_date; ?>',
+                to_date: '<?php echo $to_date; ?>',
+                train_no: '<?php echo $train_no; ?>'
+            });
+            window.location.href = 'train-report-excel.php?' + params.toString();
         }
 
         // Mobile Sidebar Toggle

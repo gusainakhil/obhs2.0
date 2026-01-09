@@ -288,11 +288,27 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                     }
                 }
                 ?>
-                <!-- <button class="badge badge-excellent" onclick="exportExcel()">Excel</button> -->
+                <button type="button" class="badge badge-excellent" style="background: #22c55e;" onclick="exportExcel()">
+                    <i class="fas fa-file-excel mr-1"></i>Export to Excel
+                </button>
                 <button type="button" class="badge" style="background: #0ea5e9;" onclick="window.print()"
                     aria-label="Print">Print</button>
                 <br>
                 <br>
+<script>
+    function exportExcel() {
+        // Build query string from current filters
+        const params = new URLSearchParams({
+            train: '<?php echo $train_no; ?>',
+            coach: '<?php echo $coach; ?>',
+            grade: '<?php echo $grade; ?>',
+            from_date: '<?php echo $from_date; ?>',
+            to_date: '<?php echo $to_date; ?>',
+            coach_type: '<?php echo $coach_type; ?>'
+        });
+        window.location.href = 'all-feedback-detail-report-excel.php?' + params.toString();
+    }
+</script>
 
 
 
@@ -528,10 +544,6 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
     <script>
         function exportPDF() {
             alert('PDF export is a placeholder in this demo.');
-        }
-
-        function exportExcel() {
-            alert('Excel export is a placeholder in this demo.');
         }
 
         // Mobile Sidebar Toggle
