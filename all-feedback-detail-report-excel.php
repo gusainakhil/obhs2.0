@@ -64,9 +64,11 @@
     }
     // Get questions before building headers
     $questions = get_questions_data($_SESSION['station_id'], $coach_type);
-    $headers = [
-        'SR.', 'Date', 'Seat No', 'Coach No', 'Customer Name', 'Phone', 'PNR No', 'Train No', 'Grade'
-    ];
+    $headers = ['SR.', 'Date', 'Seat No', 'Coach No', 'Customer Name'];
+    if ($_SESSION['station_id'] != 16) {
+        $headers[] = 'Phone';
+    }
+    $headers = array_merge($headers, ['PNR No', 'Train No', 'Grade']);
     // Use question text for feedback columns
     $question_headers = [];
     foreach ($questions as $q) {
@@ -98,12 +100,16 @@
             date('d/m/Y H:i:s', strtotime($pd['created'])),
             $pd['seat_no'],
             $pd['coach_no'],
-            $pd['name'],
-            $pd['ph_number'],
+            $pd['name']
+        ];
+        if ($_SESSION['station_id'] != 16) {
+            $rowData[] = $pd['ph_number'];
+        }
+        $rowData = array_merge($rowData, [
             $pd['pnr_number'],
             $pd['train_no'],
             $pd['grade']
-        ];
+        ]);
         $feedback_sum = 0;
         foreach ($feedbacks as $fb) {
             $rowData[] = $fb['value'];

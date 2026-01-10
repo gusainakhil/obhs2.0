@@ -28,6 +28,72 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
 <html lang="en">
 
 <head> 
+        <style>
+        @media print {
+            @page {
+                /* size: landscape; */
+                margin: 1cm;
+            }
+            body {
+                background: #fff !important;
+                color: #000 !important;
+                font-weight: bold !important;
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+            main, .max-w-full {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+            /* Hide navigation and buttons */
+            .btn-export, .flex.justify-end, #sidebar, #sidebarOverlay, nav, .fa-print, .fa-file-excel, header, .header, footer, .footer {
+                display: none !important;
+            }
+            /* Reset main content positioning */
+            .lg\:ml-64 {
+                margin-left: 0 !important;
+            }
+            /* Table styling for print */
+            .report-header, .report-grid, .table-report, .table-report th, .table-report td {
+                color: #000 !important;
+                background: #fff !important;
+                box-shadow: none !important;
+            }
+            .table-report th, .table-report td {
+                border: 1px solid #222 !important;
+                font-size: 12px !important;
+                padding: 6px 8px !important;
+                font-weight: bold !important;
+            }
+            .report-cell {
+                font-weight: bold !important;
+            }
+            .report-header {
+                border: 2px solid #222 !important;
+                margin-bottom: 10px !important;
+                padding: 8px !important;
+                border-radius: 0 !important;
+            }
+            .report-grid {
+                display: flex !important;
+                flex-direction: row !important;
+                gap: 15px !important;
+                flex-wrap: nowrap !important;
+            }
+            .report-cell {
+                padding: 5px !important;
+                white-space: nowrap !important;
+            }
+            .table-report tfoot td {
+                font-weight: bold !important;
+                background: #f0f0f0 !important;
+            }
+            a {
+                color: #000 !important;
+                text-decoration: none !important;
+            }
+        }
+        </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Train Report - <?php echo htmlspecialchars($station_name); ?></title>
@@ -146,7 +212,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         <div class="report-cell">Train No: <?php echo htmlspecialchars($train_no); ?></div>
                         <div class="report-cell">From: <?php echo htmlspecialchars($from_date); ?></div>
                         <div class="report-cell">To: <?php echo htmlspecialchars($to_date); ?></div>
-                        <div class="report-cell right">Grade: <?php echo htmlspecialchars($grade); ?></div>
+                        <div class="report-cell">Grade: <?php echo htmlspecialchars($grade); ?></div>
                     </div>
                 </div>
 

@@ -37,7 +37,93 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+      <style>
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0.5cm;
+            }
+            body {
+                background: #fff !important;
+                color: #000 !important;
+                font-weight: normal !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 10px !important;
+            }
+            main, .max-w-full {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            /* Hide navigation and buttons */
+            .badge, button, .btn-export, .flex.justify-end, #sidebar, #sidebarOverlay, nav, .fa-print, .fa-file-excel, header, .header, footer, .footer, script {
+                display: none !important;
+            }
+            /* Reset main content positioning */
+            .lg\:ml-64 {
+                margin-left: 0 !important;
+            }
+            /* Table styling for print */
+            .feedback-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                page-break-inside: auto !important;
+            }
+            .feedback-table thead {
+                display: table-header-group !important;
+                background: #000 !important;
+                color: #fff !important;
+            }
+            .feedback-table thead th {
+                padding: 4px 2px !important;
+                font-size: 8px !important;
+                border: 1px solid #000 !important;
+                font-weight: bold !important;
+                background: #000 !important;
+                color: #fff !important;
+                text-align: center !important;
+                width: auto !important;
+            }
+            .feedback-table thead th[colspan] {
+                padding: 2px 1px !important;
+                font-size: 6px !important;
+                width: 1% !important;
+                white-space: nowrap !important;
+            }
+            .feedback-table tbody tr {
+                page-break-inside: avoid !important;
+                page-break-after: auto !important;
+            }
+            .feedback-table tbody td {
+                padding: 2px 4px !important;
+                font-size: 9px !important;
+                border: 1px solid #333 !important;
+                font-weight: bold !important;
+                text-align: center !important;
+            }
+            .status-circle {
+                width: auto !important;
+                height: auto !important;
+                display: inline !important;
+                padding: 1px 3px !important;
+                font-size: 9px !important;
+                font-weight: bold !important;
+            }
+            .table-wrapper {
+                overflow: visible !important;
+            }
+            a {
+                color: #000 !important;
+                text-decoration: none !important;
+                font-weight: normal !important;
+            }
+        }
+        </style>
     <style>
+
+        
+
+
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
         body {

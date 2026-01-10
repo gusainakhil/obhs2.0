@@ -52,16 +52,25 @@ if (isset($_POST['update_passenger'])) {
     $phone_number = trim($_POST['phone_number'] ?? '');
     $seat_no = intval($_POST['seat_no'] ?? 0);
     $coach_no = trim($_POST['coach_no'] ?? '');
-    $train_no = trim($_POST['train_no'] ?? '');
-    $grade = trim($_POST['grade'] ?? '');
+    $train_no_update = trim($_POST['train_no'] ?? '');
+    $grade_update = trim($_POST['grade'] ?? '');
+    $created = trim($_POST['created'] ?? '');
+    // Convert datetime-local format (2025-12-28T09:09:56) to database format (2025-12-28 09:09:56)
+    $created = str_replace('T', ' ', $created);
     $ratings = $_POST['rating'] ?? [];
+    
+    // Store original search criteria for reuse (from hidden fields with prefix 'orig_')
+    $search_from_date = $_POST['orig_from_date'] ?? ($_POST['from_date'] ?? '');
+    $search_to_date = $_POST['orig_to_date'] ?? ($_POST['to_date'] ?? '');
+    $search_train_no = $_POST['orig_train_no'] ?? ($_POST['train_no'] ?? '');
+    $search_grade = $_POST['orig_grade'] ?? ($_POST['grade'] ?? '');
     
     if (!empty($passenger_id)) {
         // Update passenger info
-        $upd_sql = "UPDATE OBHS_passenger SET name = ?, pnr_number = ?, ph_number = ?, seat_no = ?, coach_no = ?, train_no = ?, grade = ? WHERE id = ?";
+        $upd_sql = "UPDATE OBHS_passenger SET name = ?, pnr_number = ?, ph_number = ?, seat_no = ?, coach_no = ?, train_no = ?, grade = ?, created = ? WHERE id = ?";
         if ($stmt = $mysqli->prepare($upd_sql)) {
-            // Correct bind types: name(s), pnr(s), phone(s), seat(i), coach(s), train(s), grade(s), id(s)
-            $stmt->bind_param("sssissss", $passenger_name, $pnr_number, $phone_number, $seat_no, $coach_no, $train_no, $grade, $passenger_id);
+            // Correct bind types: name(s), pnr(s), phone(s), seat(i), coach(s), train(s), grade(s), created(s), id(s)
+            $stmt->bind_param("ssissssss", $passenger_name, $pnr_number, $phone_number, $seat_no, $coach_no, $train_no_update, $grade_update, $created, $passenger_id);
             
             if ($stmt->execute()) {
                 $stmt->close();
@@ -79,10 +88,32 @@ if (isset($_POST['update_passenger'])) {
                 }
                 
                 $success_message = 'Passenger feedback updated successfully!';
+                
+                // Re-run search with original criteria to show filtered results
+                if (!empty($search_from_date) && !empty($search_to_date) && !empty($search_train_no) && !empty($search_grade)) {
+                    $search_performed = true;
+                    $from_datetime = $search_from_date . ' 00:00:00';
+                    $to_datetime = $search_to_date . ' 23:59:59';
+                    
+                    $search_sql = "SELECT id, name, pnr_number, ph_number, seat_no, coach_no, train_no, coach_type, grade, created 
+                                   FROM OBHS_passenger 
+                                   WHERE station_id = ? AND train_no = ? AND grade = ? AND created BETWEEN ? AND ? 
+                                   ORDER BY created DESC";
+                    
+                    if ($stmt = $mysqli->prepare($search_sql)) {
+                        $stmt->bind_param("issss", $station_id, $search_train_no, $search_grade, $from_datetime, $to_datetime);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        $passengers = $result->fetch_all(MYSQLI_ASSOC);
+                        $stmt->close();
+                    }
+                }
             } else {
-                $error_message = 'Error updating passenger.';
+                $error_message = 'Error updating passenger: ' . $stmt->error;
                 $stmt->close();
             }
+        } else {
+            $error_message = 'Prepare failed: ' . $mysqli->error;
         }
     }
 }
@@ -174,11 +205,11 @@ if (isset($_POST['search_passengers'])) {
                     <div class="form-row">
                         <div class="form-group">
                             <label>From Date:</label>
-                            <input type="date" name="from_date" required value="<?php echo htmlspecialchars($_POST['from_date'] ?? ''); ?>">
+                            <input type="date" name="from_date" required value="<?php echo htmlspecialchars(isset($_POST['from_date']) ? $_POST['from_date'] : (isset($search_from_date) ? $search_from_date : '')); ?>">
                         </div>
                         <div class="form-group">
                             <label>To Date:</label>
-                            <input type="date" name="to_date" required value="<?php echo htmlspecialchars($_POST['to_date'] ?? ''); ?>">
+                            <input type="date" name="to_date" required value="<?php echo htmlspecialchars(isset($_POST['to_date']) ? $_POST['to_date'] : (isset($search_to_date) ? $search_to_date : '')); ?>">
                         </div>
                         <div class="form-group">
                             <label>Train No:</label>
@@ -190,8 +221,9 @@ if (isset($_POST['search_passengers'])) {
                                 $stmt->bind_param("i", $station_id);
                                 $stmt->execute();
                                 $result = $stmt->get_result();
+                                $current_train = isset($_POST['train_no']) ? $_POST['train_no'] : (isset($search_train_no) ? $search_train_no : '');
                                 while ($row = $result->fetch_assoc()) {
-                                    $selected = (isset($_POST['train_no']) && $_POST['train_no'] == $row['train_no']) ? 'selected' : '';
+                                    $selected = ($current_train == $row['train_no']) ? 'selected' : '';
                                     echo '<option value="' . htmlspecialchars($row['train_no']) . '" ' . $selected . '>' . htmlspecialchars($row['train_no']) . '</option>';
                                 }
                                 $stmt->close();
@@ -204,8 +236,9 @@ if (isset($_POST['search_passengers'])) {
                                 <option value="">Select Grade</option>
                                 <?php
                                 $grades = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+                                $current_grade = isset($_POST['grade']) ? $_POST['grade'] : (isset($search_grade) ? $search_grade : '');
                                 foreach ($grades as $g) {
-                                    $selected = (isset($_POST['grade']) && $_POST['grade'] == $g) ? 'selected' : '';
+                                    $selected = ($current_grade == $g) ? 'selected' : '';
                                     echo '<option value="' . $g . '" ' . $selected . '>' . $g . '</option>';
                                 }
                                 ?>
@@ -244,7 +277,7 @@ if (isset($_POST['search_passengers'])) {
                                         <td><?php echo htmlspecialchars($passenger['coach_no']); ?></td>
                                         <td><?php echo htmlspecialchars($passenger['seat_no']); ?></td>
                                         <td><?php echo htmlspecialchars($passenger['coach_type']); ?></td>
-                                        <td><?php echo date('Y-m-d H:i', strtotime($passenger['created'])); ?></td>
+                                        <td><?php echo date('Y-m-d H:i:s', strtotime($passenger['created'])); ?></td>
                                         <td>
                                             <button class="action-btn edit-btn" onclick="editPassenger('<?php echo htmlspecialchars($passenger['id']); ?>')">Edit</button>
                                             <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this passenger and all feedback?');">
@@ -310,30 +343,36 @@ if (isset($_POST['search_passengers'])) {
                     // Build edit form
                     let html = '<form method="POST" action="">';
                     html += '<input type="hidden" name="passenger_id" value="' + data.passenger.id + '">';
-                    // Persist search criteria on update submit
-                    html += '<input type="hidden" name="from_date" value="' + escAttr(fromDate) + '">';
-                    html += '<input type="hidden" name="to_date" value="' + escAttr(toDate) + '">';
-                    html += '<input type="hidden" name="train_no" value="' + escAttr(trainNo) + '">';
-                    html += '<input type="hidden" name="grade" value="' + escAttr(gradeVal) + '">';
+                    // Persist original search criteria on update submit (use orig_ prefix)
+                    html += '<input type="hidden" name="orig_from_date" value="' + escAttr(fromDate) + '">';
+                    html += '<input type="hidden" name="orig_to_date" value="' + escAttr(toDate) + '">';
+                    html += '<input type="hidden" name="orig_train_no" value="' + escAttr(trainNo) + '">';
+                    html += '<input type="hidden" name="orig_grade" value="' + escAttr(gradeVal) + '">';
                     
                     html += '<div class="form-row">';
-                    html += '<div class="form-group"><label>Passenger Name:</label><input type="text" name="passenger_name" value="' + data.passenger.name + '" required></div>';
-                    html += '<div class="form-group"><label>PNR:</label><input type="text" name="pnr_number" value="' + data.passenger.pnr_number + '" required></div>';
+                    html += '<div class="form-group"><label>Passenger Name:</label><input type="text" name="passenger_name" value="' + escAttr(data.passenger.name) + '" required></div>';
+                    html += '<div class="form-group"><label>PNR:</label><input type="text" name="pnr_number" value="' + escAttr(data.passenger.pnr_number) + '" required></div>';
                     html += '</div>';
                     
                     html += '<div class="form-row">';
-                    html += '<div class="form-group"><label>Phone:</label><input type="text" name="phone_number" value="' + data.passenger.ph_number + '" required></div>';
-                    html += '<div class="form-group"><label>Train No:</label><input type="text" name="train_no" value="' + data.passenger.train_no + '" required></div>';
+                    html += '<div class="form-group"><label>Phone:</label><input type="text" name="phone_number" value="' + escAttr(data.passenger.ph_number) + '" required></div>';
+                    html += '<div class="form-group"><label>Train No:</label><input type="text" name="train_no" value="' + escAttr(data.passenger.train_no) + '" required></div>';
                     html += '</div>';
                     
                     html += '<div class="form-row">';
-                    html += '<div class="form-group"><label>Coach:</label><input type="text" name="coach_no" value="' + data.passenger.coach_no + '" required></div>';
-                    html += '<div class="form-group"><label>Seat:</label><input type="number" name="seat_no" value="' + data.passenger.seat_no + '" required></div>';
+                    html += '<div class="form-group"><label>Coach:</label><input type="text" name="coach_no" value="' + escAttr(data.passenger.coach_no) + '" required></div>';
+                    html += '<div class="form-group"><label>Seat:</label><input type="number" name="seat_no" value="' + escAttr(data.passenger.seat_no) + '" required></div>';
                     html += '<div class="form-group"><label>Grade:</label><select name="grade" required>';
+                    const currentGrade = String(data.passenger.grade).trim();
                     ['A','B','C','D','E','F','G'].forEach(g => {
-                        html += '<option value="' + g + '"' + (data.passenger.grade === g ? ' selected' : '') + '>' + g + '</option>';
+                        const isSelected = currentGrade === g ? ' selected' : '';
+                        html += '<option value="' + g + '"' + isSelected + '>' + g + '</option>';
                     });
                     html += '</select></div>';
+                    // html += '</div>';
+                    
+                    // html += '<div class="form-row">';
+                    html += '<div class="form-group"><label>Date & Time (with seconds):</label><input type="datetime-local" name="created" value="' + escAttr(data.passenger.created.substring(0, 19).replace(' ', 'T')) + '" step="1"></div>';
                     html += '</div>';
                     
                     // Feedback ratings
