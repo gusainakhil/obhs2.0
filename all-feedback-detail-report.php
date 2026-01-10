@@ -183,7 +183,13 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
         .badge-satisfactory {
             background-color: #fbbf24;
         }
-
+        .badge-notattended {
+            background-color: #eb8022ff;
+        }
+        .badge-unsatisfactory
+        {
+            background-color: #ef4444;
+        }
         /* .status-excellent {
             background-color: #10b981;
         }
