@@ -112,9 +112,10 @@ if (isset($_POST['update_employee'])) {
 $employees = [];
 
 // Pagination settings
-$records_per_page = isset($_GET['per_page']) ? intval($_GET['per_page']) : 10;
+$per_page_param = isset($_GET['per_page']) ? $_GET['per_page'] : '10';
+$records_per_page = ($per_page_param === 'all') ? PHP_INT_MAX : intval($per_page_param);
 $current_page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-$offset = ($current_page - 1) * $records_per_page;
+$offset = ($per_page_param === 'all') ? 0 : (($current_page - 1) * $records_per_page);
 
 // Get total count
 $count_query = "SELECT COUNT(*) as total FROM base_employees WHERE station_id = ?";
@@ -125,7 +126,7 @@ $count_result = $stmt->get_result();
 $total_records = $count_result->fetch_assoc()['total'];
 $stmt->close();
 
-$total_pages = ceil($total_records / $records_per_page);
+$total_pages = ($per_page_param === 'all') ? 1 : ceil($total_records / $records_per_page);
 
 // Fetch paginated employees
 $query = "SELECT * FROM base_employees WHERE station_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?";
@@ -423,10 +424,11 @@ $stmt->close();
                 <div class="entries-control">
                     <span>Show</span>
                     <select id="entriesPerPage" onchange="changeEntries(this.value)">
-                        <option value="10" <?php echo $records_per_page == 10 ? 'selected' : ''; ?>>10</option>
-                        <option value="25" <?php echo $records_per_page == 25 ? 'selected' : ''; ?>>25</option>
-                        <option value="50" <?php echo $records_per_page == 50 ? 'selected' : ''; ?>>50</option>
-                        <option value="100" <?php echo $records_per_page == 100 ? 'selected' : ''; ?>>100</option>
+                        <option value="10" <?php echo $per_page_param == 10 ? 'selected' : ''; ?>>10</option>
+                        <option value="25" <?php echo $per_page_param == 25 ? 'selected' : ''; ?>>25</option>
+                        <option value="50" <?php echo $per_page_param == 50 ? 'selected' : ''; ?>>50</option>
+                        <option value="100" <?php echo $per_page_param == 100 ? 'selected' : ''; ?>>100</option>
+                        <option value="all" <?php echo $per_page_param === 'all' ? 'selected' : ''; ?>>All</option>
                     </select>
                     <span>entries</span>
                 </div>

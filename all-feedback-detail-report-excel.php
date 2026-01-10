@@ -62,11 +62,22 @@
         $count = count($feedbacks);
         if ($count > $max_feedbacks) $max_feedbacks = $count;
     }
+    // Get questions before building headers
+    $questions = get_questions_data($_SESSION['station_id'], $coach_type);
     $headers = [
         'SR.', 'Date', 'Seat No', 'Coach No', 'Customer Name', 'Phone', 'PNR No', 'Train No', 'Grade'
     ];
-    for ($i = 1; $i <= $max_feedbacks; $i++) {
-        $headers[] = 'Feedback ' . $i;
+    // Use question text for feedback columns
+    $question_headers = [];
+    foreach ($questions as $q) {
+        $question_headers[] = isset($q['eng_question']) ? $q['eng_question'] : (isset($q['hin_question']) ? $q['hin_question'] : 'Feedback');
+    }
+    // If there are more feedbacks than questions, pad with empty headers
+    for ($i = count($question_headers) + 1; $i <= $max_feedbacks; $i++) {
+        $question_headers[] = '';
+    }
+    foreach ($question_headers as $qh) {
+        $headers[] = $qh;
     }
     $headers[] = 'PSI Score';
     $sheet->fromArray($headers, null, 'A'.$row);
@@ -108,8 +119,21 @@
         $psi_display = number_format($psi, 2);
         $rowData[] = $psi_display;
         $sheet->fromArray($rowData, null, 'A'.$row);
+        // Collect PSI for average calculation
+        $psi_values[] = $psi;
         $row++;
         $sr++;
+    }
+
+    // Print average PSI in the last column (below the PSI column)
+    if (!empty($psi_values)) {
+        $avg_psi = array_sum($psi_values) / count($psi_values);
+        $avg_psi_display = number_format($avg_psi, 2);
+        // Prepare row with empty cells except last column
+        $avgRow = array_fill(0, count($headers) - 1, '');
+        $avgRow[] =  $avg_psi_display;
+        $sheet->fromArray($avgRow, null, 'A'.$row);
+        $row++;
     }
     // Helper function to fetch all feedbacks for a passenger (grouped by feed_param)
     function getAllFeedbacksForPassenger($passenger_id) {

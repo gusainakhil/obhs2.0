@@ -180,6 +180,9 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
             /* font-weight: 700; */
             color: black;
         }
+        .badge-satisfactory {
+            background-color: #fbbf24;
+        }
 
         /* .status-excellent {
             background-color: #10b981;
