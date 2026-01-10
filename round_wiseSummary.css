@@ -16,8 +16,8 @@
         }
 
         .filter-group {
-            display: flex;
-            flex-direction: column;
+            /* display: flex;
+            flex-direction: column; */
             gap: 3px;
             flex: 0 0 auto;
         }

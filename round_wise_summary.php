@@ -22,6 +22,13 @@ $station_name = getStationName($_SESSION['station_id']);
 <html lang="en">
 
 <head>
+        <style>
+        @media print {
+            @page {
+                size: landscape;
+            }
+        }
+        </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Round-Wise Summary - <?php echo $station_name ?></title>
@@ -148,6 +155,39 @@ $station_name = getStationName($_SESSION['station_id']);
                     <div class="filter-group" style="align-self: flex-end;">
                         <input type="submit" class="btn-submit" value="Submit">
                     </div>
+                    <!-- add print button -->
+                    <div class="export-buttons"
+                        style="align-self: flex-end; display: flex; gap: 6px; margin-left: auto;">
+                        <button type="button" class="btn-submit" id="printButton">Print</button>
+                    </div>
+                    <script>
+                        function exportToCSV() {
+                            const table = document.querySelector('.report-table');
+                            let csv = [];
+                            const rows = table.querySelectorAll('tr');
+                            
+                            rows.forEach(row => {
+                                const cols = row.querySelectorAll('td, th');
+                                const csvrow = [];
+                                cols.forEach(col => {
+                                    csvrow.push(col.innerText);
+                                });
+                                csv.push(csvrow.join(','));
+                            });
+                            
+                            const csvContent = csv.join('\n');
+                            const blob = new Blob([csvContent], { type: 'text/csv' });
+                            const url = window.URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = 'round_wise_summary.csv';
+                            link.click();
+                        }
+
+                        document.getElementById('printButton').addEventListener('click', function() {
+                            window.print();
+                        });
+                    </script>
 
                     <div class="export-buttons"
                         style="align-self: flex-end; display: flex; gap: 6px; margin-left: auto;">

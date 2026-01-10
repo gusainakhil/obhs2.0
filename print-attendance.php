@@ -197,6 +197,27 @@ body {
     font-style: italic;
 }
 
+
+.location-info {
+    font-size: 9px;
+    color: #1f2937; /* dark gray */
+    line-height: 1.4;
+    margin-top: 3px;
+    font-weight: 600; /* makes it bold like datetime */
+}
+
+.location-info span {
+    display: block;
+}
+
+.date-info {
+    font-size: 9px;
+    font-weight: 700;
+    color: #0f172a; /* darker for emphasis */
+    margin-top: 4px;
+}
+
+
 /* ============ PRINT FIX ============ */
 @media print {
 
@@ -366,9 +387,19 @@ else {
 ?>
 <img src="<?= $img ?>" class="photo-thumbnail">
 <?php if (!empty($latitude)): ?>
-<div class="location-info">Lati: <?= htmlspecialchars($latitude) ?><br>Longi: <?= htmlspecialchars($longitude) ?><br><?= htmlspecialchars($location_name) ?></div>
+<div class="location-info">
+    <span>Lati: <?= htmlspecialchars($latitude) ?></span>
+    <span>Longi: <?= htmlspecialchars($longitude) ?></span>
+    <span><?= htmlspecialchars($location_name) ?></span>
+</div>
+
 <?php else: ?>
-<div class="location-info">Lati: NA<br>Longi: NA<br>NA</div>
+<div class="location-info">
+    <span>Lati: NA</span>
+    <span>Longi: NA</span>
+    <span>NA</span>
+</div>
+
 <?php endif; ?>
 <div class="date-info"><?= date('d-m-Y H:i:s', strtotime($data['created_at'])) ?></div>
 <?php else: ?>
