@@ -125,7 +125,7 @@
         $psi_display = number_format($psi, 2);
         $rowData[] = $psi_display;
         $sheet->fromArray($rowData, null, 'A'.$row);
-        // Collect PSI for average calculation
+       
         $psi_values[] = $psi;
         $row++;
         $sr++;
