@@ -131,7 +131,6 @@
         $sr++;
     }
 
-    // Print average PSI in the last column (below the PSI column)
     if (!empty($psi_values)) {
         $avg_psi = array_sum($psi_values) / count($psi_values);
         $avg_psi_display = number_format($avg_psi, 2);
