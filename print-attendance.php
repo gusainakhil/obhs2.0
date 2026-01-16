@@ -178,7 +178,7 @@ body {
 
 .photo-thumbnail {
     width: 55px;
-    height: 55px;
+    /*height: 55px;*/
     object-fit: cover;
     border: 1px solid #ccc;
     display: block;
@@ -237,7 +237,7 @@ body {
 
     .photo-thumbnail {
         width: 45px;
-        height: 45px;
+        /*height: 45px;*/
     }
 
     @page {

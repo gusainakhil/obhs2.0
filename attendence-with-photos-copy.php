@@ -347,7 +347,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
 
         .report-icon {
             width: 110px;
-            /*height: 110px;*/
+            height: 110px;
             cursor: pointer;
             transition: transform 0.2s ease;
             display: block;
