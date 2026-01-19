@@ -145,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "POST")
 
         .photo-grid {
             display: grid;
-            grid-template-columns: repeat(9, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 12px;
         }
 
@@ -374,7 +374,7 @@ $gradeDays = [
                                 <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Photo" class="photo-img" onclick="viewPhoto(this.src)">
                                 <div class="photo-info">
                                     <strong>Train:</strong> <?php echo htmlspecialchars($photo['train_no']); ?><br>
-                                    <strong>Date:</strong> <?php echo date('d-M-Y', strtotime($photo['created_at'])); ?><br>
+                                    <strong>Date:</strong> <?php echo date('d-M-Y H:i:s', strtotime($photo['created_at'])); ?><br>
                                     <strong>Location:</strong> <?php echo htmlspecialchars($location_str); ?>
                                 </div>
                             </div>
