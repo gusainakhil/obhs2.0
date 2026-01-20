@@ -23,9 +23,103 @@ $station_name = getStationName($_SESSION['station_id']);
 
 <head>
         <style>
+        .print-footer {
+            display: none;
+        }
+        
         @media print {
             @page {
-                size: landscape;
+                size: portrait;
+                margin: 0;
+            }
+            
+            body * {
+                visibility: hidden;
+            }
+            
+            .summary-header,
+            .summary-info,
+            .table-wrapper,
+            .table-wrapper *,
+            .print-footer {
+                visibility: visible;
+            }
+            
+            .table-wrapper {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .summary-header,
+            .summary-info {
+                position: relative;
+                padding: 5px !important;
+                margin: 0 !important;
+                font-size: 10px !important;
+                font-weight: bold !important;
+                color: #000 !important;
+            }
+            
+            .report-table {
+                width: 100% !important;
+                font-size: 8px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border-collapse: collapse !important;
+                border: 2px solid #000 !important;
+            }
+            
+            .report-table th {
+                padding: 2px 4px !important;
+                margin: 0 !important;
+                font-size: 8px !important;
+                border: 1px solid #000 !important;
+                background-color: #e0e0e0 !important;
+                color: #000 !important;
+                font-weight: bold !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .report-table td {
+                padding: 2px 4px !important;
+                margin: 0 !important;
+                font-size: 8px !important;
+                border: 1px solid #000 !important;
+                color: #000 !important;
+            }
+            
+            .report-table tfoot tr {
+                background-color: #d0d0d0 !important;
+                font-weight: bold !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .print-footer {
+                display: block !important;
+                position: relative;
+                margin-top: 10px !important;
+                padding: 5px !important;
+                font-size: 9px !important;
+                font-weight: bold !important;
+                color: #000 !important;
+                text-align: center;
+                border-top: 2px solid #000;
+            }
+            
+            .filter-section,
+            #menuToggle,
+            .export-buttons,
+            button,
+            nav,
+            aside,
+            footer {
+                display: none !important;
             }
         }
         </style>
@@ -223,7 +317,7 @@ $station_name = getStationName($_SESSION['station_id']);
             }
             ?>
             <!-- Summary Information -->
-            <div class="summary-header">
+            <div class="summary-header" style="text-align: center;">
                 Station: <?php echo $station_name ?> &nbsp;&nbsp;|&nbsp;&nbsp; UP: <?php echo $up ?>
                 &nbsp;&nbsp;|&nbsp;&nbsp; Down: <?php echo $down ?>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -431,6 +525,11 @@ $station_name = getStationName($_SESSION['station_id']);
                             <td><?php echo $trainDownData['total_feed'] + $trainDownData['tte']; ?></td>
                             <td><?php echo $downtrainachivedata['tte'] + $downtrainachivedata['ac_non_ac']; ?></td>
                             <td><?php echo $down_train_psi = $downFinalPSI ?> %</td>
+            <!-- Print Footer (only visible when printing) -->
+            <div class="print-footer">
+               Station: <?php echo $station_name; ?> | UP Train: <?php echo $up; ?> | DOWN Train: <?php echo $down; ?> | Grade: <?php echo $grade; ?> | Report Date: From <?php echo $from_date; ?> To <?php echo $to_date; ?>
+            </div>
+        
                         </tr>
                     </tbody>
                     <tfoot>
