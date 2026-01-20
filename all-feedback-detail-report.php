@@ -419,12 +419,13 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Coach<br>No</th>
                                
                                  <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Customer<br>Name</th>
+                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">PNR No</th>
                                 
                              <?php if($_SESSION['station_id'] != 16): ?>
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">
                                     Customer<br>Phone</th>
                                     <?php endif; ?>
-                                <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">PNR No</th>
+                                
 
                                 <th rowspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.2);">Train<br>No.
                                 </th>
@@ -493,7 +494,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
                                     echo "<tr>";
                                     echo "<td>{$sr}</td>";
-                                    echo "<td>" . date('d/m/Y H:i:s', strtotime($pd['feedback_date'])) . "</td>";
+                                    echo "<td>" . ($_SESSION['station_id'] == 16 || $_SESSION['station_id'] == 23 ? date('d/m/Y', strtotime($pd['feedback_date'])) : date('d/m/Y H:i:s', strtotime($pd['feedback_date']))) . "</td>";
                                     echo "<td>{$pd['seat_no']}</td>";
                                     echo "<td>{$pd['coach_no']}</td>";
                                     echo "<td><a href='employee-card.php?passenger_id={$pd['passenger_id']}"
@@ -508,10 +509,11 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                         . "&date_from={$from_date}"
                                         . "&date_to={$to_date}' class='customer-link' target='_blank'>"
                                         . "{$pd['name']}</a></td>";
-                                        if ($_SESSION['station_id'] != 16) {
+                                       
+                                    echo "<td>{$pd['pnr_number']}</td>";
+                                     if ($_SESSION['station_id'] != 16) {
                                             echo "  <td>{$pd['ph_number']}</td>";
                                         }
-                                    echo "<td>{$pd['pnr_number']}</td>";
                                     echo "<td>{$pd['train_no']}</td>";
                                     echo "<td>{$pd['grade']}</td>";
 
@@ -527,7 +529,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                     if ($max_total > 0) {
                                         $psi = (($pd['total_feedback_sum']) / $max_total) * 100;
                                     }
-                                    $psi_display = number_format($psi, 2);
+                                    $psi_display = number_format($psi);
 
                                     // Map PSI to status classes
                                     if ($psi >= 90) {
