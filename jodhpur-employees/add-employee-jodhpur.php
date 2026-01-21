@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if (in_array($ext, $allowed)) {
             $photo = uniqid() . '.' . $ext;
-            move_uploaded_file($_FILES['photo']['tmp_name'], 'uploads/' . $photo);
+            move_uploaded_file($_FILES['photo']['tmp_name'], '../uploads/employee/' . $photo);
         }
     }
     

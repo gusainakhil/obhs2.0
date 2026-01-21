@@ -10,4 +10,3 @@
             <li><a href="edit-attendance.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'edit-attendance.php' ? 'active' : ''; ?>">Edit Attendance</a></li>
         </ul>
     </nav>
-    <!-- End Sidebar -->

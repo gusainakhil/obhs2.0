@@ -322,18 +322,32 @@ if (!file_exists($img)) {
     $img = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg';
 }
 
-// Parse location
+
 $location = $data['location'] ?? '';
+
+// 🔥 HARD CLEANING
+$location = html_entity_decode($location, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+$location = str_replace(
+    ["\r", "\n", "\t", chr(160)],
+    ' ',
+    $location
+);
+$location = preg_replace('/[^\x20-\x7E]/u', ' ', $location); // remove unicode junk
+$location = preg_replace('/\s+/', ' ', $location);
+$location = trim($location);
+
+
+// Parse location
 $latitude = '';
 $longitude = '';
 $location_name = '';
 
-if (preg_match('/lati:\s*([\d.]+)\s+longi:\s*([\d.]+)\s*(.+)/', $location, $matches)) {
+if (preg_match('/lati\s*:\s*([0-9.]+)\s*longi\s*:\s*([0-9.]+)\s*(.*)/i', $location, $matches)) {
     $latitude = $matches[1];
     $longitude = $matches[2];
     $location_name = trim($matches[3]);
 }
-elseif (preg_match('/^([\d.]+),([\d.]+),(.+)$/', $location, $matches)) {
+elseif (preg_match('/^\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*(.+)\s*$/', $location, $matches)) {
     $latitude = $matches[1];
     $longitude = $matches[2];
     $location_name = trim($matches[3]);
@@ -341,6 +355,7 @@ elseif (preg_match('/^([\d.]+),([\d.]+),(.+)$/', $location, $matches)) {
 else {
     $location_name = $location;
 }
+
 ?>
 <img src="<?= $img ?>" class="photo-thumbnail">
 <?php if (!empty($latitude)): ?>
@@ -366,17 +381,16 @@ if (!file_exists($img)) {
 }
 
 // Parse location
-$location = $data['location'] ?? '';
 $latitude = '';
 $longitude = '';
 $location_name = '';
 
-if (preg_match('/lati:\s*([\d.]+)\s+longi:\s*([\d.]+)\s*(.+)/', $location, $matches)) {
+if (preg_match('/lati\s*:\s*([0-9.]+)\s*longi\s*:\s*([0-9.]+)\s*(.*)/i', $location, $matches)) {
     $latitude = $matches[1];
     $longitude = $matches[2];
     $location_name = trim($matches[3]);
 }
-elseif (preg_match('/^([\d.]+),([\d.]+),(.+)$/', $location, $matches)) {
+elseif (preg_match('/^\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*(.+)\s*$/', $location, $matches)) {
     $latitude = $matches[1];
     $longitude = $matches[2];
     $location_name = trim($matches[3]);
@@ -384,6 +398,7 @@ elseif (preg_match('/^([\d.]+),([\d.]+),(.+)$/', $location, $matches)) {
 else {
     $location_name = $location;
 }
+
 ?>
 <img src="<?= $img ?>" class="photo-thumbnail">
 <?php if (!empty($latitude)): ?>

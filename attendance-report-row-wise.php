@@ -47,7 +47,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                 ba.type_of_attendance,
                 ba.location,
                 ba.created_at,
-                be.photo as employee_photo
+                ba.photo as employee_photo
               FROM base_attendance ba
               LEFT JOIN base_employees be ON ba.employee_id = be.employee_id AND be.station = ?
               WHERE ba.station_id = ?
@@ -199,7 +199,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
         .employee-photo {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
+            border-radius: 4px;
             object-fit: cover;
             border: 2px solid #e2e8f0;
             display: block;
@@ -247,6 +247,95 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
             .employee-photo {
                 width: 35px;
                 height: 35px;
+            }
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+
+            #sidebarOverlay,
+            .lg\:ml-64 > *:not(.overflow-x-auto):not(main),
+            header,
+            footer {
+                display: none !important;
+            }
+
+            .lg\:ml-64 {
+                margin-left: 0 !important;
+            }
+
+            main {
+                padding: 10px !important;
+            }
+
+            .filter-card {
+                page-break-after: avoid;
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+                padding: 12px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .filter-label {
+                font-size: 11px !important;
+                margin-bottom: 3px !important;
+            }
+
+            .filter-select,
+            .filter-input {
+                padding: 6px 8px !important;
+                font-size: 11px !important;
+            }
+
+            .btn-submit,
+            .btn-print {
+                padding: 6px 12px !important;
+                font-size: 11px !important;
+            }
+
+            .filter-grid {
+                gap: 8px !important;
+            }
+
+            .attendance-table {
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+
+            .attendance-table thead {
+                background: #06b6d4 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .attendance-table thead th {
+                color: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .status-badge {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .status-start {
+                background-color: #dcfce7 !important;
+                color: #166534 !important;
+            }
+
+            .status-interval {
+                background-color: #fef3c7 !important;
+                color: #92400e !important;
+            }
+
+            .status-destination {
+                background-color: #dbeafe !important;
+                color: #1e40af !important;
             }
         }
     </style>
@@ -366,7 +455,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                     <td><?php echo $counter++; ?></td>
                                     <td>
                                         <?php 
-                                        $employee_photo = 'uploads/employee/' . $record['employee_photo'];
+                                        $employee_photo = 'uploads/attendence/' . $record['employee_photo'];
                                         if (empty($record['employee_photo']) || !file_exists($employee_photo)) {
                                             $employee_photo = 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png';
                                         }

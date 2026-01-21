@@ -78,11 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if (in_array($ext, $allowed)) {
             // Delete old photo
-            if ($photo && file_exists('uploads/' . $photo)) {
-                unlink('uploads/' . $photo);
+            if ($photo && file_exists('../uploads/employee/' . $photo)) {
+                unlink('../uploads/employee/' . $photo);
             }
             $photo = uniqid() . '.' . $ext;
-            move_uploaded_file($_FILES['photo']['tmp_name'], 'uploads/' . $photo);
+            move_uploaded_file($_FILES['photo']['tmp_name'], '../uploads/employee/' . $photo);
         }
     }
     
@@ -238,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                   <label class="form-label">Current Photo</label>
                   <div class="current-photo">
                      <?php if ($data['photo']): ?>
-                        <img src="uploads/<?php echo htmlspecialchars($data['photo']); ?>" alt="Current Photo" style="max-width: 150px; height: auto;">
+                        <img src="../uploads/employee/<?php echo htmlspecialchars($data['photo']); ?>" alt="Current Photo" style="max-width: 150px; height: auto;">
                      <?php else: ?>
                         <p class="text-muted">No photo uploaded</p>
                      <?php endif; ?>

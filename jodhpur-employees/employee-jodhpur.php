@@ -23,8 +23,8 @@ if (isset($_GET['delete_id'])) {
         
         if ($stmt->execute()) {
             // Delete photo file if exists
-            if ($photo && file_exists("uploads/" . $photo)) {
-                unlink("uploads/" . $photo);
+            if ($photo && file_exists("../uploads/employee/" . $photo)) {
+                unlink("../uploads/employee/" . $photo);
             }
             $_SESSION['success'] = "Employee deleted successfully!";
         } else {
@@ -238,7 +238,7 @@ while ($row = $result->fetch_assoc()) {
                         <?php foreach($data as $val): ?>
                             <tr>
                                 <td><?php echo $variable; ?></td>
-                                <td><img src="uploads/<?php echo htmlspecialchars($val['photo']); ?>" width="60" class="border" style="height: 60px; object-fit: cover;"></td>
+                                <td><img src="../uploads/employee/<?php echo htmlspecialchars($val['photo']); ?>" width="60" class="border" style="height: 60px; object-fit: cover;"></td>
                                 <td>
                                     <a href="employee-details-jodhpur.php?id=<?php echo $val['id']; ?>" class="employee-name-link" target="_blank">
                                         <?php echo htmlspecialchars($val['employee_id']); ?>
