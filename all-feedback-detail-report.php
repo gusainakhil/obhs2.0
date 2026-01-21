@@ -40,16 +40,16 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
       <style>
         @media print {
             @page {
-                size: A4 landscape;
-                margin: 0.5cm;
+                size: A4 portrait!important;
+                margin: 0.3cm;
             }
             body {
                 background: #fff !important;
                 color: #000 !important;
-                font-weight: normal !important;
+                font-weight: bold !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                font-size: 10px !important;
+                font-size: 14px !important;
             }
             main, .max-w-full {
                 margin: 0 !important;
@@ -68,36 +68,40 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                 width: 100% !important;
                 border-collapse: collapse !important;
                 page-break-inside: auto !important;
+                font-size: 13px !important;
             }
             .feedback-table thead {
                 display: table-header-group !important;
-                background: #000 !important;
-                color: #fff !important;
+                background: #ffffff !important;
+                color: #000000 !important;
             }
             .feedback-table thead th {
-                padding: 4px 2px !important;
-                font-size: 8px !important;
-                border: 1px solid #000 !important;
+                padding: 6px 4px !important;
+                font-size: 13px !important;
+                border: 1.5px solid #000000 !important;
                 font-weight: bold !important;
-                background: #000 !important;
-                color: #fff !important;
+                background: #ffffff !important;
+                color: #000000 !important;
                 text-align: center !important;
                 width: auto !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .feedback-table thead th[colspan] {
-                padding: 2px 1px !important;
-                font-size: 6px !important;
+                padding: 4px 3px !important;
+                font-size: 12px !important;
                 width: 1% !important;
                 white-space: nowrap !important;
+                font-weight: bold !important;
             }
             .feedback-table tbody tr {
                 page-break-inside: avoid !important;
                 page-break-after: auto !important;
             }
             .feedback-table tbody td {
-                padding: 2px 4px !important;
-                font-size: 9px !important;
-                border: 1px solid #333 !important;
+                padding: 4px 5px !important;
+                font-size: 13px !important;
+                border: 1px solid #000 !important;
                 font-weight: bold !important;
                 text-align: center !important;
             }
@@ -105,9 +109,11 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                 width: auto !important;
                 height: auto !important;
                 display: inline !important;
-                padding: 1px 3px !important;
-                font-size: 9px !important;
+                padding: 2px 4px !important;
+                font-size: 13px !important;
                 font-weight: bold !important;
+                background: transparent !important;
+                color: #000 !important;
             }
             .table-wrapper {
                 overflow: visible !important;
@@ -115,7 +121,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
             a {
                 color: #000 !important;
                 text-decoration: none !important;
-                font-weight: normal !important;
+                font-weight: bold !important;
             }
         }
         </style>

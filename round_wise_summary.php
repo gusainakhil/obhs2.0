@@ -48,7 +48,7 @@ $station_name = getStationName($_SESSION['station_id']);
             .table-wrapper {
                 position: absolute;
                 left: 0;
-                top: 0;
+                top: 15px;
                 width: 100%;
                 padding: 0 !important;
                 margin: 0 !important;
@@ -59,14 +59,14 @@ $station_name = getStationName($_SESSION['station_id']);
                 position: relative;
                 padding: 5px !important;
                 margin: 0 !important;
-                font-size: 10px !important;
+                font-size: 14px !important;
                 font-weight: bold !important;
                 color: #000 !important;
             }
             
             .report-table {
                 width: 100% !important;
-                font-size: 8px !important;
+                font-size: 12px !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 border-collapse: collapse !important;
@@ -74,9 +74,9 @@ $station_name = getStationName($_SESSION['station_id']);
             }
             
             .report-table th {
-                padding: 2px 4px !important;
+                padding: 4px 6px !important;
                 margin: 0 !important;
-                font-size: 8px !important;
+                font-size: 12px !important;
                 border: 1px solid #000 !important;
                 background-color: #e0e0e0 !important;
                 color: #000 !important;
@@ -86,9 +86,9 @@ $station_name = getStationName($_SESSION['station_id']);
             }
             
             .report-table td {
-                padding: 2px 4px !important;
+                padding: 4px 6px !important;
                 margin: 0 !important;
-                font-size: 8px !important;
+                font-size: 12px !important;
                 border: 1px solid #000 !important;
                 color: #000 !important;
             }
@@ -105,7 +105,7 @@ $station_name = getStationName($_SESSION['station_id']);
                 position: relative;
                 margin-top: 10px !important;
                 padding: 5px !important;
-                font-size: 9px !important;
+                font-size: 13px !important;
                 font-weight: bold !important;
                 color: #000 !important;
                 text-align: center;
@@ -526,7 +526,7 @@ $station_name = getStationName($_SESSION['station_id']);
                             <td><?php echo $downtrainachivedata['tte'] + $downtrainachivedata['ac_non_ac']; ?></td>
                             <td><?php echo $down_train_psi = $downFinalPSI ?> %</td>
             <!-- Print Footer (only visible when printing) -->
-            <div class="print-footer">
+            <div class="print-footer" style=" margin-top: 20px; margin-bottom: 20px;">
                Station: <?php echo $station_name; ?> | UP Train: <?php echo $up; ?> | DOWN Train: <?php echo $down; ?> | Grade: <?php echo $grade; ?> | Report Date: From <?php echo $from_date; ?> To <?php echo $to_date; ?>
             </div>
         
