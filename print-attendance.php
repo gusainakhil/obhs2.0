@@ -37,7 +37,7 @@ if ($selected_grade && $selected_train_from && $selected_train_to) {
         ba.photo,
         ba.location,
         ba.created_at,
-        be.photo as employee_photo
+        be.photo AS employee_photo
       FROM base_attendance ba
       LEFT JOIN base_employees be 
         ON ba.employee_id = be.employee_id AND be.station = ?
@@ -91,159 +91,51 @@ if ($selected_grade && $selected_train_from && $selected_train_to) {
 <title>Print Attendance Report</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #fff;
-    margin: 0;
-}
+body { font-family: Arial, sans-serif; background:#fff; margin:0; }
+.print-container { max-width:8.5in; margin:auto; padding:8px; }
+.header-section { text-align:center; border-bottom:1px solid #333; margin-bottom:6px; }
+.station-title { font-size:14px; font-weight:bold; }
+.report-title { font-size:11px; color:#555; }
 
-.print-container {
-    max-width: 8.5in;
-    margin: auto;
-    padding: 8px;
+.print-table { width:100%; border-collapse:collapse; font-size:10px; }
+.print-table th, .print-table td {
+    border:1px solid #ccc;
+    padding:5px;
+    vertical-align:top;
+    text-align:center;
 }
-
-.header-section {
-    text-align: center;
-    border-bottom: 1px solid #333;
-    margin-bottom: 6px;
-}
-
-.station-title {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.report-title {
-    font-size: 11px;
-    color: #555;
-}
-
-.filter-info {
-    background: #f8fafc;
-    border: 1px solid #cbd5e1;
-    padding: 6px;
-    border-radius: 4px;
-    margin-bottom: 6px;
-    font-size: 10px;
-}
-
-.filter-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 4px;
-    margin-bottom: 2px;
-}
-
-.filter-item {
-    display: flex;
-    gap: 8px;
-}
-
-.filter-label {
-    font-weight: 600;
-    color: #1e293b;
-    min-width: 110px;
-}
-
-.filter-value {
-    color: #475569;
-}
-
-.employee-cell {
-    text-align: center;
-}
-
-.data-cell {
-    text-align: center;
-}
-
-.print-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 10px;
-}
-
-.print-table th,
-.print-table td {
-    border: 1px solid #ccc;
-    padding: 5px;
-    vertical-align: top;
-}
-
-.print-table thead {
-    background: #0ea5e9;
-    color: #fff;
-}
+.print-table thead { background:#0ea5e9; color:#fff; }
 
 .photo-thumbnail {
-    width: 55px;
-    /*height: 55px;*/
-    object-fit: cover;
-    border: 1px solid #ccc;
-    display: block;
-    margin: 3px auto;
+    width:100px;
+    height:100px;
+    object-fit:contain;
+    object-position:center;
+    border:1px solid #ccc;
+    display:block;
+    margin:3px auto;
+    background-color:#f9fafb;
 }
 
 .location-info {
-    font-size: 8px;
-    color: #555;
-    line-height: 1.3;
-    margin-top: 2px;
-}
-
-.no-data {
-    color: #999;
-    font-style: italic;
-}
-
-
-.location-info {
-    font-size: 9px;
-    color: #1f2937; /* dark gray */
-    line-height: 1.4;
-    margin-top: 3px;
-    font-weight: 600; /* makes it bold like datetime */
-}
-
-.location-info span {
-    display: block;
+    font-size:9px;
+    font-weight:600;
+    color:#1f2937;
+    line-height:1.4;
+    margin-top:3px;
 }
 
 .date-info {
-    font-size: 9px;
-    font-weight: 700;
-    color: #0f172a; /* darker for emphasis */
-    margin-top: 4px;
+    font-size:9px;
+    font-weight:700;
+    margin-top:4px;
 }
 
+.no-data { color:#999; font-style:italic; }
 
-/* ============ PRINT FIX ============ */
 @media print {
-
-    .print-container {
-        max-width: 100%;
-        padding: 5mm;
-    }
-
-    .print-table,
-    .print-table tr {
-        page-break-inside: auto;
-    }
-
-    thead {
-        display: table-header-group;
-    }
-
-    .photo-thumbnail {
-        width: 45px;
-        /*height: 45px;*/
-    }
-
-    @page {
-        size: A4 portrait;
-        margin: 10mm;
-    }
+    thead { display: table-header-group; }
+    @page { size:A4 portrait; margin:10mm; }
 }
 </style>
 </head>
@@ -251,37 +143,11 @@ body {
 <body>
 <div class="print-container">
 
-<!-- HEADER -->
 <div class="header-section">
     <div class="station-title"><?= htmlspecialchars($station_name) ?></div>
     <div class="report-title">Attendance Report with Photos</div>
 </div>
 
-<!-- FILTER INFO -->
-<div class="filter-info">
-    <div class="filter-row">
-        <div class="filter-item">
-            <span class="filter-label">Grade:</span>
-            <span class="filter-value"><?= htmlspecialchars($selected_grade . ' - ' . $grade_day) ?></span>
-        </div>
-        <div class="filter-item">
-            <span class="filter-label">Period:</span>
-            <span class="filter-value"><?= htmlspecialchars(date('d-m-Y', strtotime($date_from)) . ' to ' . date('d-m-Y', strtotime($date_to))) ?></span>
-        </div>
-    </div>
-    <div class="filter-row">
-        <div class="filter-item">
-            <span class="filter-label">Train Up No.:</span>
-            <span class="filter-value"><?= htmlspecialchars($selected_train_from) ?></span>
-        </div>
-        <div class="filter-item">
-            <span class="filter-label">Train Down No.:</span>
-            <span class="filter-value"><?= htmlspecialchars($selected_train_to) ?></span>
-        </div>
-    </div>
-</div>
-
-<!-- TABLE -->
 <table class="print-table">
 <thead>
 <tr>
@@ -298,7 +164,7 @@ body {
 <tbody>
 <?php foreach ($attendance_data as $emp): ?>
 <tr>
-<td class="employee-cell">
+<td>
 <?php
 $emp_photo = 'uploads/employee/'.$emp['employee_photo'];
 if (!$emp['employee_photo'] || !file_exists($emp_photo)) {
@@ -315,111 +181,78 @@ $points = ['Start of journey','Mid of journey','End of journey'];
 foreach ($points as $p):
 $data = $emp['train_from'][$p] ?? null;
 ?>
-<td class="data-cell">
+<td>
 <?php if ($data):
+
 $img = 'uploads/attendence/'.$data['photo'];
 if (!file_exists($img)) {
     $img = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg';
 }
 
-
+/* ===== LOCATION CLEAN & PARSE ===== */
 $location = $data['location'] ?? '';
-
-// 🔥 HARD CLEANING
 $location = html_entity_decode($location, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-$location = str_replace(
-    ["\r", "\n", "\t", chr(160)],
-    ' ',
-    $location
-);
-$location = preg_replace('/[^\x20-\x7E]/u', ' ', $location); // remove unicode junk
+$location = preg_replace('/[^\x20-\x7E]/u', ' ', $location);
 $location = preg_replace('/\s+/', ' ', $location);
 $location = trim($location);
 
+$latitude = $longitude = $location_name = '';
 
-// Parse location
-$latitude = '';
-$longitude = '';
-$location_name = '';
-
-if (preg_match('/lati\s*:\s*([0-9.]+)\s*longi\s*:\s*([0-9.]+)\s*(.*)/i', $location, $matches)) {
-    $latitude = $matches[1];
-    $longitude = $matches[2];
-    $location_name = trim($matches[3]);
+if (preg_match('/lati\s*:\s*([0-9.]+)\s*longi\s*:\s*([0-9.]+)\s*(.*)/i', $location, $m)) {
+    $latitude = $m[1]; $longitude = $m[2]; $location_name = trim($m[3]);
 }
-elseif (preg_match('/^\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*(.+)\s*$/', $location, $matches)) {
-    $latitude = $matches[1];
-    $longitude = $matches[2];
-    $location_name = trim($matches[3]);
-}
-else {
+elseif (preg_match('/^\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*(.+)$/', $location, $m)) {
+    $latitude = $m[1]; $longitude = $m[2]; $location_name = trim($m[3]);
+} else {
     $location_name = $location;
 }
-
 ?>
 <img src="<?= $img ?>" class="photo-thumbnail">
-<?php if (!empty($latitude)): ?>
-<div class="location-info">Lati: <?= htmlspecialchars($latitude) ?><br>Longi: <?= htmlspecialchars($longitude) ?><br><?= htmlspecialchars($location_name) ?></div>
-<?php else: ?>
-<div class="location-info">Lati: NA<br>Longi: NA<br>NA</div>
-<?php endif; ?>
+<div class="location-info">
+<?= $latitude ? "Lati: $latitude<br>Longi: $longitude<br>".htmlspecialchars($location_name)
+              : "Lati: NA<br>Longi: NA<br>NA"; ?>
+</div>
 <div class="date-info"><?= date('d-m-Y H:i:s', strtotime($data['created_at'])) ?></div>
-<?php else: ?>
-<div class="no-data">No Attendance</div>
-<?php endif; ?>
+<?php else: ?><div class="no-data">No Attendance</div><?php endif; ?>
 </td>
 <?php endforeach; ?>
 
 <?php foreach ($points as $p):
 $data = $emp['train_to'][$p] ?? null;
 ?>
-<td class="data-cell">
+<td>
 <?php if ($data):
+
 $img = 'uploads/attendence/'.$data['photo'];
 if (!file_exists($img)) {
     $img = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg';
 }
 
-// Parse location
-$latitude = '';
-$longitude = '';
-$location_name = '';
+/* ===== RE-ASSIGN LOCATION (FIX) ===== */
+$location = $data['location'] ?? '';
+$location = html_entity_decode($location, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+$location = preg_replace('/[^\x20-\x7E]/u', ' ', $location);
+$location = preg_replace('/\s+/', ' ', $location);
+$location = trim($location);
 
-if (preg_match('/lati\s*:\s*([0-9.]+)\s*longi\s*:\s*([0-9.]+)\s*(.*)/i', $location, $matches)) {
-    $latitude = $matches[1];
-    $longitude = $matches[2];
-    $location_name = trim($matches[3]);
+$latitude = $longitude = $location_name = '';
+
+if (preg_match('/lati\s*:\s*([0-9.]+)\s*longi\s*:\s*([0-9.]+)\s*(.*)/i', $location, $m)) {
+    $latitude = $m[1]; $longitude = $m[2]; $location_name = trim($m[3]);
 }
-elseif (preg_match('/^\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*(.+)\s*$/', $location, $matches)) {
-    $latitude = $matches[1];
-    $longitude = $matches[2];
-    $location_name = trim($matches[3]);
-}
-else {
+elseif (preg_match('/^\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*(.+)$/', $location, $m)) {
+    $latitude = $m[1]; $longitude = $m[2]; $location_name = trim($m[3]);
+} else {
     $location_name = $location;
 }
-
 ?>
 <img src="<?= $img ?>" class="photo-thumbnail">
-<?php if (!empty($latitude)): ?>
 <div class="location-info">
-    <span>Lati: <?= htmlspecialchars($latitude) ?></span>
-    <span>Longi: <?= htmlspecialchars($longitude) ?></span>
-    <span><?= htmlspecialchars($location_name) ?></span>
+<?= $latitude ? "Lati: $latitude<br>Longi: $longitude<br>".htmlspecialchars($location_name)
+              : "Lati: NA<br>Longi: NA<br>NA"; ?>
 </div>
-
-<?php else: ?>
-<div class="location-info">
-    <span>Lati: NA</span>
-    <span>Longi: NA</span>
-    <span>NA</span>
-</div>
-
-<?php endif; ?>
 <div class="date-info"><?= date('d-m-Y H:i:s', strtotime($data['created_at'])) ?></div>
-<?php else: ?>
-<div class="no-data">No Attendance</div>
-<?php endif; ?>
+<?php else: ?><div class="no-data">No Attendance</div><?php endif; ?>
 </td>
 <?php endforeach; ?>
 
@@ -430,10 +263,6 @@ else {
 
 </div>
 
-<script>
-window.onload = function() {
-    window.print();
-};
-</script>
+<script>window.onload = () => window.print();</script>
 </body>
 </html>

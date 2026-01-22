@@ -251,11 +251,13 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            object-fit: cover;
+            object-fit: contain;
+            object-position: center;
             border: 2px solid #e2e8f0;
             display: block;
             margin: 0 auto;
             flex-shrink: 0;
+            background-color: #f9fafb;
         }
 
         .employee-info {
@@ -347,14 +349,16 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
 
         .report-icon {
             width: 110px;
-            /*height: 110px;*/
+            height: 110px;
             cursor: pointer;
             transition: transform 0.2s ease;
             display: block;
             margin: 0 auto 8px auto;
             border-radius: 4px;
-            object-fit: cover;
+            object-fit: contain;
+            object-position: center;
             border: 2px solid #e2e8f0;
+            background-color: #f9fafb;
         }
 
         .report-icon:hover {
