@@ -60,10 +60,10 @@ if (isset($_POST['update_passenger'])) {
     $ratings = $_POST['rating'] ?? [];
     
     // Store original search criteria for reuse (from hidden fields with prefix 'orig_')
-    $search_from_date = $_POST['orig_from_date'] ?? ($_POST['from_date'] ?? '');
-    $search_to_date = $_POST['orig_to_date'] ?? ($_POST['to_date'] ?? '');
-    $search_train_no = $_POST['orig_train_no'] ?? ($_POST['train_no'] ?? '');
-    $search_grade = $_POST['orig_grade'] ?? ($_POST['grade'] ?? '');
+    $from_date = $_POST['orig_from_date'] ?? '';
+    $to_date = $_POST['orig_to_date'] ?? '';
+    $train_no = $_POST['orig_train_no'] ?? '';
+    $grade = $_POST['orig_grade'] ?? '';
     
     if (!empty($passenger_id)) {
         // Update passenger info
@@ -90,10 +90,10 @@ if (isset($_POST['update_passenger'])) {
                 $success_message = 'Passenger feedback updated successfully!';
                 
                 // Re-run search with original criteria to show filtered results
-                if (!empty($search_from_date) && !empty($search_to_date) && !empty($search_train_no) && !empty($search_grade)) {
+                if (!empty($from_date) && !empty($to_date) && !empty($train_no) && !empty($grade)) {
                     $search_performed = true;
-                    $from_datetime = $search_from_date . ' 00:00:00';
-                    $to_datetime = $search_to_date . ' 23:59:59';
+                    $from_datetime = $from_date . ' 00:00:00';
+                    $to_datetime = $to_date . ' 23:59:59';
                     
                     $search_sql = "SELECT id, name, pnr_number, ph_number, seat_no, coach_no, train_no, coach_type, grade, created 
                                    FROM OBHS_passenger 
@@ -101,7 +101,7 @@ if (isset($_POST['update_passenger'])) {
                                    ORDER BY created DESC";
                     
                     if ($stmt = $mysqli->prepare($search_sql)) {
-                        $stmt->bind_param("issss", $station_id, $search_train_no, $search_grade, $from_datetime, $to_datetime);
+                        $stmt->bind_param("issss", $station_id, $train_no, $grade, $from_datetime, $to_datetime);
                         $stmt->execute();
                         $result = $stmt->get_result();
                         $passengers = $result->fetch_all(MYSQLI_ASSOC);
@@ -205,11 +205,11 @@ if (isset($_POST['search_passengers'])) {
                     <div class="form-row">
                         <div class="form-group">
                             <label>From Date:</label>
-                            <input type="date" name="from_date" required value="<?php echo htmlspecialchars(isset($_POST['from_date']) ? $_POST['from_date'] : (isset($search_from_date) ? $search_from_date : '')); ?>">
+                            <input type="date" name="from_date" required value="<?php echo htmlspecialchars(isset($from_date) ? $from_date : ''); ?>">
                         </div>
                         <div class="form-group">
                             <label>To Date:</label>
-                            <input type="date" name="to_date" required value="<?php echo htmlspecialchars(isset($_POST['to_date']) ? $_POST['to_date'] : (isset($search_to_date) ? $search_to_date : '')); ?>">
+                            <input type="date" name="to_date" required value="<?php echo htmlspecialchars(isset($to_date) ? $to_date : ''); ?>">
                         </div>
                         <div class="form-group">
                             <label>Train No:</label>
@@ -221,7 +221,7 @@ if (isset($_POST['search_passengers'])) {
                                 $stmt->bind_param("i", $station_id);
                                 $stmt->execute();
                                 $result = $stmt->get_result();
-                                $current_train = isset($_POST['train_no']) ? $_POST['train_no'] : (isset($search_train_no) ? $search_train_no : '');
+                                $current_train = isset($train_no) ? $train_no : '';
                                 while ($row = $result->fetch_assoc()) {
                                     $selected = ($current_train == $row['train_no']) ? 'selected' : '';
                                     echo '<option value="' . htmlspecialchars($row['train_no']) . '" ' . $selected . '>' . htmlspecialchars($row['train_no']) . '</option>';
@@ -236,7 +236,7 @@ if (isset($_POST['search_passengers'])) {
                                 <option value="">Select Grade</option>
                                 <?php
                                 $grades = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-                                $current_grade = isset($_POST['grade']) ? $_POST['grade'] : (isset($search_grade) ? $search_grade : '');
+                                $current_grade = isset($grade) ? $grade : '';
                                 foreach ($grades as $g) {
                                     $selected = ($current_grade == $g) ? 'selected' : '';
                                     echo '<option value="' . $g . '" ' . $selected . '>' . $g . '</option>';
@@ -283,10 +283,10 @@ if (isset($_POST['search_passengers'])) {
                                             <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this passenger and all feedback?');">
                                                 <input type="hidden" name="passenger_id" value="<?php echo htmlspecialchars($passenger['id']); ?>">
                                                 <!-- Persist search criteria on delete submit -->
-                                                <input type="hidden" name="from_date" value="<?php echo htmlspecialchars($_POST['from_date'] ?? ''); ?>">
-                                                <input type="hidden" name="to_date" value="<?php echo htmlspecialchars($_POST['to_date'] ?? ''); ?>">
-                                                <input type="hidden" name="train_no" value="<?php echo htmlspecialchars($_POST['train_no'] ?? ''); ?>">
-                                                <input type="hidden" name="grade" value="<?php echo htmlspecialchars($_POST['grade'] ?? ''); ?>">
+                                                <input type="hidden" name="from_date" value="<?php echo htmlspecialchars($from_date ?? ''); ?>">
+                                                <input type="hidden" name="to_date" value="<?php echo htmlspecialchars($to_date ?? ''); ?>">
+                                                <input type="hidden" name="train_no" value="<?php echo htmlspecialchars($train_no ?? ''); ?>">
+                                                <input type="hidden" name="grade" value="<?php echo htmlspecialchars($grade ?? ''); ?>">
                                                 <button type="submit" name="delete_passenger" class="action-btn delete-btn">Delete</button>
                                             </form>
                                         </td>
@@ -372,7 +372,14 @@ if (isset($_POST['search_passengers'])) {
                     // html += '</div>';
                     
                     // html += '<div class="form-row">';
-                    html += '<div class="form-group"><label>Date & Time (with seconds):</label><input type="datetime-local" name="created" value="' + escAttr(data.passenger.created.substring(0, 19).replace(' ', 'T')) + '" step="1"></div>';
+                    // Get current datetime in format YYYY-MM-DDTHH:MM
+                    const now = new Date();
+                    const maxDateTime = now.getFullYear() + '-' + 
+                                       String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                                       String(now.getDate()).padStart(2, '0') + 'T' + 
+                                       String(now.getHours()).padStart(2, '0') + ':' + 
+                                       String(now.getMinutes()).padStart(2, '0');
+                    html += '<div class="form-group"><label>Date & Time (with seconds):</label><input type="datetime-local" name="created" value="' + escAttr(data.passenger.created.substring(0, 19).replace(' ', 'T')) + '" step="1" max="' + maxDateTime + '"></div>';
                     html += '</div>';
                     
                     // Feedback ratings

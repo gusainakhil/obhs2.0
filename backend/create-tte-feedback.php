@@ -36,11 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $station_id = $_SESSION['station_id'];
     $date_input = trim($_POST['date'] ?? '');
     
-    // Combine date input with current time
+    // Convert datetime-local format (YYYY-MM-DDTHH:MM) to database format (YYYY-MM-DD HH:MM:SS)
     if ($date_input === '') {
         $date = date('Y-m-d H:i:s');
     } else {
-        $date = $date_input . ' ' . date('H:i:s');
+        // Replace 'T' with space and add seconds
+        $date = str_replace('T', ' ', $date_input) . ':00';
     }
     
     $question_ids = $_POST['question_id'] ?? [];
@@ -98,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
                 if ($feedback_success) {
-                    $success_message = 'AC Feedback submitted successfully!';
+                    $success_message = 'TTE Feedback submitted successfully!';
                 } else {
                     $error_message = 'Error saving feedback ratings. Please try again.';
                 }
@@ -188,8 +189,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                       
                         <div class="form-group">
-                            <label>Date:</label>
-                            <input type="date" name="date" required>
+                            <label>Date & Time:</label>
+                            <input type="datetime-local" name="date" required value="<?php echo date('Y-m-d\TH:i'); ?>" max="<?php echo date('Y-m-d\TH:i'); ?>">
+                          
                         </div>
                         <div class="form-group">
                             <label>Ph Number:</label>
