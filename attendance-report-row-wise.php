@@ -197,12 +197,24 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
         }
 
         .employee-photo {
-            width: 50px;
-            height: 50px;
+            width: 100%;
+            height: 100%;
             border-radius: 4px;
-            object-fit: cover;
-            border: 2px solid #e2e8f0;
+            object-fit: contain;
+            object-position: center;
             display: block;
+        }
+
+        .photo-container {
+            width: 80px;
+            height: 80px;
+            background-color: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
             margin: 0 auto;
         }
 
@@ -244,9 +256,9 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                 font-size: 11px;
             }
 
-            .employee-photo {
-                width: 35px;
-                height: 35px;
+            .photo-container {
+                width: 70px;
+                height: 70px;
             }
         }
 
@@ -336,6 +348,16 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
             .status-destination {
                 background-color: #dbeafe !important;
                 color: #1e40af !important;
+            }
+
+            .photo-container {
+                page-break-inside: avoid;
+                width: 100px !important;
+                height: 100px !important;
+            }
+
+            .employee-photo {
+                border-radius: 4px !important;
             }
         }
     </style>
@@ -439,7 +461,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                     <thead>
                         <tr>
                             <th style="width: 60px;">S.No</th>
-                            <th style="width: 80px;">Employee Photo</th>
+                            <th style="width: 120px;">Employee Photo</th>
                             <th>Employee Name</th>
                             <th>Employee ID</th>
                             <th>Train NO.</th>
@@ -454,13 +476,15 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                 <tr>
                                     <td><?php echo $counter++; ?></td>
                                     <td>
-                                        <?php 
-                                        $employee_photo = 'uploads/attendence/' . $record['employee_photo'];
-                                        if (empty($record['employee_photo']) || !file_exists($employee_photo)) {
-                                            $employee_photo = 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png';
-                                        }
-                                        ?>
-                                        <img src="<?php echo htmlspecialchars($employee_photo); ?>" alt="Photo" class="employee-photo">
+                                        <div class="photo-container">
+                                            <?php 
+                                            $employee_photo = 'uploads/attendence/' . $record['employee_photo'];
+                                            if (empty($record['employee_photo']) || !file_exists($employee_photo)) {
+                                                $employee_photo = 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png';
+                                            }
+                                            ?>
+                                            <img src="<?php echo htmlspecialchars($employee_photo); ?>" alt="Photo" class="employee-photo">
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="employee-name"><?php echo htmlspecialchars($record['employee_name']); ?></div>
