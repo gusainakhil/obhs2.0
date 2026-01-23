@@ -155,8 +155,8 @@ $station_name = getStationName($_SESSION['station_id']);
 
             <!-- Filter Section -->
             <form class="filter-section" method="get" action="">
-                <div class="filter-row">
-                    <div class="filter-group">
+                <div class="filter-row" style="display: flex; flex-wrap: nowrap; align-items: flex-end; gap: 10px; overflow-x: auto;">
+                    <div class="">
                         <label for="gradeFilter">Grade</label>
                         <select id="gradeFilter" name="grade" class="filter-select">
                             <option value="">-- All --</option>
@@ -178,14 +178,15 @@ $station_name = getStationName($_SESSION['station_id']);
                     </div>
 
                     <?php
-                    // Fetch train numbers for UP select
+                    // Fetch train numbers for UP select 
                     $train_query = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no ASC";
                     $stmt = $mysqli->prepare($train_query);
                     $stmt->bind_param("i", $_SESSION['station_id']);
                     $stmt->execute();
                     $train_result = $stmt->get_result();
                     ?>
-                    <div class="filter-group">
+                    <div class=""> 
+                        <!-- filter-group -->
                         <label for="upFilter">UP</label>
                         <select id="upFilter" name="up" class="filter-select">
                             <option value="">-- All --</option>
@@ -213,7 +214,7 @@ $station_name = getStationName($_SESSION['station_id']);
                     $stmt_down->execute();
                     $train_result_down = $stmt_down->get_result();
                     ?>
-                    <div class="filter-group">
+                    <div class="">
                         <label for="downFilter">Down</label>
                         <select id="downFilter" name="down" class="filter-select">
                             <option value="">-- All --</option>
@@ -234,25 +235,27 @@ $station_name = getStationName($_SESSION['station_id']);
                         </select>
                     </div>
 
-                    <div class="filter-group">
+                    <div class="">
                         <label for="fromDate">From</label>
                         <input type="date" id="fromDate" name="from_date" class="filter-input"
                             value="<?php echo isset($_GET['from_date']) ? htmlspecialchars($_GET['from_date']) : date('Y-m-d'); ?>">
                     </div>
 
-                    <div class="filter-group">
+                    <div class="">
                         <label for="toDate">To</label>
                         <input type="date" id="toDate" name="to_date" class="filter-input"
                             value="<?php echo isset($_GET['to_date']) ? htmlspecialchars($_GET['to_date']) : date('Y-m-d'); ?>">
                     </div>
 
-                    <div class="filter-group" style="align-self: flex-end;">
+                    <div class="filter-group" style="flex-shrink: 0;">
                         <input type="submit" class="btn-submit" value="Submit">
                     </div>
                     <!-- add print button -->
-                    <div class="export-buttons"
-                        style="align-self: flex-end; display: flex; gap: 6px; margin-left: auto;">
+                    <div class="export-buttons" style="flex-shrink: 0; display: flex; gap: 2px;">
                         <button type="button" class="btn-submit" id="printButton">Print</button>
+                        <button type="button" class="btn-submit" id="excelButton">Export to Excel</button>
+                        <!-- <button type="button" class="btn-submit" id="downloadAllButton">📥  All Reports PDF</button>
+                        <button type="button" class="btn-submit" id="downloadAllExcelButton">📊  All Reports Excel</button> -->
                     </div>
                     <script>
                         function exportToCSV() {
@@ -278,8 +281,115 @@ $station_name = getStationName($_SESSION['station_id']);
                             link.click();
                         }
 
+                        function exportToExcel() {
+                            // Get header information from the page
+                            const summaryHeader = document.querySelector('.summary-header');
+                            if (!summaryHeader) {
+                                alert('Please submit the form first to generate the report.');
+                                return;
+                            }
+                            
+                            const headerText = summaryHeader.innerText;
+                            const stationMatch = headerText.match(/Station:\s*([^\|]+)/);
+                            const upMatch = headerText.match(/UP:\s*([^\|]+)/);
+                            const downMatch = headerText.match(/Down:\s*([^\|]+)/);
+                            const fromMatch = headerText.match(/From:\s*([^\|]+)/);
+                            const toMatch = headerText.match(/To:\s*([^\|]+)/);
+                            const gradeMatch = headerText.match(/Grade:\s*([^\s]+)/);
+                            
+                            const stationName = stationMatch ? stationMatch[1].trim() : '';
+                            const upTrain = upMatch ? upMatch[1].trim() : '';
+                            const downTrain = downMatch ? downMatch[1].trim() : '';
+                            const fromDate = fromMatch ? fromMatch[1].trim() : '';
+                            const toDate = toMatch ? toMatch[1].trim() : '';
+                            const grade = gradeMatch ? gradeMatch[1].trim() : '';
+                            
+                            const table = document.querySelector('.report-table');
+                            const rows = table.querySelectorAll('tr');
+                            
+                            // Start Excel data with header information
+                            let excelData = '<table border="1">';
+                            
+                            // Add header rows
+                            excelData += '<tr><td colspan="15" style="text-align:center; font-weight:bold; font-size:16px; background-color:#4472C4; color:white;">Round-Wise Summary Report</td></tr>';
+                            excelData += '<tr><td colspan="15" style="text-align:center; background-color:#D9E1F2;"></td></tr>';
+                            excelData += '<tr><td style="font-weight:bold;">Station:</td><td colspan="3">' + stationName + '</td><td style="font-weight:bold;">UP Train:</td><td colspan="3">' + upTrain + '</td><td style="font-weight:bold;">DOWN Train:</td><td colspan="6">' + downTrain + '</td></tr>';
+                            excelData += '<tr><td style="font-weight:bold;">From Date:</td><td colspan="3">' + fromDate + '</td><td style="font-weight:bold;">To Date:</td><td colspan="3">' + toDate + '</td><td style="font-weight:bold;">Grade:</td><td colspan="6">' + grade + '</td></tr>';
+                            excelData += '<tr><td colspan="15" style="background-color:#D9E1F2;"></td></tr>';
+                            
+                            // Add table data
+                            rows.forEach(row => {
+                                excelData += '<tr>';
+                                const cols = row.querySelectorAll('td, th');
+                                cols.forEach(col => {
+                                    const tag = col.tagName === 'TH' ? 'th' : 'td';
+                                    const rowspan = col.getAttribute('rowspan') || '';
+                                    const colspan = col.getAttribute('colspan') || '';
+                                    const style = col.tagName === 'TH' ? 'style="background-color:#4472C4; color:white; font-weight:bold;"' : '';
+                                    excelData += `<${tag}${rowspan ? ' rowspan="'+rowspan+'"' : ''}${colspan ? ' colspan="'+colspan+'"' : ''} ${style}>${col.innerText}</${tag}>`;
+                                });
+                                excelData += '</tr>';
+                            });
+                            
+                            excelData += '</table>';
+                            
+                            const blob = new Blob([excelData], { 
+                                type: 'application/vnd.ms-excel' 
+                            });
+                            const url = window.URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = 'round_wise_summary.xls';
+                            link.click();
+                            window.URL.revokeObjectURL(url);
+                        }
+
                         document.getElementById('printButton').addEventListener('click', function() {
                             window.print();
+                        });
+
+                        document.getElementById('excelButton').addEventListener('click', function() {
+                            exportToExcel();
+                        });
+
+                        document.getElementById('downloadAllButton').addEventListener('click', function() {
+                            // Get current filter values
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const params = new URLSearchParams({
+                                from_date: urlParams.get('from_date') || '',
+                                to_date: urlParams.get('to_date') || '',
+                                grade: urlParams.get('grade') || '',
+                                up: urlParams.get('up') || '',
+                                down: urlParams.get('down') || ''
+                            });
+                            
+                            // Check if required parameters exist
+                            if (!params.get('from_date') || !params.get('to_date')) {
+                                alert('Please submit the form first to generate reports!');
+                                return;
+                            }
+                            
+                            window.open('download-all-reports-pdf.php?' + params.toString(), '_blank');
+                        });
+                        
+                        document.getElementById('downloadAllExcelButton').addEventListener('click', function() {
+                            // Get current filter values
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const params = new URLSearchParams({
+                                from_date: urlParams.get('from_date') || '',
+                                to_date: urlParams.get('to_date') || '',
+                                grade: urlParams.get('grade') || '',
+                                up: urlParams.get('up') || '',
+                                down: urlParams.get('down') || ''
+                            });
+                            
+                            // Check if required parameters exist
+                            if (!params.get('from_date') || !params.get('to_date')) {
+                                alert('Please submit the form first to generate reports!');
+                                return;
+                            }
+                            
+                            window.open('download-all-reports-excel.php?' + params.toString(), '_blank');
                         });
                     </script>
 

@@ -200,9 +200,15 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                     <button type="button" class="btn-export" onclick="window.print()">
                         <i class="fas fa-print mr-2"></i>Print
                     </button>
+                    <!-- <button type="button" class="btn-export" onclick="printAllInOne()"> -->
+                        <!-- <i class="fas fa-print mr-2"></i>Print All in One
+                    </button> -->
                     <button class="btn-export"  onclick="exportExcel()">
                         <i class="fas fa-file-excel mr-2"></i>Export To Excel
                     </button>
+                    <!-- <button class="btn-export"  onclick="exportAllInOne()">
+                        <i class="fas fa-file-excel mr-2"></i>Export All in One Report
+                    </button> -->
                 </div>
 
                 <!-- Report Header -->
@@ -590,6 +596,28 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                 train_no: '<?php echo $train_no; ?>'
             });
             window.location.href = 'train-report-excel.php?' + params.toString();
+        }
+
+        function exportAllInOne() {
+            // Build query string from current filters for all-in-one export
+            const params = new URLSearchParams({
+                grade: '<?php echo $grade; ?>',
+                from_date: '<?php echo $from_date; ?>',
+                to_date: '<?php echo $to_date; ?>',
+                train_no: '<?php echo $train_no; ?>'
+            });
+            window.location.href = 'train-report-all-excel.php?' + params.toString();
+        }
+
+        function printAllInOne() {
+            // Build query string from current filters for all-in-one print
+            const params = new URLSearchParams({
+                grade: '<?php echo $grade; ?>',
+                from_date: '<?php echo $from_date; ?>',
+                to_date: '<?php echo $to_date; ?>',
+                train_no: '<?php echo $train_no; ?>'
+            });
+            window.open('train-report-all-detail-print.php?' + params.toString(), '_blank');
         }
 
         // Mobile Sidebar Toggle
