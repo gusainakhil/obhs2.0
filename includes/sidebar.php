@@ -52,7 +52,8 @@
         <a href="../jodhpur-employees/employee-jodhpur.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">View Employee</span> </a>
         <?php endif; ?>
         <!-- chnage password   -->
-        <a href="change-password.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-key w-5"></i> <span class="text-sm font-medium">Change Password</span> </a>
+        <a href="change-password.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-key w-5"></i> <span class="text-sm font-medium">Change Dashboard Password</span> </a>
+        <a href="change-app-password.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-key w-5"></i> <span class="text-sm font-medium">Change App Password</span> </a>
         
         
         <!--Remove -->
