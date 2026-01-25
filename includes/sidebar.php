@@ -56,7 +56,11 @@
         <a href="change-app-password.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-key w-5"></i> <span class="text-sm font-medium">Change App Password</span> </a>
         
         
-       
+        <!--Remove -->
+        <!--<a href="view-attendance.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">View Attendance</span> </a>-->
+        <!--<a href="attendance-report-row-wise.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">View Attendance (ANDVH)</span> </a>-->
+        <!--<a href="view-no-photo-attendance.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">View no photo Attendance</span> </a>-->
+        <!--<a href="salary.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-calendar-check w-5"></i> <span class="text-sm font-medium">Salary Report</span> </a>-->
         
     </nav>
 
