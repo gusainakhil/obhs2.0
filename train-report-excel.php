@@ -24,14 +24,10 @@ $row = 1;
 // Header
 $sheet->setCellValue('A'.$row, 'Train Report - ' . $station_name);
 $row++;
-$sheet->setCellValue('A'.$row, 'Train No:');
-$sheet->setCellValue('B'.$row, $train_no);
-$sheet->setCellValue('C'.$row, 'From:');
-$sheet->setCellValue('D'.$row, $from_date);
-$sheet->setCellValue('E'.$row, 'To:');
-$sheet->setCellValue('F'.$row, $to_date);
-$sheet->setCellValue('G'.$row, 'Grade:');
-$sheet->setCellValue('H'.$row, $grade);
+$sheet->setCellValue('A'.$row, 'Train No: ' . $train_no);
+$sheet->setCellValue('B'.$row, 'From: ' . $from_date);
+$sheet->setCellValue('C'.$row, 'To: ' . $to_date);
+$sheet->setCellValue('D'.$row, 'Grade: ' . $grade);
 $row += 2;
 
 // AC Feedback Report
