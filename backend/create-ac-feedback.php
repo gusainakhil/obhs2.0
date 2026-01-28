@@ -40,8 +40,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($date_input === '') {
         $date = date('Y-m-d H:i:s');
     } else {
-        // Replace 'T' with space and add seconds
-        $date = str_replace('T', ' ', $date_input) . ':00';
+        // Replace 'T' with space to convert datetime-local format
+        $dateTime = DateTime::createFromFormat('Y-m-d\TH:i', $date_input);
+        if ($dateTime) {
+            $date = $dateTime->format('Y-m-d H:i:s');
+        } else {
+            // Fallback if format is already correct
+            $date = str_replace('T', ' ', $date_input);
+            // Only add seconds if not already present
+            if (substr_count($date, ':') == 1) {
+                $date .= ':00';
+            }
+        }
     }
     
     $question_ids = $_POST['question_id'] ?? [];
@@ -190,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       
                         <div class="form-group">
                             <label>Date & Time:</label>
-                            <input type="datetime-local" name="date" required value="<?php echo date('Y-m-d\TH:i'); ?>" max="<?php echo date('Y-m-d\TH:i'); ?>">
+                            <input type="datetime-local" name="date" step="1" required value="<?php echo date('Y-m-d\TH:i:s'); ?>" max="<?php echo date('Y-m-d\TH:i:s'); ?>">
                         </div>
                         <div class="form-group">
                             <label>Ph Number:</label>

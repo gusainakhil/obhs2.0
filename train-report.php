@@ -67,12 +67,20 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
             }
             .report-cell {
                 font-weight: bold !important;
+                color: #000 !important;
+            }
+            .report-cell * {
+                color: #000 !important;
             }
             .report-header {
                 border: 2px solid #222 !important;
                 margin-bottom: 10px !important;
                 padding: 8px !important;
                 border-radius: 0 !important;
+                background: #fff !important;
+            }
+            .report-header * {
+                color: #000 !important;
             }
             .report-grid {
                 display: flex !important;
@@ -214,11 +222,11 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                 <!-- Report Header -->
                 <div class="report-header rounded-lg">
                     <div class="report-grid">
-                        <div class="report-cell">Station: <?php echo htmlspecialchars($station_name); ?></div>
-                        <div class="report-cell">Train No: <?php echo htmlspecialchars($train_no); ?></div>
-                        <div class="report-cell">From: <?php echo htmlspecialchars($from_date); ?></div>
-                        <div class="report-cell">To: <?php echo htmlspecialchars($to_date); ?></div>
-                        <div class="report-cell">Grade: <?php echo htmlspecialchars($grade); ?></div>
+                        <div class="report-cell" >Station:</strong> <?php echo htmlspecialchars($station_name); ?></div>
+                        <div class="report-cell" >Train No:</strong> <?php echo htmlspecialchars($train_no); ?></div>
+                        <div class="report-cell" >From:</strong> <?php echo htmlspecialchars($from_date); ?></div>
+                        <div class="report-cell" >To:</strong> <?php echo htmlspecialchars($to_date); ?></div>
+                        <div class="report-cell" >Grade:</strong> <?php echo htmlspecialchars($grade); ?></div>
                     </div>
                 </div>
 
