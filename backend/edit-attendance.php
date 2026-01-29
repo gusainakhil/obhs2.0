@@ -55,11 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_attendance']))
     $created_at_input = $_POST['created_at'] ?? '';
     $created_at_mysql = null;
     if (!empty($created_at_input)) {
-        // Convert "YYYY-MM-DDTHH:MM" to "YYYY-MM-DD HH:MM:SS"
+        // Convert "YYYY-MM-DDTHH:MM:SS" or "YYYY-MM-DDTHH:MM" to "YYYY-MM-DD HH:MM:SS"
         $created_at_mysql = str_replace('T', ' ', $created_at_input);
+        // If seconds are missing, add them
         if (strlen($created_at_mysql) === 16) {
             $created_at_mysql .= ':00';
         }
+        // If only 19 chars, it already has seconds
     }
     
     // Handle photo upload
@@ -519,12 +521,12 @@ $pageTitle = "Edit Attendance";
             }
         }
 
-        // Convert "YYYY-MM-DD HH:MM:SS" to "YYYY-MM-DDTHH:MM" for datetime-local
+        // Convert "YYYY-MM-DD HH:MM:SS" to "YYYY-MM-DDTHH:MM:SS" for datetime-local
         function toDatetimeLocal(value) {
             if (!value) return '';
-            // Replace space with 'T' and trim seconds
+            // Replace space with 'T' and keep seconds
             const v = value.replace(' ', 'T');
-            return v.length >= 16 ? v.slice(0, 16) : v;
+            return v.length >= 19 ? v.slice(0, 19) : v;
         }
 
         // Flatten attendance data for editing
