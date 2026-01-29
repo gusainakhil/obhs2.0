@@ -214,9 +214,9 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                     <button class="btn-export"  onclick="exportExcel()">
                         <i class="fas fa-file-excel mr-2"></i>Export To Excel
                     </button>
-                    <!-- <button class="btn-export"  onclick="exportAllInOne()">
+                     <button class="btn-export"  onclick="exportAllInOne()">
                         <i class="fas fa-file-excel mr-2"></i>Export All in One Report
-                    </button> -->
+                    </button> 
                 </div>
 
                 <!-- Report Header -->
