@@ -53,7 +53,7 @@ $stmt = $mysqli->prepare("
         u.username,
         u.station_id,
         u.user_id,
-        u.password,
+        u.app_password,
         s.station_name,
         s.url
     FROM OBHS_users u
@@ -73,7 +73,7 @@ if ($result->num_rows === 1) {
 
     $row = $result->fetch_assoc();
 
-    if (password_verify($password, $row['password'])) {
+    if (password_verify($password, $row['app_password'])) {
 
         $_SESSION['station_id'] = $row['station_id'];
         $_SESSION['user_id'] = $row['user_id'];
