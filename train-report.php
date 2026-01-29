@@ -261,6 +261,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         $total_passenger_sum = 0;
                         $total_percentage_sum = 0;
                         $total_coaches = count($coachList);
+                        $query = '';
 
                         if (empty($coachList)) {
                             echo '<tr><td colspan="5">No data available</td></tr>';
@@ -377,6 +378,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                         $total_percentage_sum = 0;
                         $total_target_sum = 0;
                         $total_coaches = count($coachList);
+                        $query2 = '';
 
                         if (empty($coachList)) {
                             echo '<tr><td colspan="5">No data found</td></tr>';
@@ -496,6 +498,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                     $total_percentage_sum = 0;
                     $total_target_sum = 0;
                     $total_coaches = count($coachList);
+                    $query3 = '';
 
                     if (empty($coachList)) {
                         echo '<tr><td colspan="5">No data found</td></tr>';
