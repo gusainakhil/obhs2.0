@@ -13,6 +13,7 @@ if ($debug) {
 
 // Call reusable login check
 checkLogin();
+checkSubscription($_SESSION['station_id']);
 
 // Now fetch station name
 $station_name = getStationName($_SESSION['station_id']);

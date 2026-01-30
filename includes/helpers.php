@@ -52,6 +52,204 @@ Note: If your subscription payment is overdue, please clear the payment to resto
     }
 }
 
+//check if user subscription is active or not 
+function checkSubscription($station_id) {
+    global $mysqli;
+
+    $sql = "SELECT end_date FROM OBHS_users WHERE station_id = ? LIMIT 1";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i", $station_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+        $subscription_end_date = $row['end_date'];
+        $current_time = time();
+        $end_time = strtotime($subscription_end_date);
+        $days_diff = ($end_time - $current_time) / (60 * 60 * 24);
+
+        // Show warning 7 days before expiry
+        if ($days_diff > 0 && $days_diff <= 7) {
+            echo "
+            <div id='subscription-warning-modal' style='
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            '>
+                <div style='
+                    background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+                    padding: 40px;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                    text-align: center;
+                    max-width: 450px;
+                    width: 90%;
+                    border: 3px solid #ffc107;
+                    position: relative;
+                '>
+                    <button onclick=\"document.getElementById('subscription-warning-modal').style.display='none'\" style='
+                        position: absolute;
+                        top: 10px;
+                        right: 15px;
+                        background: none;
+                        border: none;
+                        font-size: 28px;
+                        color: #856404;
+                        cursor: pointer;
+                        font-weight: bold;
+                    '>&times;</button>
+                    <div style='font-size: 60px; margin-bottom: 15px;'>⚠️</div>
+                    <h2 style='color: #856404; margin-bottom: 15px; font-weight: bold;'>Subscription Expiring Soon!</h2>
+                    <p style='color: #856404; font-size: 16px; margin-bottom: 10px;'>
+                        Your subscription expires on<br>
+                        <strong style='font-size: 18px;'>" . htmlspecialchars($subscription_end_date) . "</strong>
+                    </p>
+                    <p style='color: #856404; font-size: 14px; margin-bottom: 20px;'>
+                        Please renew your subscription soon to avoid service interruption. <br>
+                        Otherwise, access will be blocked after 3 days of expiry.
+                    </p>
+                    <a href='index.php' style='
+                        display: inline-block;
+                        padding: 12px 30px;
+                        background: #ffc107;
+                        color: #856404;
+                        text-decoration: none;
+                        border-radius: 8px;
+                        font-weight: bold;
+                        font-size: 16px;
+                        transition: all 0.3s;
+                    ' onmouseover=\"this.style.background='#e0a800'\" onmouseout=\"this.style.background='#ffc107'\">
+                        Continue to Dashboard
+                    </a>
+                </div>
+            </div>";
+        }
+        
+        // Block access 3 days after expiry
+        if ($current_time > $end_time) {
+            $days_expired = abs($days_diff);
+            if ($days_expired > 3) {
+                echo "
+                <div style='
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.7);
+                    z-index: 9999;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                '>
+                    <div style='
+                        background: linear-gradient(135deg, #ffe4e4 0%, #ffcccc 100%);
+                        padding: 40px;
+                        border-radius: 15px;
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+                        text-align: center;
+                        max-width: 450px;
+                        width: 90%;
+                        border: 3px solid #dc3545;
+                    '>
+                        <div style='font-size: 60px; margin-bottom: 15px;'>🚫</div>
+                        <h2 style='color: #721c24; margin-bottom: 15px; font-weight: bold;'>Access Denied!</h2>
+                        <p style='color: #721c24; font-size: 16px; margin-bottom: 10px;'>
+                            Your subscription expired on<br>
+                            <strong style='font-size: 18px;'>" . htmlspecialchars($subscription_end_date) . "</strong>
+                        </p>
+                        <p style='color: #721c24; font-size: 14px; margin-bottom: 20px;'>
+                            Please contact administrator to restore access.
+                        </p>
+                        <a href='index.php' style='
+                            display: inline-block;
+                            padding: 12px 30px;
+                            background: #dc3545;
+                            color: #fff;
+                            text-decoration: none;
+                            border-radius: 8px;
+                            font-weight: bold;
+                            font-size: 16px;
+                            transition: all 0.3s;
+                        ' onmouseover=\"this.style.background='#c82333'\" onmouseout=\"this.style.background='#dc3545'\">
+                            Go to Home Page
+                        </a>
+                    </div>
+                </div>";
+                exit;
+            } else {
+                echo "
+                <div id='subscription-modal' style='
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.6);
+                    z-index: 9999;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                '>
+                    <div style='
+                        background: linear-gradient(135deg, #ffe4e4 0%, #ffcccc 100%);
+                        padding: 40px;
+                        border-radius: 15px;
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+                        text-align: center;
+                        max-width: 450px;
+                        width: 90%;
+                        border: 3px solid #dc3545;
+                        position: relative;
+                    '>
+                        <button onclick=\"document.getElementById('subscription-modal').style.display='none'\" style='
+                            position: absolute;
+                            top: 10px;
+                            right: 15px;
+                            background: none;
+                            border: none;
+                            font-size: 28px;
+                            color: #721c24;
+                            cursor: pointer;
+                            font-weight: bold;
+                        '>&times;</button>
+                        <div style='font-size: 60px; margin-bottom: 15px;'>⏰</div>
+                        <h2 style='color: #721c24; margin-bottom: 15px; font-weight: bold;'>Subscription Expired!</h2>
+                        <p style='color: #721c24; font-size: 16px; margin-bottom: 10px;'>
+                            Your subscription expired on<br>
+                            <strong style='font-size: 18px;'>" . htmlspecialchars($subscription_end_date) . "</strong>
+                        </p>
+                        <p style='color: #721c24; font-size: 14px; margin-bottom: 20px;'>
+                            Please renew your subscription immediately to continue using the service. otherwise, access will be blocked after 3 days of expiry.
+                        </p>
+                        <a href='index.php' style='
+                            display: inline-block;
+                            padding: 12px 30px;
+                            background: #dc3545;
+                            color: #fff;
+                            text-decoration: none;
+                            border-radius: 8px;
+                            font-weight: bold;
+                            font-size: 16px;
+                            transition: all 0.3s;
+                        ' onmouseover=\"this.style.background='#c82333'\" onmouseout=\"this.style.background='#dc3545'\">
+                            Go to Home Page
+                        </a>
+                    </div>
+                </div>";
+            }
+        }
+    }
+}
+
 
 
 
