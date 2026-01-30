@@ -22,12 +22,11 @@ $sheet = $spreadsheet->getActiveSheet();
 $row = 1;
 
 // Header
-$sheet->setCellValue('A'.$row, 'Train Report - ' . $station_name);
-$row++;
-$sheet->setCellValue('A'.$row, 'Train No: ' . $train_no);
-$sheet->setCellValue('B'.$row, 'From: ' . $from_date);
-$sheet->setCellValue('C'.$row, 'To: ' . $to_date);
-$sheet->setCellValue('D'.$row, 'Grade: ' . $grade);
+$sheet->setCellValue('A'.$row, 'Station: ' . $station_name);
+$sheet->setCellValue('B'.$row, 'Train No: ' . $train_no);
+$sheet->setCellValue('C'.$row, 'From: ' . $from_date);
+$sheet->setCellValue('D'.$row, 'To: ' . $to_date);
+$sheet->setCellValue('E'.$row, 'Grade: ' . $grade);
 $row += 2;
 
 // AC Feedback Report
