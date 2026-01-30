@@ -7,12 +7,12 @@ session_start();
 
 require_once "./includes/connection.php";
 
-//create a condition to check if user is logged in
-// if (isset($_SESSION['user_id'])) {
-//     // Redirect to dashboard if already logged in
-//     header("Location: dashboard.php");
-//     exit;
-// }
+// create a condition to check if user is logged in
+if (isset($_SESSION['user_id'])) {
+    // Redirect to dashboard if already logged in
+    header("Location: dashboard.php");
+    exit;
+}
 
 
 $info = "";

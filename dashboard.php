@@ -425,13 +425,14 @@ $stmt->close();
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
                 <!-- Weekly Cleanliness Photos Count -->
-                <div class="bg-white rounded-xl shadow-md p-5">
+                  <div class="bg-white rounded-xl shadow-md p-5">
                     <div class="flex items-center space-x-2 mb-4">
                         <i class="fas fa-chart-bar text-slate-400"></i>
-                        <h2 class="text-sm font-semibold text-slate-700">Weekly Cleanliness Photos Count</h2>
+                        <h2 class="text-sm font-semibold text-slate-700">Weekly Feedback Count</h2>
                     </div>
-                    <div id="cleanlinessChart" style="width: 100%; height: 200px;"></div>
+                    <div id="feedbackChart" style="width: 100%; height: 200px;"></div>
                 </div>
+                
 
                 <!-- Weekly Attendance Count -->
                 <div class="bg-white rounded-xl shadow-md p-5">
@@ -443,13 +444,14 @@ $stmt->close();
                 </div>
 
                 <!-- Weekly Feedback Count -->
-                <div class="bg-white rounded-xl shadow-md p-5">
+                 <div class="bg-white rounded-xl shadow-md p-5">
                     <div class="flex items-center space-x-2 mb-4">
                         <i class="fas fa-chart-bar text-slate-400"></i>
-                        <h2 class="text-sm font-semibold text-slate-700">Weekly Feedback Count</h2>
+                        <h2 class="text-sm font-semibold text-slate-700">Weekly Cleanliness Photos Count</h2>
                     </div>
-                    <div id="feedbackChart" style="width: 100%; height: 200px;"></div>
+                    <div id="cleanlinessChart" style="width: 100%; height: 200px;"></div>
                 </div>
+               
 
                 <?php
                 // Fetch weekly feedback count for the last 7 days
@@ -586,7 +588,7 @@ $stmt->close();
             var options = {
                 title: '',
                 chartArea: { width: '80%', height: '70%' },
-                colors: ['#3b82f6'],
+                colors: ['#30bd61'],
                 legend: { position: 'none' },
                 vAxis: {
                     minValue: 0,
