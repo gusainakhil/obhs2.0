@@ -846,18 +846,8 @@ $is_active = $end_date > $today;
                                                     ?>
                                                 </span>
                                             </div>
-                                             <div class="info-row">
-                                                <span class="info-label"><i class="bi bi-ticket-perforated"></i> Photo
-                                                    Functionality</span>
-                                                <span class="info-value">
-                                                    <?php
-                                                    $photo_skip = isset($user['photo_skip']) ? (int) $user['photo_skip'] : 0;
-                                                    echo $photo_skip === 1 ? '<span class="badge badge-custom-active"><i class="bi bi-check-circle-fill"></i> ON</span>' : '<span class="badge bg-secondary"><i class="bi bi-x-circle-fill"></i> OFF</span>';
-                                                    ?>
-                                                </span>
-                                            </div>
                                             <div class="info-row">
-                                                <span class="info-label"><i class="bi bi-ticket-perforated"></i> Photo Skip
+                                                <span class="info-label"><i class="bi bi-ticket-perforated"></i> Photo 
                                                     Functionality</span>
                                                 <span class="info-value">
                                                     <?php
@@ -866,6 +856,17 @@ $is_active = $end_date > $today;
                                                     ?>
                                                 </span>
                                             </div>
+                                             <div class="info-row">
+                                                <span class="info-label"><i class="bi bi-ticket-perforated"></i> Photo Skip
+                                                    Functionality</span>
+                                                <span class="info-value">
+                                                    <?php
+                                                    $photo_skip = isset($user['photo_skip']) ? (int) $user['photo_skip'] : 0;
+                                                    echo $photo_skip === 1 ? '<span class="badge badge-custom-active"><i class="bi bi-check-circle-fill"></i> ON</span>' : '<span class="badge bg-secondary"><i class="bi bi-x-circle-fill"></i> OFF</span>';
+                                                    ?>
+                                                </span>
+                                            </div>
+                                            
                                             <div class="info-row">
                                                 <span class="info-label"><i class="bi bi-shield-check"></i>
                                                     Status</span>
