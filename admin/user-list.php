@@ -143,8 +143,9 @@ if (!isset($_SESSION['user_id'])) {
                           <td><?php echo htmlspecialchars($user['start_date'] ?? ''); ?></td>
                             <td><?php echo htmlspecialchars($user['end_date'] ?? ''); ?></td>
                             <td><a href="user-info.php?id=<?php echo (int)$user['user_id']; ?>" class="btn btn-sm btn-primary" title="Info"><i class="bi bi-info-circle"></i></a></td>
-                            <td><a href="../dashboard.php" class="btn btn-sm btn-primary">Login</a></td>
+                            <td><a href="auto-login.php?user_id=<?php echo (int)$user['user_id']; ?>" class="btn btn-sm btn-primary" target="_blank">Login</a></td>
                             <td>
+                           
                             <button type="button" class="badge <?php echo $badgeClass; ?> border-0" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#statusModal"

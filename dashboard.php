@@ -174,6 +174,15 @@ $stmt->close();
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* Blinking animation */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .blink-text {
+            animation: blink 1s ease-in-out infinite;
+        }
     </style>
 </head>
 
@@ -324,24 +333,32 @@ $stmt->close();
                         if ($row = $result->fetch_assoc()) {
                             $end_date = new DateTime($row['end_date']);
                             $today = new DateTime();
-                            $days_left = $today->diff($end_date)->days;
-                            $is_active = $days_left > 0;
+                            $days_left = $end_date > $today ? $today->diff($end_date)->days : 0;
+                            $is_active = $end_date > $today;
                             $status_color = $days_left > 30 ? 'green' : ($days_left > 0 ? 'amber' : 'red');
                             $status_text = $is_active ? 'ACTIVE' : 'EXPIRED';
-                        ?>
                         
+                        if (!$is_active): ?>
+                        <!-- Expired Subscription View -->
+                        <div class="flex flex-col items-center justify-center p-6 bg-red-50 rounded-lg border border-red-200">
+                            <i class="fas fa-exclamation-circle text-5xl text-red-500 mb-3"></i>
+                            <p class="text-2xl font-bold text-red-600 mb-2">EXPIRED</p>
+                            <p class="text-sm text-red-500 font-medium blink-text text-center">Please renew your subscription; otherwise, your dashboard will be locked.</p>
+                        </div>
+                        <?php else: ?>
+                        <!-- Active Subscription View -->
                         <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
                             <div>
                                 <p class="text-xs text-slate-500 font-medium">Status</p>
                                 <p class="text-lg font-bold text-<?php echo $status_color; ?>-600"><?php echo $status_text; ?></p>
                             </div>
-                            <i class="fas fa-<?php echo $is_active ? 'check-circle' : 'exclamation-circle'; ?> text-2xl text-<?php echo $status_color; ?>-500"></i>
+                            <i class="fas fa-check-circle text-2xl text-<?php echo $status_color; ?>-500"></i>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-2 text-sm">
                             <div class="p-2 bg-slate-50 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500">Days Left</p>
-                                <p class="text-xl font-bold text-slate-800"><?php echo max(0, $days_left); ?></p>
+                                <p class="text-xl font-bold text-slate-800"><?php echo $days_left; ?></p>
                             </div>
                             <div class="p-2 bg-slate-50 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500">Expires</p>
@@ -352,8 +369,7 @@ $stmt->close();
                         <div class="w-full bg-slate-200 rounded-full h-1.5">
                             <div class="bg-<?php echo $status_color; ?>-500 h-full rounded-full" style="width: <?php echo min(100, ($days_left / 365) * 100); ?>%"></div>
                         </div>
-                        
-                        <?php
+                        <?php endif;
                         }
                         $stmt->close();
                         ?>
