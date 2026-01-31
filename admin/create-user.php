@@ -453,6 +453,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       </button>
                     </div>
                   </div>
+           <H6 class="text-center" style="color:red">123456 is a system-generated mobile application password. Please inform the user of their login credentials and update them from the dashboard login.</H6>
                   <!--end::Body-->
                   <!--begin::Footer-->
                   <div class="card-footer">
@@ -461,6 +462,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   </div>
                   <!--end::Footer-->
                 </form>
+                
 
                 <script>
                   document.addEventListener('DOMContentLoaded', function () {

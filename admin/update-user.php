@@ -542,8 +542,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                  <label class="form-label">Skip PNR Functionality</label>
                                                 <input type="hidden" name="pnr_skip" value="0" />
                                                 <div class="form-check">
+
                                                     <input class="form-check-input" type="checkbox" name="pnr_skip" value="1"
-                                                        id="pnr_skip" <?php if (!empty($existing_user['PNR_skip']) && $existing_user['PNR_skip'] == 1) echo 'checked'; ?>>
+                                                        id="pnr_skip" <?php if (!empty($existing_user['pnr_skip']) && $existing_user['pnr_skip'] == 1) echo 'checked'; ?>>
                                                     <label class="form-check-label" for="pnr_skip">
                                                         On / Off
                                                     </label>
