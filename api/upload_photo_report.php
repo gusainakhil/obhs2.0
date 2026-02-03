@@ -53,14 +53,60 @@ if (empty($mime) && function_exists('finfo_open')) {
 }
 if (!in_array($mime, $allowedMime)) jsonErr('Invalid file type. Only JPG/PNG allowed.');
 
-// build filename: YYYYMMDD_His_rand.ext
-$ext = pathinfo($f['name'], PATHINFO_EXTENSION) ?: ($mime === 'image/png' ? 'png' : 'jpg');
-$ext = strtolower(preg_replace('/[^a-z0-9]/', '', $ext));
-$filename = $station_id . '_' . date('Ymd_His') . '_' . substr(bin2hex(random_bytes(6)), 0, 12) . '.' . $ext;
-if (strlen($filename) > 100) $filename = substr($filename, 0, 96) . '.' . $ext;
+// build filename with .webp extension
+$filename = $station_id . '_' . date('Ymd_His') . '_' . substr(bin2hex(random_bytes(6)), 0, 12) . '.webp';
+if (strlen($filename) > 100) $filename = substr($filename, 0, 96) . '.webp';
 
 $dest = $uploadDir . $filename;
-if (!move_uploaded_file($f['tmp_name'], $dest)) jsonErr('Failed to save uploaded file.', 500);
+
+// Create image resource from uploaded file
+$sourceImage = null;
+if ($mime === 'image/jpeg' || $mime === 'image/jpg') {
+    $sourceImage = @imagecreatefromjpeg($f['tmp_name']);
+} elseif ($mime === 'image/png') {
+    $sourceImage = @imagecreatefrompng($f['tmp_name']);
+}
+
+if (!$sourceImage) {
+    jsonErr('Failed to process image. Unsupported or corrupted file.', 500);
+}
+
+// Get original dimensions
+$origWidth = imagesx($sourceImage);
+$origHeight = imagesy($sourceImage);
+
+// Optional: Resize if image is too large (max 1920px on longest side)
+$maxDimension = 1920;
+$newWidth = $origWidth;
+$newHeight = $origHeight;
+
+if ($origWidth > $maxDimension || $origHeight > $maxDimension) {
+    if ($origWidth > $origHeight) {
+        $newWidth = $maxDimension;
+        $newHeight = (int)($origHeight * ($maxDimension / $origWidth));
+    } else {
+        $newHeight = $maxDimension;
+        $newWidth = (int)($origWidth * ($maxDimension / $origHeight));
+    }
+    
+    $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+    // Preserve transparency for PNG
+    imagealphablending($resizedImage, false);
+    imagesavealpha($resizedImage, true);
+    
+    imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
+    imagedestroy($sourceImage);
+    $sourceImage = $resizedImage;
+}
+
+// Convert and compress to WebP (quality 80 for good balance)
+$webpQuality = 80;
+if (!imagewebp($sourceImage, $dest, $webpQuality)) {
+    imagedestroy($sourceImage);
+    jsonErr('Failed to save image as WebP.', 500);
+}
+
+imagedestroy($sourceImage);
 
 // Insert into DB (store filename only)
 $sql = "INSERT INTO base_photo_report

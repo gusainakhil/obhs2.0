@@ -52,7 +52,7 @@ if (!empty($location)) {
 }
 
 // -----------------------------------------
-// HANDLE PHOTO
+// HANDLE PHOTO - Compress and convert to WebP
 // -----------------------------------------
 $photo_filename = "";
 
@@ -66,16 +66,58 @@ if (!empty($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE
     $mime = @getimagesize($f['tmp_name'])['mime'] ?? '';
     if (!in_array($mime, $allowed)) jsonErr('Invalid file type.');
 
-    $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
-    if ($ext == '') $ext = ($mime === 'image/png') ? 'png' : 'jpg';
-
-    $filename = $station_id . '_' . date('Ymd_His') . '_' . uniqid() . '.' . $ext;
+    // Build filename with .webp extension
+    $filename = $station_id . '_' . date('Ymd_His') . '_' . uniqid() . '.webp';
     $dest     = $uploadDir . $filename;
 
-    if (!move_uploaded_file($f['tmp_name'], $dest)) {
-        jsonErr('Failed to save file.', 500);
+    // Create image resource from uploaded file
+    $sourceImage = null;
+    if ($mime === 'image/jpeg' || $mime === 'image/jpg') {
+        $sourceImage = @imagecreatefromjpeg($f['tmp_name']);
+    } elseif ($mime === 'image/png') {
+        $sourceImage = @imagecreatefrompng($f['tmp_name']);
     }
 
+    if (!$sourceImage) {
+        jsonErr('Failed to process image. Unsupported or corrupted file.', 500);
+    }
+
+    // Get original dimensions
+    $origWidth = imagesx($sourceImage);
+    $origHeight = imagesy($sourceImage);
+
+    // Resize if image is too large (max 1920px on longest side)
+    $maxDimension = 1920;
+    $newWidth = $origWidth;
+    $newHeight = $origHeight;
+
+    if ($origWidth > $maxDimension || $origHeight > $maxDimension) {
+        if ($origWidth > $origHeight) {
+            $newWidth = $maxDimension;
+            $newHeight = (int)($origHeight * ($maxDimension / $origWidth));
+        } else {
+            $newHeight = $maxDimension;
+            $newWidth = (int)($origWidth * ($maxDimension / $origHeight));
+        }
+        
+        $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+        // Preserve transparency for PNG
+        imagealphablending($resizedImage, false);
+        imagesavealpha($resizedImage, true);
+        
+        imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
+        imagedestroy($sourceImage);
+        $sourceImage = $resizedImage;
+    }
+
+    // Convert and compress to WebP (quality 80)
+    $webpQuality = 80;
+    if (!imagewebp($sourceImage, $dest, $webpQuality)) {
+        imagedestroy($sourceImage);
+        jsonErr('Failed to save image as WebP.', 500);
+    }
+
+    imagedestroy($sourceImage);
     $photo_filename = $filename;
 }
 
