@@ -39,7 +39,9 @@
             echo '<p class="text-slate-400 text-sm px-4">No menu assigned.</p>';
         }
         ?>
-        <!--<a href="train-information.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">Train Report</span> </a>-->
+        <?php if($_SESSION['station_id'] == 8): ?>
+        <a href="feedback-single-train-report.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">Train Report</span> </a>
+        <?php endif; ?>
         <a href="feedback-target.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">Feedback Target</span> </a>
         <a href="view-feedback-target.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">View Feedback Target</span> </a>
         <?php if($_SESSION['station_id'] != 17): ?>
