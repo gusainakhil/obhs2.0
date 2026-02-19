@@ -145,7 +145,8 @@ body { font-family: Arial, sans-serif; background:#fff; margin:0; }
 
 @media print {
     thead { display: table-header-group; }
-    @page { size:A4 portrait; margin:10mm; }
+    @page { size:A4 portrait; margin:0 10mm 10mm 10mm; }
+    body { margin:10mm; }
 }
 </style>
 </head>
