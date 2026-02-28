@@ -33,6 +33,44 @@ $desination         = $_POST['desination']         ?? '';
 $grade              = $_POST['grade']              ?? '';
 $location           = $_POST['location']           ?? '';
 $toc                = $_POST['toc']                ?? '';
+$fullLocationInput  = $_POST['fullLocation']       ?? '';
+$fullLocation = '';
+
+$formatFullLocation = function(array $locationArray): string {
+    $parts = [];
+
+    foreach ($locationArray as $key => $value) {
+        if (is_null($value)) {
+            $displayValue = 'null';
+        } elseif (is_bool($value)) {
+            $displayValue = $value ? 'true' : 'false';
+        } elseif (is_scalar($value)) {
+            $displayValue = trim((string)$value);
+        } else {
+            $displayValue = json_encode($value, JSON_UNESCAPED_UNICODE);
+        }
+
+        $parts[] = $key . ': ' . $displayValue;
+    }
+
+    return implode(', ', $parts);
+};
+
+if (is_array($fullLocationInput)) {
+    $fullLocation = $formatFullLocation($fullLocationInput);
+} else {
+    $rawFullLocation = trim((string)$fullLocationInput);
+
+    if ($rawFullLocation !== '') {
+        $decodedFullLocation = json_decode($rawFullLocation, true);
+
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decodedFullLocation)) {
+            $fullLocation = $formatFullLocation($decodedFullLocation);
+        } else {
+            $fullLocation = $rawFullLocation;
+        }
+    }
+}
 
 // -------------------------------------------------
 // ONLY CHANGE: FORMAT LOCATION
@@ -150,14 +188,14 @@ if (strcasecmp($type_of_attendance, 'Start Of journey') === 0) {
 // INSERT INTO base_attendance
 // -----------------------------------------------------------
 $sql = "INSERT INTO base_attendance
-    (employee_name, employee_id, station_id, type_of_attendance, train_no, desination, grade, location, photo, toc, employee_name_unique, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+    (employee_name, employee_id, station_id, type_of_attendance, train_no, desination, grade, location, photo, toc, employee_name_unique, fullLocation, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
 $stmt = $mysqli->prepare($sql);
 if (!$stmt) jsonErr("DB prepare failed: ".$mysqli->error, 500);
 
 $stmt->bind_param(
-    "sssssssssss",
+    "ssssssssssss",
     $employee_name,
     $employee_id,
     $station_id,
@@ -168,7 +206,8 @@ $stmt->bind_param(
     $formatted_location, // ONLY CHANGE USED HERE
     $photo_filename,
     $toc,
-    $employeeNameUnique
+    $employeeNameUnique,
+    $fullLocation
 );
 
 if (!$stmt->execute()) {
