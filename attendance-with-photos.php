@@ -37,6 +37,30 @@ $selected_train_to = $_REQUEST['trainTo'] ?? '';
 $date_from = $_REQUEST['dateFrom'] ?? date('Y-m-01');
 $date_to = $_REQUEST['dateTo'] ?? date('Y-m-d');
 
+function getDisplayFullAddress($fullLocationRaw)
+{
+    $fullLocationRaw = trim((string)$fullLocationRaw);
+    if ($fullLocationRaw === '') {
+        return '';
+    }
+
+    $address = '';
+    $decoded = json_decode($fullLocationRaw, true);
+
+    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+        $address = trim((string)($decoded['formattedAddress'] ?? ''));
+    } else {
+        if (preg_match('/formattedAddress:\s*(.*?)(?:,\s*subregion\s*:|,\s*timezone\s*:|$)/i', $fullLocationRaw, $matches)) {
+            $address = trim($matches[1]);
+        } else {
+            $address = $fullLocationRaw;
+        }
+    }
+
+    $address = preg_replace('/,\s*India\s*$/i', '', $address);
+    return trim($address);
+}
+
 // Fetch attendance data with photos (optimized with LEFT JOIN to avoid N+1 query)
 $attendance_data = [];
 if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_train_to)) {
@@ -48,6 +72,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                 ba.location,
                 ba.photo,
                 ba.created_at,
+                ba.fullLocation,
                 be.photo as employee_photo
               FROM base_attendance ba
               LEFT JOIN base_employees be ON ba.employee_id = be.employee_id AND be.station = ?
@@ -56,24 +81,24 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
               AND ba.train_no IN (?, ?)
               AND DATE(ba.created_at) BETWEEN ? AND ?
               ORDER BY ba.employee_name, ba.train_no, FIELD(ba.type_of_attendance, 'Start of journey', 'Mid of journey', 'End of journey')";
-    
+
     $stmt = $mysqli->prepare($query);
     $stmt->bind_param("sssssss", $station_id, $station_id, $selected_grade, $selected_train_from, $selected_train_to, $date_from, $date_to);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     // Organize data by employee
     while ($row = $result->fetch_assoc()) {
         $emp_id = $row['employee_id'];
-        
+
         if (!isset($attendance_data[$emp_id])) {
             $employee_photo = $row['employee_photo'] ?? '';
-            
+
             // Debug: Log if no photo found
             if ($debug && empty($employee_photo)) {
                 error_log("No photo found for employee: $emp_id, station: $station_id");
             }
-            
+
             $attendance_data[$emp_id] = [
                 'employee_name' => $row['employee_name'],
                 'employee_id' => $row['employee_id'],
@@ -82,17 +107,19 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                 'train_to' => []
             ];
         }
-        
+
         // Organize by train and checkpoint type
         if ($row['train_no'] == $selected_train_from) {
             $attendance_data[$emp_id]['train_from'][$row['type_of_attendance']] = [
                 'location' => $row['location'],
+                'fullLocation' => $row['fullLocation'],
                 'photo' => $row['photo'],
                 'created_at' => $row['created_at']
             ];
         } elseif ($row['train_no'] == $selected_train_to) {
             $attendance_data[$emp_id]['train_to'][$row['type_of_attendance']] = [
                 'location' => $row['location'],
+                'fullLocation' => $row['fullLocation'],
                 'photo' => $row['photo'],
                 'created_at' => $row['created_at']
             ];
@@ -397,7 +424,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                 width: 60px;
                 height: 60px;
             }
-            
+
             .report-icon {
                 width: 80px;
                 height: 80px;
@@ -426,17 +453,17 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
     <!-- Mobile Sidebar Overlay -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
     <!-- sidebar  -->
-    <?php 
+    <?php
     require_once 'includes/sidebar.php'
-    ?>
+        ?>
 
     <!-- Main Content -->
     <div class="lg:ml-64 min-h-screen">
 
         <!-- Top Navigation Bar -->
-        <?php 
+        <?php
         require_once 'includes/header.php'
-        ?>
+            ?>
 
         <!-- Main Content Area -->
         <main class="p-4 lg:p-6">
@@ -445,19 +472,26 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
             <div class="filter-card">
                 <form id="attendanceForm" method="POST" action="">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 filter-grid">
-                        
+
                         <!-- Grade Selection -->
                         <div>
                             <label class="filter-label">Grade</label>
                             <select name="grade" id="grade" class="filter-select" required>
                                 <option value="">Select Grade</option>
-                                <option value="A" <?php echo $selected_grade === 'A' ? 'selected' : ''; ?>>A - Monday</option>
-                                <option value="B" <?php echo $selected_grade === 'B' ? 'selected' : ''; ?>>B - Tuesday</option>
-                                <option value="C" <?php echo $selected_grade === 'C' ? 'selected' : ''; ?>>C - Wednesday</option>
-                                <option value="D" <?php echo $selected_grade === 'D' ? 'selected' : ''; ?>>D - Thursday</option>
-                                <option value="E" <?php echo $selected_grade === 'E' ? 'selected' : ''; ?>>E - Friday</option>
-                                <option value="F" <?php echo $selected_grade === 'F' ? 'selected' : ''; ?>>F - Saturday</option>
-                                <option value="G" <?php echo $selected_grade === 'G' ? 'selected' : ''; ?>>G - Sunday</option>
+                                <option value="A" <?php echo $selected_grade === 'A' ? 'selected' : ''; ?>>A - Monday
+                                </option>
+                                <option value="B" <?php echo $selected_grade === 'B' ? 'selected' : ''; ?>>B - Tuesday
+                                </option>
+                                <option value="C" <?php echo $selected_grade === 'C' ? 'selected' : ''; ?>>C - Wednesday
+                                </option>
+                                <option value="D" <?php echo $selected_grade === 'D' ? 'selected' : ''; ?>>D - Thursday
+                                </option>
+                                <option value="E" <?php echo $selected_grade === 'E' ? 'selected' : ''; ?>>E - Friday
+                                </option>
+                                <option value="F" <?php echo $selected_grade === 'F' ? 'selected' : ''; ?>>F - Saturday
+                                </option>
+                                <option value="G" <?php echo $selected_grade === 'G' ? 'selected' : ''; ?>>G - Sunday
+                                </option>
                             </select>
                         </div>
 
@@ -490,13 +524,15 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                         <!-- Date From -->
                         <div>
                             <label class="filter-label">From</label>
-                            <input type="date" name="dateFrom" id="dateFrom" class="filter-input" value="<?php echo htmlspecialchars($date_from); ?>" required>
+                            <input type="date" name="dateFrom" id="dateFrom" class="filter-input"
+                                value="<?php echo htmlspecialchars($date_from); ?>" required>
                         </div>
 
                         <!-- Date To -->
                         <div>
                             <label class="filter-label">To</label>
-                            <input type="date" name="dateTo" id="dateTo" class="filter-input" value="<?php echo htmlspecialchars($date_to); ?>" required>
+                            <input type="date" name="dateTo" id="dateTo" class="filter-input"
+                                value="<?php echo htmlspecialchars($date_to); ?>" required>
                         </div>
 
                     </div>
@@ -520,8 +556,10 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                     <thead>
                         <tr>
                             <th rowspan="2" style="width: 250px;">Employee Name</th>
-                            <th colspan="3" class="journey-header">Train Up No. <?php echo htmlspecialchars($selected_train_from ?: 'N/A'); ?></th>
-                            <th colspan="3" class="journey-header">Train Down No. <?php echo htmlspecialchars($selected_train_to ?: 'N/A'); ?></th>
+                            <th colspan="3" class="journey-header">Train Up No.
+                                <?php echo htmlspecialchars($selected_train_from ?: 'N/A'); ?></th>
+                            <th colspan="3" class="journey-header">Train Down No.
+                                <?php echo htmlspecialchars($selected_train_to ?: 'N/A'); ?></th>
                         </tr>
                         <tr>
                             <th>Start of journey</th>
@@ -538,52 +576,56 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                             <?php foreach ($attendance_data as $emp_id => $employee): ?>
                                 <tr>
                                     <td class="employee-cell">
-    <div class="employee-info">
-        <div class="counter-badge"><?php echo $counter++; ?></div>
-        
-        <div class="employee-photo-wrapper">
-            <?php 
-            $employee_photo = 'uploads/employee/' . $employee['employee_photo'];
-            if (empty($employee['employee_photo']) || !file_exists($employee_photo)) {
-                $employee_photo = 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png';
-            }
-            ?>
-            
-            <img src="<?php echo htmlspecialchars($employee_photo); ?>" alt="Photo" class="employee-photo">
+                                        <div class="employee-info">
+                                            <div class="counter-badge"><?php echo $counter++; ?></div>
 
-            <div class="employee-details">
-                <div class="employee-name">
-                    <strong>Emp Name:</strong> <?php echo htmlspecialchars($employee['employee_name']); ?>
-                </div>
+                                            <div class="employee-photo-wrapper">
+                                                <?php
+                                                $employee_photo = 'uploads/employee/' . $employee['employee_photo'];
+                                                if (empty($employee['employee_photo']) || !file_exists($employee_photo)) {
+                                                    $employee_photo = 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png';
+                                                }
+                                                ?>
 
-                <div class="employee-id">
-                    <strong>Emp ID:</strong> <strong><?php echo htmlspecialchars($employee['employee_id']); ?></strong>
-                </div>
-            </div>
-        </div>
-    </div>
-</td>
+                                                <img src="<?php echo htmlspecialchars($employee_photo); ?>" alt="Photo"
+                                                    class="employee-photo">
 
-                                    
-                                    <?php 
+                                                <div class="employee-details">
+                                                    <div class="employee-name">
+                                                        <strong>Emp Name:</strong>
+                                                        <?php echo htmlspecialchars($employee['employee_name']); ?>
+                                                    </div>
+
+                                                    <div class="employee-id">
+                                                        <strong>Emp ID:</strong>
+                                                        <strong><?php echo htmlspecialchars($employee['employee_id']); ?></strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+
+                                    <?php
                                     $checkpoints = ['Start of journey', 'Mid of journey', 'End of journey'];
-                                    foreach ($checkpoints as $checkpoint): 
+                                    foreach ($checkpoints as $checkpoint):
                                         $data = $employee['train_from'][$checkpoint] ?? null;
-                                    ?>
+                                        ?>
                                         <td>
                                             <?php if ($data): ?>
-                                                <?php 
+                                                <?php
                                                 $photo_path = 'uploads/attendence/' . $data['photo'];
                                                 if (!file_exists($photo_path)) {
                                                     $photo_path = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
                                                 }
-                                                
+
                                                 // Parse location data
                                                 $location = $data['location'];
                                                 $latitude = '';
                                                 $longitude = '';
                                                 $location_name = '';
-                                                
+                                                $displayFullAddress = getDisplayFullAddress($data['fullLocation'] ?? '');
+
                                                 // Format 1: 'lati: 21.1312829 longi: 79.0843243 Nagpur'
                                                 if (preg_match('/lati:\s*([\d.]+)\s+longi:\s*([\d.]+)\s*(.+)/', $location, $matches)) {
                                                     $latitude = $matches[1];
@@ -595,43 +637,49 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                     $latitude = $matches[1];
                                                     $longitude = $matches[2];
                                                     $location_name = trim($matches[3]);
-                                                }
-                                                else {
+                                                } else {
                                                     $location_name = $location;
                                                 }
                                                 ?>
-                                                <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report" class="report-icon">
-                                                <div class="coordinates">
+                                                <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report"
+                                                    class="report-icon">
+                                                  <div class="coordinates">
                                                     <?php if (!empty($latitude)): ?>
                                                         Lati: <?php echo htmlspecialchars($latitude); ?><br>
                                                         Longi: <?php echo htmlspecialchars($longitude); ?><br>
+                                                        location: <?php echo htmlspecialchars($location_name); ?>
                                                     <?php endif; ?>
-                                                    <?php echo htmlspecialchars($location_name); ?>
+                                            
+                                                    <?php if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
+                                                        <br><?php echo htmlspecialchars($displayFullAddress); ?>
+                                                    <?php endif; ?>
                                                 </div>
-                                                <div class="date-time">Date: <?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></div>
+                                                <div class="date-time">Date:
+                                                    <?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></div>
                                             <?php else: ?>
                                                 <div style="color: #94a3b8;">No Data</div>
                                             <?php endif; ?>
                                         </td>
                                     <?php endforeach; ?>
-                                    
-                                    <?php foreach ($checkpoints as $checkpoint): 
+
+                                    <?php foreach ($checkpoints as $checkpoint):
                                         $data = $employee['train_to'][$checkpoint] ?? null;
-                                    ?>
+                                        ?>
                                         <td>
                                             <?php if ($data): ?>
-                                                <?php 
+                                                <?php
                                                 $photo_path = 'uploads/attendence/' . $data['photo'];
                                                 if (!file_exists($photo_path)) {
                                                     $photo_path = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
                                                 }
-                                                
+
                                                 // Parse location data
                                                 $location = $data['location'];
                                                 $latitude = '';
                                                 $longitude = '';
                                                 $location_name = '';
-                                                
+                                                $displayFullAddress = getDisplayFullAddress($data['fullLocation'] ?? '');
+
                                                 // Format 1: 'lati: 21.1312829 longi: 79.0843243 Nagpur'
                                                 if (preg_match('/lati:\s*([\d.]+)\s+longi:\s*([\d.]+)\s*(.+)/', $location, $matches)) {
                                                     $latitude = $matches[1];
@@ -643,20 +691,25 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                     $latitude = $matches[1];
                                                     $longitude = $matches[2];
                                                     $location_name = trim($matches[3]);
-                                                }
-                                                else {
+                                                } else {
                                                     $location_name = $location;
                                                 }
                                                 ?>
-                                                <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report" class="report-icon">
+                                                <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report"
+                                                    class="report-icon">
                                                 <div class="coordinates">
                                                     <?php if (!empty($latitude)): ?>
                                                         Lati: <?php echo htmlspecialchars($latitude); ?><br>
                                                         Longi: <?php echo htmlspecialchars($longitude); ?><br>
+                                                        location: <?php echo htmlspecialchars($location_name); ?>
                                                     <?php endif; ?>
-                                                    <?php echo htmlspecialchars($location_name); ?>
+                                            
+                                                    <?php if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
+                                                        <br> <?php echo htmlspecialchars($displayFullAddress); ?>
+                                                    <?php endif; ?>
                                                 </div>
-                                                <div class="date-time">Date: <?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></div>
+                                                <div class="date-time">Date:
+                                                    <?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></div>
                                             <?php else: ?>
                                                 <div style="color: #94a3b8;">No Data</div>
                                             <?php endif; ?>
@@ -682,14 +735,14 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
             <!-- Footer -->
             <?php
             require_once 'includes/footer.php'
-            ?>
+                ?>
 
         </main>
 
     </div>
-    
+
     <script>
-    // Mobile Sidebar Toggle
+        // Mobile Sidebar Toggle
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -709,9 +762,9 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
             sidebar.classList.add('-translate-x-full');
             sidebarOverlay.classList.add('hidden');
         });
-        
-        
-        
+
+
+
         // Print Attendance Function
         function printAttendance() {
             const grade = document.getElementById('grade').value;
@@ -733,9 +786,9 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                 dateTo: dateTo
             });
 
-             window.open('print-attendance.php?' + params.toString(), '_blank');
+            window.open('print-attendance.php?' + params.toString(), '_blank');
         }
-</script>
+    </script>
 
 </body>
 

@@ -36,28 +36,8 @@ $toc                = $_POST['toc']                ?? '';
 $fullLocationInput  = $_POST['fullLocation']       ?? '';
 $fullLocation = '';
 
-$formatFullLocation = function(array $locationArray): string {
-    $parts = [];
-
-    foreach ($locationArray as $key => $value) {
-        if (is_null($value)) {
-            $displayValue = 'null';
-        } elseif (is_bool($value)) {
-            $displayValue = $value ? 'true' : 'false';
-        } elseif (is_scalar($value)) {
-            $displayValue = trim((string)$value);
-        } else {
-            $displayValue = json_encode($value, JSON_UNESCAPED_UNICODE);
-        }
-
-        $parts[] = $key . ': ' . $displayValue;
-    }
-
-    return implode(', ', $parts);
-};
-
 if (is_array($fullLocationInput)) {
-    $fullLocation = $formatFullLocation($fullLocationInput);
+    $fullLocation = trim((string)($fullLocationInput['formattedAddress'] ?? ''));
 } else {
     $rawFullLocation = trim((string)$fullLocationInput);
 
@@ -65,7 +45,7 @@ if (is_array($fullLocationInput)) {
         $decodedFullLocation = json_decode($rawFullLocation, true);
 
         if (json_last_error() === JSON_ERROR_NONE && is_array($decodedFullLocation)) {
-            $fullLocation = $formatFullLocation($decodedFullLocation);
+            $fullLocation = trim((string)($decodedFullLocation['formattedAddress'] ?? ''));
         } else {
             $fullLocation = $rawFullLocation;
         }

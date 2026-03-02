@@ -14,6 +14,30 @@ $selected_train_to = $_REQUEST['trainTo'] ?? '';
 $date_from = $_REQUEST['dateFrom'] ?? date('Y-m-01');
 $date_to = $_REQUEST['dateTo'] ?? date('Y-m-d');
 
+function getDisplayFullAddress($fullLocationRaw)
+{
+    $fullLocationRaw = trim((string)$fullLocationRaw);
+    if ($fullLocationRaw === '') {
+        return '';
+    }
+
+    $address = '';
+    $decoded = json_decode($fullLocationRaw, true);
+
+    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+        $address = trim((string)($decoded['formattedAddress'] ?? ''));
+    } else {
+        if (preg_match('/formattedAddress:\s*(.*?)(?:,\s*subregion\s*:|,\s*timezone\s*:|$)/i', $fullLocationRaw, $matches)) {
+            $address = trim($matches[1]);
+        } else {
+            $address = $fullLocationRaw;
+        }
+    }
+
+    $address = preg_replace('/,\s*India\s*$/i', '', $address);
+    return trim($address);
+}
+
 $grade_mapping = [
     'A' => 'Monday',
     'B' => 'Tuesday',
@@ -36,6 +60,7 @@ if ($selected_grade && $selected_train_from && $selected_train_to) {
         ba.type_of_attendance,
         ba.photo,
         ba.location,
+                ba.fullLocation,
         ba.created_at,
         be.photo AS employee_photo
       FROM base_attendance ba
@@ -252,6 +277,8 @@ else {
     $location_name = $location;
 }
 
+$displayFullAddress = getDisplayFullAddress($data['fullLocation'] ?? '');
+
 ?>
 <img src="<?= $img ?>" class="photo-thumbnail">
 <div class="location-info">
@@ -259,7 +286,11 @@ else {
     Lati: <?= htmlspecialchars($latitude) ?><br>
     Longi: <?= htmlspecialchars($longitude) ?><br>
 <?php endif; ?>
+
 <?= htmlspecialchars($location_name ?: 'NA') ?>
+<?php if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
+    <br><?= htmlspecialchars($displayFullAddress) ?>
+<?php endif; ?>
 </div>
 <div class="date-info"><?= date('d-m-Y H:i:s', strtotime($data['created_at'])) ?></div>
 <?php else: ?><div class="no-data">No Attendance</div><?php endif; ?>
