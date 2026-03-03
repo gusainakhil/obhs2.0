@@ -169,6 +169,57 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
             font-size: 14px;
         }
 
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-export {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+        }
+
+        .btn-export:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.18);
+            opacity: 0.95;
+        }
+
+        .btn-export:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.14);
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+        }
+
+        .btn-print-all {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        }
+
+        .btn-excel {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+        }
+
+        .btn-excel-all {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
         @media (max-width: 768px) {
             .report-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -176,6 +227,14 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
 
             .report-cell {
                 font-size: 12px;
+            }
+
+            .action-buttons {
+                justify-content: stretch;
+            }
+
+            .btn-export {
+                width: 100%;
             }
         }
     </style>
@@ -204,18 +263,19 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
             <div class="max-w-full mx-auto">
 
                 <!-- Export Buttons -->
-                <div class="flex justify-end gap-2 mb-4">
-                    <button type="button" class="btn-export" onclick="window.print()">
-                        <i class="fas fa-print mr-2"></i>Print
+                <div class="action-buttons">
+                    <button type="button" class="btn-export btn-print" onclick="window.print()">
+                        <i class="fas fa-print mr-1"></i>Print
                     </button>
-                    <!-- <button type="button" class="btn-export" onclick="printAllInOne()"> -->
-                        <!-- <i class="fas fa-print mr-2"></i>Print All in One
-                    </button> -->
-                    <button class="btn-export"  onclick="exportExcel()">
-                        <i class="fas fa-file-excel mr-2"></i>Export To Excel
+                  
+                    <button class="btn-export btn-excel"  onclick="exportExcel()">
+                        <i class="fas fa-file-excel mr-1"></i>Excel
                     </button>
-                     <button class="btn-export"  onclick="exportAllInOne()">
-                        <i class="fas fa-file-excel mr-2"></i>Export All in One Report
+                    <button type="button" class="btn-export btn-print-all" onclick="printAllInOne()"> 
+                        <i class="fas fa-print mr-1"></i>Print All in One
+                    </button> 
+                     <button class="btn-export btn-excel-all"  onclick="exportAllInOne()">
+                        <i class="fas fa-file-excel mr-1"></i>Excel All in One 
                     </button> 
                 </div>
 
@@ -604,7 +664,7 @@ $train_no = isset($_GET['train_no']) ? $_GET['train_no'] : null;
                 grade: '<?php echo $grade; ?>',
                 from_date: '<?php echo $from_date; ?>',
                 to_date: '<?php echo $to_date; ?>',
-                train_no: '<?php echo $train_no; ?>'
+                train_no: '<?php echo $train_no; ?>' 
             });
             window.location.href = 'train-report-excel.php?' + params.toString();
         }

@@ -574,7 +574,7 @@ function getAllFeedbackDetails($train_no, $grade, $from_date, $to_date, $coach_t
                     
                     echo '<tr>';
                     echo '<td>' . $sr . '</td>';
-                    echo '<td>' . (($_SESSION['station_id'] == 16 || $_SESSION['station_id'] == 23) ? date('d/m/Y', strtotime($pd['created'])) : date('d/m/Y H:i', strtotime($pd['created']))) . '</td>';
+                    echo '<td>' . (($_SESSION['station_id'] == 16 || $_SESSION['station_id'] == 23 || $_SESSION['station_id'] == 25) ? date('d/m/Y', strtotime($pd['created'])) : date('d/m/Y H:i', strtotime($pd['created']))) . '</td>';
                     echo '<td>' . htmlspecialchars($pd['seat_no']) . '</td>';
                     echo '<td>' . htmlspecialchars($pd['coach_no']) . '</td>';
                     echo '<td>' . htmlspecialchars($pd['name']) . '</td>';

@@ -452,7 +452,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
                                     echo "<tr>";
                                     echo "<td>{$sr}</td>";
-                                    if ($_SESSION['station_id'] == 16 || $_SESSION['station_id'] == 23) {
+                                    if ($_SESSION['station_id'] == 16 || $_SESSION['station_id'] == 23 || $_SESSION['station_id'] == 25) {
                                         echo "<td>" . date('d/m/Y', strtotime($pd['feedback_date'])) . "</td>";
                                     } else {
                                         echo "<td>" . date('d/m/Y H:i:s', strtotime($pd['feedback_date'])) . "</td>";

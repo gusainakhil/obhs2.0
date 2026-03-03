@@ -254,8 +254,8 @@ $station_name = getStationName($_SESSION['station_id']);
                     <div class="export-buttons" style="flex-shrink: 0; display: flex; gap: 2px;">
                         <button type="button" class="btn-submit" id="printButton">Print</button>
                         <button type="button" class="btn-submit" id="excelButton">Export to Excel</button>
-                        <!-- <button type="button" class="btn-submit" id="downloadAllButton">📥  All Reports PDF</button>
-                        <button type="button" class="btn-submit" id="downloadAllExcelButton">📊  All Reports Excel</button> -->
+                        <button type="button" class="btn-submit" id="downloadAllButton">All Reports PDF</button>
+                        <button type="button" class="btn-submit" id="downloadAllExcelButton">All Reports Excel</button>
                     </div>
                     <script>
                         function exportToCSV() {
@@ -692,7 +692,7 @@ $station_name = getStationName($_SESSION['station_id']);
     </div>
 
     <script>
-        // Apply filters: handled by normal form submission — no JavaScript here.
+        // Apply filters: handled by normal form submission â€” no JavaScript here.
 
         // Export functions
         function exportPDF() {
