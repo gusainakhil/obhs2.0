@@ -61,6 +61,33 @@ function getDisplayFullAddress($fullLocationRaw)
     return trim($address);
 }
 
+function parseAttendanceLocation($rawLocation)
+{
+    $location = html_entity_decode((string)$rawLocation, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $location = preg_replace('/[\x00-\x1F\x7F]/u', ' ', $location);
+    $location = trim(preg_replace('/\s+/', ' ', $location));
+
+    $latitude = '';
+    $longitude = '';
+    $location_name = $location;
+
+    if (preg_match('/lati\s*:\s*(-?[\d.]+)\s*longi\s*:\s*(-?[\d.]+)\s*(.+)?/iu', $location, $matches)) {
+        $latitude = trim($matches[1]);
+        $longitude = trim($matches[2]);
+        $location_name = trim($matches[3] ?? '');
+    } elseif (preg_match('/^(-?[\d.]+),\s*(-?[\d.]+),\s*(.+)$/u', $location, $matches)) {
+        $latitude = trim($matches[1]);
+        $longitude = trim($matches[2]);
+        $location_name = trim($matches[3]);
+    }
+
+    return [
+        'latitude' => $latitude,
+        'longitude' => $longitude,
+        'location_name' => $location_name,
+    ];
+}
+
 // Fetch attendance data with photos (optimized with LEFT JOIN to avoid N+1 query)
 $attendance_data = [];
 if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_train_to)) {
@@ -620,26 +647,11 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                 }
 
                                                 // Parse location data
-                                                $location = $data['location'];
-                                                $latitude = '';
-                                                $longitude = '';
-                                                $location_name = '';
+                                                $parsedLocation = parseAttendanceLocation($data['location'] ?? '');
+                                                $latitude = $parsedLocation['latitude'];
+                                                $longitude = $parsedLocation['longitude'];
+                                                $location_name = $parsedLocation['location_name'];
                                                 $displayFullAddress = getDisplayFullAddress($data['fullLocation'] ?? '');
-
-                                                // Format 1: 'lati: 21.1312829 longi: 79.0843243 Nagpur'
-                                                if (preg_match('/lati:\s*([\d.]+)\s+longi:\s*([\d.]+)\s*(.+)/', $location, $matches)) {
-                                                    $latitude = $matches[1];
-                                                    $longitude = $matches[2];
-                                                    $location_name = trim($matches[3]);
-                                                }
-                                                // Format 2: '16.3016563,80.4446609,Guntur'
-                                                else if (preg_match('/^([\d.]+),([\d.]+),(.+)$/', $location, $matches)) {
-                                                    $latitude = $matches[1];
-                                                    $longitude = $matches[2];
-                                                    $location_name = trim($matches[3]);
-                                                } else {
-                                                    $location_name = $location;
-                                                }
                                                 ?>
                                                 <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report"
                                                     class="report-icon">
@@ -647,8 +659,8 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                     <?php if (!empty($latitude)): ?>
                                                         Lati: <?php echo htmlspecialchars($latitude); ?><br>
                                                         Longi: <?php echo htmlspecialchars($longitude); ?><br>
-                                                        location: <?php echo htmlspecialchars($location_name); ?>
                                                     <?php endif; ?>
+                                                    location: <?php echo htmlspecialchars($location_name ?: 'NA'); ?>
                                             
                                                     <?php if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
                                                         <br><?php echo htmlspecialchars($displayFullAddress); ?>
@@ -674,26 +686,11 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                 }
 
                                                 // Parse location data
-                                                $location = $data['location'];
-                                                $latitude = '';
-                                                $longitude = '';
-                                                $location_name = '';
+                                                $parsedLocation = parseAttendanceLocation($data['location'] ?? '');
+                                                $latitude = $parsedLocation['latitude'];
+                                                $longitude = $parsedLocation['longitude'];
+                                                $location_name = $parsedLocation['location_name'];
                                                 $displayFullAddress = getDisplayFullAddress($data['fullLocation'] ?? '');
-
-                                                // Format 1: 'lati: 21.1312829 longi: 79.0843243 Nagpur'
-                                                if (preg_match('/lati:\s*([\d.]+)\s+longi:\s*([\d.]+)\s*(.+)/', $location, $matches)) {
-                                                    $latitude = $matches[1];
-                                                    $longitude = $matches[2];
-                                                    $location_name = trim($matches[3]);
-                                                }
-                                                // Format 2: '16.3016563,80.4446609,Guntur'
-                                                else if (preg_match('/^([\d.]+),([\d.]+),(.+)$/', $location, $matches)) {
-                                                    $latitude = $matches[1];
-                                                    $longitude = $matches[2];
-                                                    $location_name = trim($matches[3]);
-                                                } else {
-                                                    $location_name = $location;
-                                                }
                                                 ?>
                                                 <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report"
                                                     class="report-icon">
@@ -701,8 +698,8 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                     <?php if (!empty($latitude)): ?>
                                                         Lati: <?php echo htmlspecialchars($latitude); ?><br>
                                                         Longi: <?php echo htmlspecialchars($longitude); ?><br>
-                                                        location: <?php echo htmlspecialchars($location_name); ?>
                                                     <?php endif; ?>
+                                                    location: <?php echo htmlspecialchars($location_name ?: 'NA'); ?>
                                             
                                                     <?php if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
                                                         <br> <?php echo htmlspecialchars($displayFullAddress); ?>

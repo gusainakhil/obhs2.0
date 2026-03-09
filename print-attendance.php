@@ -247,28 +247,25 @@ if (!file_exists($img)) {
     $img = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg';
 }
 
-$location = trim(preg_replace('/\s+/', ' ',
-    preg_replace('/[^\x20-\x7E]/u', ' ',
-    html_entity_decode($data['location'] ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')
-)));
+$location = html_entity_decode($data['location'] ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+$location = preg_replace('/[\x00-\x1F\x7F]/u', ' ', $location);
+$location = trim(preg_replace('/\s+/', ' ', $location));
 
 $latitude = '';
 $longitude = '';
 $location_name = '';
 
-// Clean location string first (important)
-$location = trim(preg_replace('/\s+/', ' ',
-    preg_replace('/[^\x20-\x7E]/u', ' ', $location)
-));
+// Clean location string first (important) while preserving Unicode text (e.g., Hindi)
+$location = trim(preg_replace('/\s+/', ' ', $location));
 
 // Format 1: lati: xx longi: yy Place
-if (preg_match('/lati:\s*([\d.]+)\s*longi:\s*([\d.]+)\s*(.+)?/i', $location, $matches)) {
+if (preg_match('/lati:\s*(-?[\d.]+)\s*longi:\s*(-?[\d.]+)\s*(.+)?/i', $location, $matches)) {
     $latitude = $matches[1];
     $longitude = $matches[2];
     $location_name = trim($matches[3] ?? '');
 }
 // Format 2: lat,long,place
-else if (preg_match('/^([\d.]+),([\d.]+),(.+)$/', $location, $matches)) {
+else if (preg_match('/^(-?[\d.]+),\s*(-?[\d.]+),\s*(.+)$/u', $location, $matches)) {
     $latitude = $matches[1];
     $longitude = $matches[2];
     $location_name = trim($matches[3]);
