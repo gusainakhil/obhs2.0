@@ -19,6 +19,7 @@ checkLogin();
 // Get station information
 $station_name = getStationName($_SESSION['station_id']);
 $station_id = $_SESSION['station_id'];
+$is_station_25 = ((string)$station_id === '25');
 
 // Fetch trains
 $trains = [];
@@ -52,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_attendance']))
     $train_no = $_POST['train_no'];
     $type_of_attendance = $_POST['type_of_attendance'];
     $location = $_POST['location'];
+    $fullLocation = $is_station_25 ? ($_POST['fullLocation'] ?? '') : null;
     $grade = $_POST['grade'];
     // Created at (datetime-local -> MySQL DATETIME)
     $created_at_input = $_POST['created_at'] ?? '';
@@ -151,17 +153,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_attendance']))
     // Update query with or without photo
     $created_by = 'BACKEND';
     if ($photo_filename) {
-        $update_query = "UPDATE base_attendance 
-                         SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, grade = ?, photo = ?, created_by = ?, created_at = ? 
-                         WHERE id = ? AND station_id = ?";
-        $stmt = $mysqli->prepare($update_query);
-        $stmt->bind_param("sssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $grade, $photo_filename, $created_by, $created_at_mysql, $update_id, $station_id);
+        if ($is_station_25) {
+            $update_query = "UPDATE base_attendance 
+                             SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, fullLocation = ?, grade = ?, photo = ?, created_by = ?, created_at = ? 
+                             WHERE id = ? AND station_id = ?";
+            $stmt = $mysqli->prepare($update_query);
+            $stmt->bind_param("ssssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $fullLocation, $grade, $photo_filename, $created_by, $created_at_mysql, $update_id, $station_id);
+        } else {
+            $update_query = "UPDATE base_attendance 
+                             SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, grade = ?, photo = ?, created_by = ?, created_at = ? 
+                             WHERE id = ? AND station_id = ?";
+            $stmt = $mysqli->prepare($update_query);
+            $stmt->bind_param("sssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $grade, $photo_filename, $created_by, $created_at_mysql, $update_id, $station_id);
+        }
     } else {
-        $update_query = "UPDATE base_attendance 
-                         SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, grade = ?, created_by = ?, created_at = ? 
-                         WHERE id = ? AND station_id = ?";
-        $stmt = $mysqli->prepare($update_query);
-        $stmt->bind_param("ssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $grade, $created_by, $created_at_mysql, $update_id, $station_id);
+        if ($is_station_25) {
+            $update_query = "UPDATE base_attendance 
+                             SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, fullLocation = ?, grade = ?, created_by = ?, created_at = ? 
+                             WHERE id = ? AND station_id = ?";
+            $stmt = $mysqli->prepare($update_query);
+            $stmt->bind_param("sssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $fullLocation, $grade, $created_by, $created_at_mysql, $update_id, $station_id);
+        } else {
+            $update_query = "UPDATE base_attendance 
+                             SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, grade = ?, created_by = ?, created_at = ? 
+                             WHERE id = ? AND station_id = ?";
+            $stmt = $mysqli->prepare($update_query);
+            $stmt->bind_param("ssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $grade, $created_by, $created_at_mysql, $update_id, $station_id);
+        }
     }
     
     $stmt->execute();
@@ -223,6 +241,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                 ba.train_no,
                 ba.type_of_attendance,
                 ba.location,
+                ba.fullLocation,
                 ba.photo,
                 ba.created_at,
                 be.photo as employee_photo
@@ -262,6 +281,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                 'desination' => $row['desination'],
                 'toc' => $row['toc'],
                 'location' => $row['location'],
+                'fullLocation' => $row['fullLocation'],
                 'photo' => $row['photo'],
                 'created_at' => $row['created_at']
             ];
@@ -271,6 +291,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                 'desination' => $row['desination'],
                 'toc' => $row['toc'],
                 'location' => $row['location'],
+                'fullLocation' => $row['fullLocation'],
                 'photo' => $row['photo'],
                 'created_at' => $row['created_at']
             ];
@@ -400,6 +421,9 @@ $pageTitle = "Edit Attendance";
                                                 ?>
                                                 <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto 5px;">
                                                 <small style="display: block; color: #666; margin-bottom: 3px;"><?php echo htmlspecialchars($clean_location); ?></small>
+                                                <?php if ($_SESSION['station_id'] == 25): ?>
+                                                <small style="display: block; color: #666; margin-bottom: 3px;">Full Location: <?php echo htmlspecialchars($data['fullLocation']); ?></small>
+                                                <?php endif; ?>
                                                 <small style="display: block; font-weight: bold;"><?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></small>
                                                 <div style="margin-top: 5px;">
                                                     <button class="action-btn edit-btn" style="padding: 4px 8px; font-size: 11px;" onclick="editRecord(<?php echo $data['id']; ?>)">Edit</button>
@@ -426,6 +450,9 @@ $pageTitle = "Edit Attendance";
                                                 ?>
                                                 <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto 5px;">
                                                 <small style="display: block; color: #666; margin-bottom: 3px;"><?php echo htmlspecialchars($clean_location); ?></small>
+                                                <?php if ($_SESSION['station_id'] == 25): ?>
+                                                <small style="display: block; color: #666; margin-bottom: 3px;">Full Location: <?php echo htmlspecialchars($data['fullLocation'] ?? ''); ?></small>
+                                                <?php endif; ?>
                                                 <small style="display: block; font-weight: bold;"><?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></small>
                                                 <div style="margin-top: 5px;">
                                                     <button class="action-btn edit-btn" style="padding: 4px 8px; font-size: 11px;" onclick="editRecord(<?php echo $data['id']; ?>)">Edit</button>
@@ -504,6 +531,14 @@ $pageTitle = "Edit Attendance";
                     <label>Location:</label>
                     <input type="text" name="location" id="edit_location" required>
                 </div>
+       
+                   
+                <?php if ($is_station_25): ?>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label> Full Location:</label>
+                    <input type="text" name="fullLocation" id="edit_fullLocation" required>
+                </div>
+                <?php endif; ?>
                 
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label>Grade:</label>
@@ -551,6 +586,10 @@ $pageTitle = "Edit Attendance";
                 document.getElementById('edit_toc').value = record.toc || ''; // Default to empty string if missing
                 document.getElementById('edit_train_no').value = record.train_no || '';
                 document.getElementById('edit_type').value = record.type_of_attendance || '';
+                const fullLocationInput = document.getElementById('edit_fullLocation');
+                if (fullLocationInput) {
+                    fullLocationInput.value = record.fullLocation || '';
+                }
                 document.getElementById('edit_location').value = record.location || '';
                 document.getElementById('edit_grade').value = record.grade || 'A';
                 document.getElementById('edit_created_at').value = toDatetimeLocal(record.created_at);
@@ -609,6 +648,7 @@ $pageTitle = "Edit Attendance";
                     toc: <?php echo json_encode($toc, JSON_UNESCAPED_UNICODE); ?>,
                     train_no: <?php echo json_encode($selected_train_from, JSON_UNESCAPED_UNICODE); ?>,
                     type_of_attendance: <?php echo json_encode($checkpoint, JSON_UNESCAPED_UNICODE); ?>,
+                    fullLocation: <?php echo json_encode($data['fullLocation'] ?? '', JSON_UNESCAPED_UNICODE); ?>,
                     location: <?php echo json_encode($location, JSON_UNESCAPED_UNICODE); ?>,
                     grade: <?php echo json_encode($selected_grade, JSON_UNESCAPED_UNICODE); ?>,
                     created_at: <?php echo json_encode($data['created_at'], JSON_UNESCAPED_UNICODE); ?>
@@ -634,6 +674,7 @@ $pageTitle = "Edit Attendance";
                     toc: <?php echo json_encode($toc, JSON_UNESCAPED_UNICODE); ?>,
                     train_no: <?php echo json_encode($selected_train_to, JSON_UNESCAPED_UNICODE); ?>,
                     type_of_attendance: <?php echo json_encode($checkpoint, JSON_UNESCAPED_UNICODE); ?>,
+                    fullLocation: <?php echo json_encode($data['fullLocation'] ?? '', JSON_UNESCAPED_UNICODE); ?>,
                     location: <?php echo json_encode($location, JSON_UNESCAPED_UNICODE); ?>,
                     grade: <?php echo json_encode($selected_grade, JSON_UNESCAPED_UNICODE); ?>,
                     created_at: <?php echo json_encode($data['created_at'], JSON_UNESCAPED_UNICODE); ?>
