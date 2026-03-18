@@ -41,6 +41,7 @@
         ?>
         <?php if($_SESSION['station_id'] == 8): ?>
         <a href="feedback-single-train-report.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">Train Report</span> </a>
+        <a href="view-pdf-attendece.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">View PDF Attendence</span> </a>   
         <?php endif; ?>
         <a href="feedback-target.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">Feedback Target</span> </a>
         <a href="view-feedback-target.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 mb-1 hover:bg-slate-700 transition"> <i class="fas fa-angle-right"></i> <span class="text-sm font-medium">View Feedback Target</span> </a>

@@ -57,6 +57,18 @@ $station_id = $_SESSION['station_id'];
                             <h4>Edit Attendance</h4>
                             <p>View and modify attendance records</p>
                         </a>
+                        <?php if (isset($_SESSION['station_id']) && $_SESSION['station_id'] == 8) { ?>
+                        <a href="create-pdf-attendence.php" class="action-card">
+                            <div class="action-icon">📄</div>
+                            <h4>Create PDF Attendence</h4>
+                            <p>Upload attendance PDF with train up/down and dates</p>
+                        </a>
+                        <a href="edit-pdf-attendence.php" class="action-card">
+                            <div class="action-icon">🛠️</div>
+                            <h4>Edit PDF Attendence</h4>
+                            <p>Show and edit uploaded PDF records</p>
+                        </a>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
