@@ -172,7 +172,7 @@ if ($show_results && $error_message === '') {
 							<th class="px-3 py-2 text-left">Train Down</th>
 							<th class="px-3 py-2 text-left">Date</th>
 							<th class="px-3 py-2 text-left">PDF</th>
-							<th class="px-3 py-2 text-left">Created</th>
+							
 						</tr>
 					</thead>
 					<tbody>
@@ -184,7 +184,7 @@ if ($show_results && $error_message === '') {
 									<td class="px-3 py-2"><?php echo htmlspecialchars($row['train_down']); ?></td>
 									<td class="px-3 py-2"><?php echo htmlspecialchars($row['from_date']); ?></td>
 									<td class="px-3 py-2"><a href="uploads/pdf/<?php echo rawurlencode($row['pdf_file']); ?>" target="_blank" class="text-blue-600 hover:text-blue-800 font-semibold">View PDF</a></td>
-									<td class="px-3 py-2 text-slate-500"><?php echo !empty($row['created_at']) ? date('d M Y, h:i A', strtotime($row['created_at'])) : '-'; ?></td>
+									
 								</tr>
 							<?php endforeach; ?>
 						<?php else: ?>

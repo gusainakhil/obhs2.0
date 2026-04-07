@@ -281,11 +281,13 @@ $displayFullAddress = getDisplayFullAddress($data['fullLocation'] ?? '');
 <div class="location-info">
 <?php if (!empty($latitude)): ?>
     Lati: <?= htmlspecialchars($latitude) ?><br>
-    Longi: <?= htmlspecialchars($longitude) ?><br>
+    Longi: <?= htmlspecialchars($longitude) ?>
 <?php endif; ?>
 
-<?= htmlspecialchars($location_name ?: 'NA') ?>
-<?php if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
+<?php if ((string)$station_id !== '25'): ?>
+    <?= htmlspecialchars($location_name ?: 'NA') ?>
+<?php endif; ?>
+<?php  if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
     <br><?= htmlspecialchars($displayFullAddress) ?>
 <?php endif; ?>
 </div>
