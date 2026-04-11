@@ -81,6 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         if (empty($train_no)) {
             continue; // Skip empty rows
         }
+
+        if (!ctype_digit($train_no) || strlen($train_no) > 5) {
+            $success = false;
+            $errors[] = "Train no {$train_no} must contain only up to 5 digits.";
+            break;
+        }
         
         $no_ac_coach = $no_ac_coaches[$index] ?? 0;
         $feed_per_ac_coach = $feed_per_ac_coaches[$index] ?? 0;
@@ -290,7 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                             </thead>
                             <tbody id="tableBody">
                                 <tr>
-                                    <td><input type="text" name="train_no[]" class="form-input" placeholder="Enter train no" required></td>
+                                    <td><input type="text" name="train_no[]" class="form-input" placeholder="Enter train no" maxlength="5" inputmode="numeric" pattern="[0-9]{1,5}" title="Enter up to 5 digits only" required></td>
                                     <td><input type="number" name="no_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
                                     <td><input type="number" name="feed_per_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
                                     <td><input type="number" name="no_non_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
@@ -337,12 +343,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             const stationName = '<?php echo htmlspecialchars($station_name); ?>';
             
             newRow.innerHTML = `
-                <td><input type="text" name="train_no[]" class="form-input" placeholder="Enter train no" required></td>
+                <td><input type="text" name="train_no[]" class="form-input" placeholder="Enter train no" maxlength="5" inputmode="numeric" pattern="[0-9]{1,5}" title="Enter up to 5 digits only" required></td>
                 <td><input type="number" name="no_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
                 <td><input type="number" name="feed_per_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
                 <td><input type="number" name="no_non_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
                 <td><input type="number" name="feed_per_non_ac_coach[]" class="form-input" placeholder="0" min="0" required></td>
-                <td><input type="number" name="feedback_tte[]" class="form-input" placeholder="0" min="0" required></td>
+                <td><input type="number" name="feedback_tte[]" class="form-input" placeholder="0" min="0" required"></td>
                 <td><input type="text" class="form-input" placeholder="Station" value="${stationName}" readonly></td>
                 <td>
                     <button type="button" class="btn-remove" onclick="removeRow(this)">
