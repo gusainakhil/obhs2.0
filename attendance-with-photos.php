@@ -666,8 +666,16 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                         <br><?php echo htmlspecialchars($displayFullAddress); ?>
                                                     <?php endif; ?>
                                                 </div>
-                                                <div class="date-time">Date:
-                                                    <?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></div>
+                                                <div class="date-time">
+                                                    Date:
+                                                    <?php 
+                                                    if ( $_SESSION['station_id'] == 23) {
+                                                        echo date('d/m/Y', strtotime($data['created_at']));
+                                                    } else {
+                                                        echo date('d/m/Y H:i:s', strtotime($data['created_at']));
+                                                    }
+                                                    ?>
+                                                </div>
                                             <?php else: ?>
                                                 <div style="color: #94a3b8;">No Data</div>
                                             <?php endif; ?>
@@ -705,8 +713,16 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                         <br> <?php echo htmlspecialchars($displayFullAddress); ?>
                                                     <?php endif; ?>
                                                 </div>
-                                                <div class="date-time">Date:
-                                                    <?php echo date('d-m-Y H:i:s', strtotime($data['created_at'])); ?></div>
+                                                <div class="date-time">
+                                                    Date:
+                                                    <?php 
+                                                    if ( $_SESSION['station_id'] == 23) {
+                                                        echo date('d/m/Y', strtotime($data['created_at']));
+                                                    } else {
+                                                        echo date('d/m/Y H:i:s', strtotime($data['created_at']));
+                                                    }
+                                                    ?>
+                                                </div>
                                             <?php else: ?>
                                                 <div style="color: #94a3b8;">No Data</div>
                                             <?php endif; ?>

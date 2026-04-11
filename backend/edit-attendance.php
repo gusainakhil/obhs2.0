@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 // Set proper content type and encoding
 header('Content-Type: text/html; charset=utf-8');
@@ -44,7 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
 }
 
 // Handle update request
+// Handle update request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_attendance'])) {
+
     $update_id = $_POST['update_id'];
     $employee_name = $_POST['employee_name'];
     $employee_id = $_POST['employee_id'];
@@ -55,138 +58,246 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_attendance']))
     $location = $_POST['location'];
     $fullLocation = $is_station_25 ? ($_POST['fullLocation'] ?? '') : null;
     $grade = $_POST['grade'];
-    // Created at (datetime-local -> MySQL DATETIME)
+
     $created_at_input = $_POST['created_at'] ?? '';
     $created_at_mysql = null;
+
     if (!empty($created_at_input)) {
-        // Convert "YYYY-MM-DDTHH:MM:SS" or "YYYY-MM-DDTHH:MM" to "YYYY-MM-DD HH:MM:SS"
         $created_at_mysql = str_replace('T', ' ', $created_at_input);
-        // If seconds are missing, add them
         if (strlen($created_at_mysql) === 16) {
             $created_at_mysql .= ':00';
         }
-        // If only 19 chars, it already has seconds
     }
-    
-    // -----------------------------------------
-    // HANDLE PHOTO - Compress and convert to WebP
-    // -----------------------------------------
-    $photo_filename = "";
+
     $uploadDir = '../uploads/attendence/';
-    $maxSize = 5 * 1024 * 1024; // 5MB
-    $allowed = ['image/jpeg', 'image/jpg', 'image/png'];
-    
+    $maxSize = 5 * 1024 * 1024;
+    $allowed = ['image/jpeg','image/jpg','image/png','image/webp'];
+
     if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
+        mkdir($uploadDir,0755,true);
     }
 
-    if (!empty($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE) {
+    $photo_filename = null;
 
-        $f = $_FILES['photo'];
+    // GET OLD PHOTO
+    $old_photo = null;
+    $stmt_old = $mysqli->prepare("SELECT photo FROM base_attendance WHERE id=? AND station_id=?");
+    $stmt_old->bind_param("is",$update_id,$station_id);
+    $stmt_old->execute();
+    $res_old = $stmt_old->get_result();
+    if ($row_old = $res_old->fetch_assoc()) {
+        $old_photo = $row_old['photo'];
+    }
+    $stmt_old->close();
 
-        if ($f['error'] !== UPLOAD_ERR_OK) {
-            $photo_filename = null;
-        } elseif ($f['size'] > $maxSize) {
-            $photo_filename = null;
+
+    // HANDLE NEW PHOTO
+   
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
+
+    $f = $_FILES['photo'];
+
+    if ($f['size'] <= $maxSize) {
+
+        $mime = mime_content_type($f['tmp_name']);
+
+        if (in_array($mime, $allowed)) {
+
+            $filename = $station_id.'_'.time().'_'.uniqid().'.webp';
+            $dest = $uploadDir.$filename;
+
+         if ($mime === 'image/jpeg' || $mime === 'image/jpg') {
+        
+            $src = imagecreatefromjpeg($f['tmp_name']);
+        
+        } elseif ($mime === 'image/png') {
+        
+            $src = imagecreatefrompng($f['tmp_name']);
+        
+        } elseif ($mime === 'image/webp') {
+        
+            $src = imagecreatefromwebp($f['tmp_name']);
+        
         } else {
-            $mime = @getimagesize($f['tmp_name'])['mime'] ?? '';
-            if (!in_array($mime, $allowed)) {
-                $photo_filename = null;
-            } else {
-                // Build filename with .webp extension
-                $filename = $station_id . '_' . date('Ymd_His') . '_' . uniqid() . '.webp';
-                $dest     = $uploadDir . $filename;
+        
+            $src = false;
+        
+        }
 
-                // Create image resource from uploaded file
-                $sourceImage = null;
-                if ($mime === 'image/jpeg' || $mime === 'image/jpg') {
-                    $sourceImage = @imagecreatefromjpeg($f['tmp_name']);
-                } elseif ($mime === 'image/png') {
-                    $sourceImage = @imagecreatefrompng($f['tmp_name']);
-                }
+            if ($src) {
 
-                if (!$sourceImage) {
-                    $photo_filename = null;
-                } else {
-                    // Get original dimensions
-                    $origWidth = imagesx($sourceImage);
-                    $origHeight = imagesy($sourceImage);
+                imagewebp($src, $dest, 80);
+                imagedestroy($src);
 
-                    // Resize if image is too large (max 1920px on longest side)
-                    $maxDimension = 1920;
-                    $newWidth = $origWidth;
-                    $newHeight = $origHeight;
+                $photo_filename = $filename;
 
-                    if ($origWidth > $maxDimension || $origHeight > $maxDimension) {
-                        if ($origWidth > $origHeight) {
-                            $newWidth = $maxDimension;
-                            $newHeight = (int)($origHeight * ($maxDimension / $origWidth));
-                        } else {
-                            $newHeight = $maxDimension;
-                            $newWidth = (int)($origWidth * ($maxDimension / $origHeight));
-                        }
-                        
-                        $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
-                        // Preserve transparency for PNG
-                        imagealphablending($resizedImage, false);
-                        imagesavealpha($resizedImage, true);
-                        
-                        imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
-                        imagedestroy($sourceImage);
-                        $sourceImage = $resizedImage;
-                    }
-
-                    // Convert and compress to WebP (quality 80)
-                    $webpQuality = 80;
-                    if (!imagewebp($sourceImage, $dest, $webpQuality)) {
-                        imagedestroy($sourceImage);
-                        $photo_filename = null;
-                    } else {
-                        imagedestroy($sourceImage);
-                        $photo_filename = $filename;
+                // DELETE OLD PHOTO
+                if (!empty($old_photo)) {
+                    $old_path = $uploadDir.$old_photo;
+                    if (file_exists($old_path)) {
+                        unlink($old_path);
                     }
                 }
             }
         }
     }
-    
-    // Update query with or without photo
-    $created_by = 'BACKEND';
+}
+
+    $created_by = "BACKEND";
+
+
+    // UPDATE QUERY
     if ($photo_filename) {
+
         if ($is_station_25) {
-            $update_query = "UPDATE base_attendance 
-                             SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, fullLocation = ?, grade = ?, photo = ?, created_by = ?, created_at = ? 
-                             WHERE id = ? AND station_id = ?";
-            $stmt = $mysqli->prepare($update_query);
-            $stmt->bind_param("ssssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $fullLocation, $grade, $photo_filename, $created_by, $created_at_mysql, $update_id, $station_id);
+
+            $sql = "UPDATE base_attendance SET
+                    employee_name=?,
+                    employee_id=?,
+                    desination=?,
+                    toc=?,
+                    train_no=?,
+                    type_of_attendance=?,
+                    location=?,
+                    fullLocation=?,
+                    grade=?,
+                    photo=?,
+                    created_by=?,
+                    created_at=?
+                    WHERE id=? AND station_id=?";
+
+            $stmt = $mysqli->prepare($sql);
+
+            $stmt->bind_param(
+                "ssssssssssssis",
+                $employee_name,
+                $employee_id,
+                $desination,
+                $toc,
+                $train_no,
+                $type_of_attendance,
+                $location,
+                $fullLocation,
+                $grade,
+                $photo_filename,
+                $created_by,
+                $created_at_mysql,
+                $update_id,
+                $station_id
+            );
+
         } else {
-            $update_query = "UPDATE base_attendance 
-                             SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, grade = ?, photo = ?, created_by = ?, created_at = ? 
-                             WHERE id = ? AND station_id = ?";
-            $stmt = $mysqli->prepare($update_query);
-            $stmt->bind_param("sssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $grade, $photo_filename, $created_by, $created_at_mysql, $update_id, $station_id);
+
+            $sql = "UPDATE base_attendance SET
+                    employee_name=?,
+                    employee_id=?,
+                    desination=?,
+                    toc=?,
+                    train_no=?,
+                    type_of_attendance=?,
+                    location=?,
+                    grade=?,
+                    photo=?,
+                    created_by=?,
+                    created_at=?
+                    WHERE id=? AND station_id=?";
+
+            $stmt = $mysqli->prepare($sql);
+
+            $stmt->bind_param(
+                "sssssssssssis",
+                $employee_name,
+                $employee_id,
+                $desination,
+                $toc,
+                $train_no,
+                $type_of_attendance,
+                $location,
+                $grade,
+                $photo_filename,
+                $created_by,
+                $created_at_mysql,
+                $update_id,
+                $station_id
+            );
         }
+
     } else {
+
         if ($is_station_25) {
-            $update_query = "UPDATE base_attendance 
-                             SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, fullLocation = ?, grade = ?, created_by = ?, created_at = ? 
-                             WHERE id = ? AND station_id = ?";
-            $stmt = $mysqli->prepare($update_query);
-            $stmt->bind_param("sssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $fullLocation, $grade, $created_by, $created_at_mysql, $update_id, $station_id);
+
+            $sql = "UPDATE base_attendance SET
+                    employee_name=?,
+                    employee_id=?,
+                    desination=?,
+                    toc=?,
+                    train_no=?,
+                    type_of_attendance=?,
+                    location=?,
+                    fullLocation=?,
+                    grade=?,
+                    created_by=?,
+                    created_at=?
+                    WHERE id=? AND station_id=?";
+
+            $stmt = $mysqli->prepare($sql);
+
+            $stmt->bind_param(
+                "sssssssssssis",
+                $employee_name,
+                $employee_id,
+                $desination,
+                $toc,
+                $train_no,
+                $type_of_attendance,
+                $location,
+                $fullLocation,
+                $grade,
+                $created_by,
+                $created_at_mysql,
+                $update_id,
+                $station_id
+            );
+
         } else {
-            $update_query = "UPDATE base_attendance 
-                             SET employee_name = ?, employee_id = ?, desination = ?, toc = ?, train_no = ?, type_of_attendance = ?, location = ?, grade = ?, created_by = ?, created_at = ? 
-                             WHERE id = ? AND station_id = ?";
-            $stmt = $mysqli->prepare($update_query);
-            $stmt->bind_param("ssssssssssis", $employee_name, $employee_id, $desination, $toc, $train_no, $type_of_attendance, $location, $grade, $created_by, $created_at_mysql, $update_id, $station_id);
+
+            $sql = "UPDATE base_attendance SET
+                    employee_name=?,
+                    employee_id=?,
+                    desination=?,
+                    toc=?,
+                    train_no=?,
+                    type_of_attendance=?,
+                    location=?,
+                    grade=?,
+                    created_by=?,
+                    created_at=?
+                    WHERE id=? AND station_id=?";
+
+            $stmt = $mysqli->prepare($sql);
+
+            $stmt->bind_param(
+                "ssssssssssis",
+                $employee_name,
+                $employee_id,
+                $desination,
+                $toc,
+                $train_no,
+                $type_of_attendance,
+                $location,
+                $grade,
+                $created_by,
+                $created_at_mysql,
+                $update_id,
+                $station_id
+            );
         }
     }
-    
+
     $stmt->execute();
     $stmt->close();
-    
-    // Redirect to avoid resubmission
-    header("Location: " . $_SERVER['PHP_SELF'] . "?" . http_build_query($_REQUEST));
+
+    header("Location: ".$_SERVER['PHP_SELF']."?".http_build_query($_REQUEST));
     exit;
 }
 

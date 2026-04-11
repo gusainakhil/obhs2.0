@@ -433,7 +433,7 @@ foreach ($trains as $train) {
                 
                 $col = 'A';
                 $newSheet->setCellValue($col++ . $row, $sr);
-                $newSheet->setCellValue($col++ . $row, ($_SESSION['station_id'] == 16 || $_SESSION['station_id'] == 23 || $_SESSION['station_id'] == 25  ) ? date('d/m/Y', strtotime($pd['created'])) : date('d/m/Y H:i', strtotime($pd['created'])));
+                $newSheet->setCellValue($col++ . $row, ($_SESSION['station_id'] == 16 || $_SESSION['station_id'] == 23) ? date('d/m/Y', strtotime($pd['created'])) : date('d/m/Y H:i', strtotime($pd['created'])));
                 $newSheet->setCellValue($col++ . $row, $pd['seat_no']);
                 $newSheet->setCellValue($col++ . $row, $pd['coach_no']);
                 $newSheet->setCellValue($col++ . $row, $pd['name']);

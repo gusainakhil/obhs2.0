@@ -465,9 +465,9 @@ $stmt->close();
                         if (count($employees) > 0):
                             $sr_no = 1;
                             foreach ($employees as $employee):
-                                $photo_path = !empty($employee['photo']) ? 'uploads/employee/' . $employee['photo'] : 'https://via.placeholder.com/40';
+                                $photo_path = !empty($employee['photo']) ? 'uploads/employee/' . $employee['photo'] : 'uploads/user_13984171.png';
                                 if (!empty($employee['photo']) && !file_exists($photo_path)) {
-                                    $photo_path = 'https://via.placeholder.com/40';
+                                    $photo_path = 'user_13984171.png';
                                 }
                         ?>
                         <tr>
