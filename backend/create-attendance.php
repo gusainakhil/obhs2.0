@@ -61,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_attendance']))
     $designations = $_POST['designation'] ?? [];
     $tocs = $_POST['toc'] ?? [];
     $created_ats = $_POST['created_at'] ?? [];
+    $fullLocations = $_POST['full_location'] ?? [];
     
     $upload_dir = '../uploads/attendence/';
     if (!file_exists($upload_dir)) {
@@ -85,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_attendance']))
         $grade = $grades[$i] ?? '';
         $designation = $designations[$i] ?? '';
         $toc = $tocs[$i] ?? '';
+        $fullLocation = $fullLocations[$i] ?? '';
         
         // Get employee name
         $employee_name = '';
@@ -220,12 +222,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_attendance']))
 
         // Insert into database with provided created_at
         $insert_query = "INSERT INTO base_attendance 
-                        (station_id, employee_id, employee_name, train_no, type_of_attendance, location, grade, desination, toc, photo, created_at, created_by) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        (station_id, employee_id, employee_name, train_no, type_of_attendance, location, grade, desination, toc, photo, created_at, created_by,fullLocation) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $created_by = 'BACKEND';
         $stmt = $mysqli->prepare($insert_query);
-        $stmt->bind_param("ssssssssssss", $station_id, $employee_id, $employee_name, $train_no, $type_of_attendance, $location, $grade, $designation, $toc, $photo_filename, $created_at_mysql, $created_by);
+        $stmt->bind_param("sssssssssssss", $station_id, $employee_id, $employee_name, $train_no, $type_of_attendance, $location, $grade, $designation, $toc, $photo_filename, $created_at_mysql, $created_by, $fullLocation);
         
         if ($stmt->execute()) {
             $success_count++;
@@ -377,6 +379,13 @@ $pageTitle = "Create Attendance";
                                     <input type="datetime-local" name="created_at[]" step="1" required>
                                     <small style="color: #666; font-size: 12px;">Specify local date & time</small>
                                 </div>
+                                   <?php if ($_SESSION['station_id'] == 25): ?>
+                                    <div class="form-group">
+                                         <label>Full Location:</label>
+                                    <input type="text" name="full_location[]" placeholder="e.g., lati: 26.2174382 longi: 78.1831218 Gwalior" required>
+                                    <small style="color: #666; font-size: 12px;">Full Address</small>
+                                    </div>
+                                 <?php endif; ?>
                             </div>
                         </div>
                     </div>
