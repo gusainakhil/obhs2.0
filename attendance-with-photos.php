@@ -660,10 +660,12 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                         Lati: <?php echo htmlspecialchars($latitude); ?><br>
                                                         Longi: <?php echo htmlspecialchars($longitude); ?><br>
                                                     <?php endif; ?>
-                                                    location: <?php echo htmlspecialchars($location_name ?: 'NA'); ?>
+                                                    <?php if ((string)$station_id !== '25'): ?>
+                                                        location: <?php echo htmlspecialchars($location_name ?: 'NA'); ?>
+                                                    <?php endif; ?>
                                             
                                                     <?php if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
-                                                        <br><?php echo htmlspecialchars($displayFullAddress); ?>
+                                                        location: <?php echo htmlspecialchars($displayFullAddress); ?>
                                                     <?php endif; ?>
                                                 </div>
                                                 <div class="date-time">
@@ -707,10 +709,12 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                                         Lati: <?php echo htmlspecialchars($latitude); ?><br>
                                                         Longi: <?php echo htmlspecialchars($longitude); ?><br>
                                                     <?php endif; ?>
-                                                    location: <?php echo htmlspecialchars($location_name ?: 'NA'); ?>
+                                                    <?php if ((string)$station_id !== '25'): ?>
+                                                        location: <?php echo htmlspecialchars($location_name ?: 'NA'); ?>
+                                                    <?php endif; ?>
                                             
                                                     <?php if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
-                                                        <br> <?php echo htmlspecialchars($displayFullAddress); ?>
+                                                         location: <?php echo htmlspecialchars($displayFullAddress); ?>
                                                     <?php endif; ?>
                                                 </div>
                                                 <div class="date-time">
