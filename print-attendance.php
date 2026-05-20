@@ -288,7 +288,8 @@ $displayFullAddress = getDisplayFullAddress($data['fullLocation'] ?? '');
     <?= htmlspecialchars($location_name ?: 'NA') ?>
 <?php endif; ?>
 <?php  if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
-    <br><?= htmlspecialchars($displayFullAddress) ?>
+    <br>Location:
+    <?= htmlspecialchars($displayFullAddress) ?>
 <?php endif; ?>
 </div>
 <div class="date-info"><?= date('d-m-Y H:i:s', strtotime($data['created_at'])) ?></div>
