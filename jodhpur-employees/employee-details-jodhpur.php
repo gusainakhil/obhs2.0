@@ -2,16 +2,15 @@
 session_start();
 include '../includes/connection.php';
 
-// Get employee ID from URL
 $employee_id = $_GET['id'] ?? 0;
 
-// Fetch employee data
 $employee = null;
 $query = "SELECT * FROM base_employees_jodhpur WHERE id = ?";
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $employee_id);
 $stmt->execute();
 $result = $stmt->get_result();
+
 if ($row = $result->fetch_assoc()) {
     $employee = $row;
 }
@@ -21,220 +20,329 @@ if (!$employee) {
     echo "Employee not found";
     exit();
 }
+
+function e($value) {
+    return htmlspecialchars($value ?? 'N/A');
+}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Employee Biodata Form</title>
+    <title>Employee ID Card</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            width: 80%;
-            margin: auto;
-            line-height: 1.5;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        h2, h4 {
-            text-align: center;
             margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f2f4f8;
         }
-        .photo {
-            width: 120px;
-            height: 140px;
-            border: 1px solid black;
-            object-fit: cover;
-        }
-        td {
-            padding: 6px;
-            vertical-align: top;
-        }
-        .underline {
-            border-bottom: 1px solid #000;
-            display: inline-block;
-            width: 80%;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .bold {
-            font-weight: bold;
-        }
+
         .print-btn {
             position: fixed;
             top: 20px;
             right: 30px;
-            background-color: #007bff;
-            color: white;
+            background: #0d6efd;
+            color: #fff;
             border: none;
-            padding: 10px 18px;
-            font-size: 14px;
-            border-radius: 5px;
+            padding: 10px 20px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 14px;
             z-index: 999;
         }
-        .print-btn:hover {
-            background-color: #0056b3;
+
+        .card-wrapper {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-        @media print {
-            .print-btn {
-                display: none;
-            }
+
+        .id-card {
+            width: 330px;
+            height: 520px;
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #0b3d91;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            position: relative;
         }
-        .sign-section {
+
+        .card-header {
+            background: linear-gradient(135deg, #0b3d91, #1c75bc);
+            color: #fff;
+            text-align: center;
+            padding: 16px 10px;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .card-header p {
+            margin: 5px 0 0;
+            font-size: 11px;
+        }
+
+        .photo-box {
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .photo {
+            width: 125px;
+            height: 145px;
+            border: 3px solid #0b3d91;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #eee;
+        }
+
+        .emp-name {
+            text-align: center;
+            margin: 12px 10px 4px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #0b3d91;
+            text-transform: uppercase;
+        }
+
+        .designation {
+            text-align: center;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .details {
+            padding: 0 22px;
+            font-size: 13px;
+        }
+
+        .row {
+            display: flex;
+            border-bottom: 1px dashed #ccc;
+            padding: 7px 0;
+        }
+
+        .label {
+            width: 42%;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .value {
+            width: 58%;
+            color: #111;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #0b3d91;
+            color: #fff;
+            text-align: center;
+            font-size: 11px;
+            padding: 8px;
+        }
+
+        .back-content {
+            padding: 20px;
+            font-size: 13px;
+        }
+
+        .back-content h3 {
+            text-align: center;
+            color: #0b3d91;
+            margin-top: 0;
+            border-bottom: 2px solid #0b3d91;
+            padding-bottom: 8px;
+        }
+
+        .address-box {
+            min-height: 80px;
+            border: 1px solid #ccc;
+            padding: 8px;
+            margin-top: 6px;
+            font-size: 12px;
+        }
+
+        .instruction {
+            margin-top: 15px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .sign-area {
             display: flex;
             justify-content: space-between;
-            margin-top: 60px;
-        }
-        .left-sign {
-            text-align: left;
+            margin-top: 35px;
+            font-size: 11px;
             font-weight: bold;
         }
-        .right-sign {
-            text-align: right;
-            font-weight: bold;
+
+        .sign-box {
+            text-align: center;
+            width: 45%;
+            border-top: 1px solid #000;
+            padding-top: 5px;
         }
-        
+
         @media print {
-            @page {
-                size: A4;
-                margin: 15mm;
-            }
-
             body {
-                width: 100%;
-                margin: 0;
+                background: #fff;
                 padding: 0;
-                font-size: 12px;
-                line-height: 1.4;
-            }
-
-            table, td {
-                border: 1px solid #000;
-                border-collapse: collapse;
             }
 
             .print-btn {
                 display: none;
             }
 
-            .photo {
-                width: 100px;
-                height: 120px;
+            .card-wrapper {
+                gap: 20px;
+                align-items: flex-start;
+                justify-content: center;
             }
 
-            h2, h4, p, td {
+            .id-card {
+                box-shadow: none;
                 page-break-inside: avoid;
+            }
+
+            @page {
+                size: A4;
+                margin: 10mm;
             }
         }
     </style>
 </head>
 <body>
 
-    <button class="print-btn" onclick="window.print()">Print PDF</button>
+<button class="print-btn" onclick="window.print()">Print ID Card</button>
 
-    <div class="header">
-        <h2>RAKSHAK SECURITAS PVT. LTD.</h2>
-        <h4>ADDRESS: RAILWAY STATION NWR JODHPUR (RAJ)</h4>
-        <h4>BIODATA FORM</h4>
-        <p><strong>APPLICATION – FORMAT FOR EHK / ACCA / OBHS STAFF</strong></p>
-    </div>
+<div class="card-wrapper">
 
-    <table border="1">
-        <tr>
-            <td><strong>EMPLOYEE ID NO:</strong></td>
-            <td><?php echo htmlspecialchars($employee['name'] ?? 'N/A'); ?></td>
-            <td rowspan="5" style="text-align: center;">
-                <img src="uploads/<?php echo htmlspecialchars($employee['photo'] ?? 'nophoto.png'); ?>" 
-                     class="photo" alt="Photo">
-            </td>
-        </tr>
-        <tr>
-            <td><strong>NAME:</strong></td>
-            <td><?php echo htmlspecialchars($employee['employee_id'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>FATHER'S NAME:</strong></td>
-            <td><?php echo htmlspecialchars($employee['FATHER_NAME'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>MOTHER'S NAME:</strong></td>
-            <td><?php echo htmlspecialchars($employee['FORMULA_DOB'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>DATE OF BIRTH:</strong></td>
-            <td><?php echo htmlspecialchars($employee['DOB'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>AADHAR NO:</strong></td>
-            <td colspan="2"><?php echo htmlspecialchars($employee['ADHAR_NO'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>MOBILE NO:</strong></td>
-            <td colspan="2"><?php echo htmlspecialchars($employee['MOBILE_NO'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>ADDRESS:</strong></td>
-            <td colspan="2"><?php echo htmlspecialchars($employee['ADDRESH'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>PAN NO:</strong></td>
-            <td colspan="2"><?php echo htmlspecialchars($employee['PAN_CARD'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>BANK NAME:</strong></td>
-            <td colspan="2"><?php echo htmlspecialchars($employee['AC_NAME'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>BANK ACCOUNT NO:</strong></td>
-            <td colspan="2"><?php echo htmlspecialchars($employee['AC_NO'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>IFSC CODE:</strong></td>
-            <td colspan="2"><?php echo htmlspecialchars($employee['IFSC_CODE'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>POLICE VERIFICATION CERTIFICATE:</strong></td>
-            <td colspan="2"><?php echo htmlspecialchars($employee['Police_ver'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>POLICE VERIFICATION CERTIFICATE DATE:</strong></td>
-            <td colspan="2"><?php echo htmlspecialchars($employee['Police_ver_dt'] ?? 'N/A'); ?></td>
-        </tr>
-        <tr>
-            <td><strong>ENCLOSED DOCUMENTS:</strong></td>
-            <td colspan="2">Aadhar Card, PAN Card, Bank Pass Book, PVC, Medical, Photo</td>
-        </tr>
-    </table>
-
-    <p><strong>DECLARATION:</strong><br>
-        I <strong><?php echo htmlspecialchars($employee['employee_id'] ?? 'N/A'); ?></strong> hereby declare that the information furnished above is true, complete, and correct to the best of my knowledge and belief. I understand that in the event of my information being found false or incorrect at any stage, my candidature/appointment shall be liable to cancellation/termination without any notice or compensation in lieu thereof.
-    </p>
-
-    <table style="width:100%; margin-top:20px;">
-    <tr>
-        <td style="text-align:left;">
-            <strong>Place:</strong> Jodhpur
-        </td>
-        <td style="text-align:right;">
-            <strong>Date:</strong> <?php echo $employee['created_at'] ? date('d/m/Y', strtotime($employee['created_at'])) : 'N/A'; ?>
-        </td>
-    </tr>
-    </table>
-
-
-    <div class="sign-section">
-        <div class="left-sign">
-            <p>Authorised Sign</p>
-            <p>RAKSHAK SECURITAS PVT. LTD.</p>
+    <!-- FRONT SIDE -->
+    <div class="id-card">
+        <div class="card-header">
+            <h2>RAKSHAK SECURITAS PVT. LTD.</h2>
+            <p>RAILWAY STATION NWR JODHPUR (RAJ)</p>
         </div>
-        <div class="right-sign">
-            <p>Signature of Applicant</p>
+
+        <div class="photo-box">
+            <img src="/uploads/employee/<?php echo e($employee['photo'] ?? 'nophoto.png'); ?>" class="photo" alt="Employee Photo">
+        </div>
+
+        <div class="emp-name"><?php echo e($employee['name']); ?></div>
+        <div class="designation">EHK / ACCA / OBHS STAFF</div>
+
+        <div class="details">
+            <div class="row">
+                <div class="label">Emp ID</div>
+                <div class="value"><?php echo e($employee['employee_id']); ?></div>
+            </div>
+
+            <div class="row">
+                <div class="label">Father</div>
+                <div class="value"><?php echo e($employee['FATHER_NAME']); ?></div>
+            </div>
+
+            <div class="row">
+                <div class="label">DOB</div>
+                <div class="value"><?php echo e($employee['DOB']); ?></div>
+            </div>
+
+            <div class="row">
+                <div class="label">Mobile</div>
+                <div class="value"><?php echo e($employee['MOBILE_NO']); ?></div>
+            </div>
+
+            <div class="row">
+                <div class="label">Aadhar</div>
+                <div class="value"><?php echo e($employee['ADHAR_NO']); ?></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Employee Identity Card
         </div>
     </div>
+
+    <!-- BACK SIDE -->
+    <div class="id-card">
+        <div class="card-header">
+            <h2>IDENTITY CARD</h2>
+            <p>Back Side Details</p>
+        </div>
+
+        <div class="back-content">
+            <h3>Employee Details</h3>
+
+            <div class="row">
+                <div class="label">PAN No</div>
+                <div class="value"><?php echo e($employee['PAN_CARD']); ?></div>
+            </div>
+
+            <div class="row">
+                <div class="label">Bank</div>
+                <div class="value"><?php echo e($employee['AC_NAME']); ?></div>
+            </div>
+
+            <div class="row">
+                <div class="label">A/C No</div>
+                <div class="value"><?php echo e($employee['AC_NO']); ?></div>
+            </div>
+
+            <div class="row">
+                <div class="label">IFSC</div>
+                <div class="value"><?php echo e($employee['IFSC_CODE']); ?></div>
+            </div>
+
+            <div class="row">
+                <div class="label">PVC</div>
+                <div class="value"><?php echo e($employee['Police_ver']); ?></div>
+            </div>
+
+            <p><strong>Address:</strong></p>
+            <div class="address-box">
+                <?php echo e($employee['ADDRESH']); ?>
+            </div>
+
+            <div class="instruction">
+                <strong>Instructions:</strong><br>
+                This card is property of RAKSHAK SECURITAS PVT. LTD.
+                If found, please return to the company office.
+            </div>
+
+            <p style="margin-top:15px;">
+                <strong>Issue Date:</strong>
+                <?php echo !empty($employee['created_at']) ? date('d/m/Y', strtotime($employee['created_at'])) : 'N/A'; ?>
+            </p>
+
+            <div class="sign-area">
+                <div class="sign-box">
+                    Authorised Sign
+                </div>
+                <div class="sign-box">
+                    Employee Sign
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            RAKSHAK SECURITAS PVT. LTD.
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>

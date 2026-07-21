@@ -215,7 +215,7 @@ while ($row = $result->fetch_assoc()) {
                             <th>ADHAR_NO</th>
                             <th>DOB</th>
                             <th>AGE</th>
-                            <th>ADDRESH</th>
+                            <th>ADDRESS</th>
                             <th>PVC</th>
                             <th>PVC_Ok_Applied</th>
                             <th>PVC_Issue_Month</th>

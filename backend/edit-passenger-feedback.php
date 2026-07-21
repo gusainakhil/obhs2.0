@@ -31,7 +31,7 @@ if (isset($_POST['delete_passenger'])) {
         }
         
         // Delete passenger
-        $del_passenger = "DELETE FROM OBHS_passenger WHERE id = ?";
+        $del_passenger = "DELETE FROM OBHS_passenger WHERE unique_id = ?";
         if ($stmt = $mysqli->prepare($del_passenger)) {
             $stmt->bind_param("s", $passenger_id);
             if ($stmt->execute()) {
@@ -46,7 +46,7 @@ if (isset($_POST['delete_passenger'])) {
 
 // Handle edit/update request
 if (isset($_POST['update_passenger'])) {
-    $passenger_id = $_POST['passenger_id'] ?? '';
+    $unique_id = $_POST['passenger_id'] ?? '';
     $passenger_name = trim($_POST['passenger_name'] ?? '');
     $pnr_number = trim($_POST['pnr_number'] ?? '');
     $phone_number = trim($_POST['phone_number'] ?? '');
@@ -64,57 +64,73 @@ if (isset($_POST['update_passenger'])) {
     $to_date = $_POST['orig_to_date'] ?? '';
     $train_no = $_POST['orig_train_no'] ?? '';
     $grade = $_POST['orig_grade'] ?? '';
-       $created_by = 'BACKEND';
+    $created_by = 'BACKEND';
     
-    if (!empty($passenger_id)) {
-        // Update passenger info
-        $upd_sql = "UPDATE OBHS_passenger SET name = ?, pnr_number = ?, ph_number = ?, seat_no = ?, coach_no = ?, train_no = ?, grade = ?, created = ?, created_by = ? WHERE id = ?";
-        if ($stmt = $mysqli->prepare($upd_sql)) {
-            // Correct bind types: name(s), pnr(s), phone(s), seat(i), coach(s), train(s), grade(s), created(s), created_by(s), id(s)
-            $stmt->bind_param("ssisssssss", $passenger_name, $pnr_number, $phone_number, $seat_no, $coach_no, $train_no_update, $grade_update, $created, $created_by, $passenger_id);
-            
-            if ($stmt->execute()) {
-                $stmt->close();
+    if (!empty($unique_id)) {
+        // Get the actual passenger_id (id field) from unique_id
+        $get_id_sql = "SELECT id FROM OBHS_passenger WHERE unique_id = ?";
+        if ($id_stmt = $mysqli->prepare($get_id_sql)) {
+            $id_stmt->bind_param("s", $unique_id);
+            $id_stmt->execute();
+            $id_result = $id_stmt->get_result();
+            $id_row = $id_result->fetch_assoc();
+            $passenger_id = $id_row['id'] ?? '';
+            $id_stmt->close();
+        }
+        
+        if (!empty($passenger_id)) {
+            // Update passenger info
+            $upd_sql = "UPDATE OBHS_passenger SET name = ?, pnr_number = ?, ph_number = ?, seat_no = ?, coach_no = ?, train_no = ?, grade = ?, created = ?, created_by = ? WHERE unique_id = ?";
+            if ($stmt = $mysqli->prepare($upd_sql)) {
+                // Correct bind types: name(s), pnr(s), phone(s), seat(i), coach(s), train(s), grade(s), created(s), created_by(s), unique_id(s)
+                $stmt->bind_param("ssisssssss", $passenger_name, $pnr_number, $phone_number, $seat_no, $coach_no, $train_no_update, $grade_update, $created, $created_by, $unique_id);
                 
-                // Update feedback ratings
-                foreach ($ratings as $question_id => $value) {
-                    $upd_feedback = "UPDATE OBHS_feedback SET value = ? WHERE passenger_id = ? AND feed_param = ?";
-                    if ($fstmt = $mysqli->prepare($upd_feedback)) {
-                        $val = (float)$value;
-                        $qid = (int)$question_id;
-                        $fstmt->bind_param("dsi", $val, $passenger_id, $qid);
-                        $fstmt->execute();
-                        $fstmt->close();
-                    }
-                }
-                
-                $success_message = 'Passenger feedback updated successfully!';
-                
-                // Re-run search with original criteria to show filtered results
-                if (!empty($from_date) && !empty($to_date) && !empty($train_no) && !empty($grade)) {
-                    $search_performed = true;
-                    $from_datetime = $from_date . ' 00:00:00';
-                    $to_datetime = $to_date . ' 23:59:59';
+                if ($stmt->execute()) {
+                    $stmt->close();
                     
-                    $search_sql = "SELECT id, name, pnr_number, ph_number, seat_no, coach_no, train_no, coach_type, grade, created 
-                                   FROM OBHS_passenger 
-                                   WHERE station_id = ? AND train_no = ? AND grade = ? AND created BETWEEN ? AND ? 
-                                   ORDER BY created DESC";
-                    
-                    if ($stmt = $mysqli->prepare($search_sql)) {
-                        $stmt->bind_param("issss", $station_id, $train_no, $grade, $from_datetime, $to_datetime);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        $passengers = $result->fetch_all(MYSQLI_ASSOC);
-                        $stmt->close();
+                    // Update feedback ratings
+                    foreach ($ratings as $question_id => $value) {
+                        // Update feedback
+                        $upd_feedback = "UPDATE OBHS_feedback SET value = ? WHERE passenger_id = ? AND feed_param = ?";
+                        if ($fstmt = $mysqli->prepare($upd_feedback)) {
+                            $val = (float)$value;
+                            $qid = (int)$question_id;
+                            $fstmt->bind_param("dsi", $val, $passenger_id, $qid);
+                            $fstmt->execute();
+                            $fstmt->close();
+                        }
                     }
+                    
+                    $success_message = 'Passenger feedback updated successfully!';
+                    
+                    // Re-run search with original criteria to show filtered results
+                    if (!empty($from_date) && !empty($to_date) && !empty($train_no) && !empty($grade)) {
+                        $search_performed = true;
+                        $from_datetime = $from_date . ' 00:00:00';
+                        $to_datetime = $to_date . ' 23:59:59';
+                        
+                        $search_sql = "SELECT unique_id, id, name, pnr_number, ph_number, seat_no, coach_no, train_no, coach_type, grade, created 
+                                       FROM OBHS_passenger 
+                                       WHERE station_id = ? AND train_no = ? AND grade = ? AND created BETWEEN ? AND ? 
+                                       ORDER BY created DESC";
+                        
+                        if ($stmt = $mysqli->prepare($search_sql)) {
+                            $stmt->bind_param("issss", $station_id, $train_no, $grade, $from_datetime, $to_datetime);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $passengers = $result->fetch_all(MYSQLI_ASSOC);
+                            $stmt->close();
+                        }
+                    }
+                } else {
+                    $error_message = 'Error updating passenger: ' . $stmt->error;
+                    $stmt->close();
                 }
             } else {
-                $error_message = 'Error updating passenger: ' . $stmt->error;
-                $stmt->close();
+                $error_message = 'Prepare failed: ' . $mysqli->error;
             }
         } else {
-            $error_message = 'Prepare failed: ' . $mysqli->error;
+            $error_message = 'Error: Could not find passenger record.';
         }
     }
 }
@@ -132,7 +148,7 @@ if (!$search_performed && isset($_POST['from_date'], $_POST['to_date'], $_POST['
         $from_datetime = $from_date . ' 00:00:00';
         $to_datetime = $to_date . ' 23:59:59';
 
-        $search_sql = "SELECT id, name, pnr_number, ph_number, seat_no, coach_no, train_no, coach_type, grade, created 
+        $search_sql = "SELECT unique_id, id, name, pnr_number, ph_number, seat_no, coach_no, train_no, coach_type, grade, created 
                        FROM OBHS_passenger 
                        WHERE station_id = ? AND train_no = ? AND grade = ? AND created BETWEEN ? AND ? 
                        ORDER BY created DESC";
@@ -160,7 +176,7 @@ if (isset($_POST['search_passengers'])) {
         $from_datetime = $from_date . ' 00:00:00';
         $to_datetime = $to_date . ' 23:59:59';
         
-        $search_sql = "SELECT id, name, pnr_number, ph_number, seat_no, coach_no, train_no, coach_type, grade, created 
+        $search_sql = "SELECT unique_id , id, name, pnr_number, ph_number, seat_no, coach_no, train_no, coach_type, grade, created 
                        FROM OBHS_passenger 
                        WHERE station_id = ? AND train_no = ? AND grade = ? AND created BETWEEN ? AND ? 
                        ORDER BY created DESC";
@@ -280,9 +296,9 @@ if (isset($_POST['search_passengers'])) {
                                         <td><?php echo htmlspecialchars($passenger['coach_type']); ?></td>
                                         <td><?php echo date('Y-m-d H:i:s', strtotime($passenger['created'])); ?></td>
                                         <td>
-                                            <button class="action-btn edit-btn" onclick="editPassenger('<?php echo htmlspecialchars($passenger['id']); ?>')">Edit</button>
+                                            <button class="action-btn edit-btn" onclick="editPassenger('<?php echo htmlspecialchars($passenger['id'] ); ?>', '<?php echo htmlspecialchars($passenger['unique_id'] ); ?>')">Edit</button>
                                             <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this passenger and all feedback?');">
-                                                <input type="hidden" name="passenger_id" value="<?php echo htmlspecialchars($passenger['id']); ?>">
+                                                <input type="hidden" name="passenger_id" value="<?php echo htmlspecialchars($passenger['unique_id']); ?>">
                                                 <!-- Persist search criteria on delete submit -->
                                                 <input type="hidden" name="from_date" value="<?php echo htmlspecialchars($from_date ?? ''); ?>">
                                                 <input type="hidden" name="to_date" value="<?php echo htmlspecialchars($to_date ?? ''); ?>">
@@ -325,9 +341,9 @@ if (isset($_POST['search_passengers'])) {
                 .replace(/>/g, '&gt;');
         }
 
-        function editPassenger(passengerId) {
+        function editPassenger(passengerId ,uniqueId) {
             // Fetch passenger details and feedback via AJAX
-            fetch('get-passenger-details.php?id=' + passengerId)
+            fetch('get-passenger-details.php?id=' + passengerId + '&unique_id=' + uniqueId)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
@@ -343,7 +359,7 @@ if (isset($_POST['search_passengers'])) {
 
                     // Build edit form
                     let html = '<form method="POST" action="">';
-                    html += '<input type="hidden" name="passenger_id" value="' + data.passenger.id + '">';
+                    html += '<input type="hidden" name="passenger_id" value="' + data.passenger.unique_id + '">';
                     // Persist original search criteria on update submit (use orig_ prefix)
                     html += '<input type="hidden" name="orig_from_date" value="' + escAttr(fromDate) + '">';
                     html += '<input type="hidden" name="orig_to_date" value="' + escAttr(toDate) + '">';

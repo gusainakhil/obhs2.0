@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $passenger_id = $_GET['id'] ?? '';
 $station_id = $_SESSION['station_id'] ?? 0;
+$unique_id = $_GET['unique_id'] ?? '';
 
 if (empty($passenger_id)) {
     echo json_encode(['error' => 'Passenger ID required']);
@@ -24,9 +25,9 @@ $response = [
 ];
 
 // Get passenger details
-$p_sql = "SELECT * FROM OBHS_passenger WHERE id = ? AND station_id = ?";
+$p_sql = "SELECT * FROM OBHS_passenger WHERE unique_id = ? AND station_id = ?";
 if ($stmt = $mysqli->prepare($p_sql)) {
-    $stmt->bind_param("si", $passenger_id, $station_id);
+    $stmt->bind_param("si", $unique_id, $station_id);
     $stmt->execute();
     $result = $stmt->get_result();
     $response['passenger'] = $result->fetch_assoc();

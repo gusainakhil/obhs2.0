@@ -61,12 +61,7 @@ $station_id = $_SESSION['station_id'];
                         <a href="create-pdf-attendence.php" class="action-card">
                             <div class="action-icon">📄</div>
                             <h4>Create PDF Attendence</h4>
-                            <p>Upload attendance PDF with train up/down and dates</p>
-                        </a>
-                        <a href="edit-pdf-attendence.php" class="action-card">
-                            <div class="action-icon">🛠️</div>
-                            <h4>Edit PDF Attendence</h4>
-                            <p>Show and edit uploaded PDF records</p>
+                            <p>Upload attendance PDF with date and grade</p>
                         </a>
                         <?php } ?>
                     </div>
