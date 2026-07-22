@@ -158,6 +158,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($r_name === 'Round Wise Summary') {
                             $link = 'round_wise_summary.php';
                             $type='Feedback';
+                        } elseif ($r_name === 'Round Wise Summary Without Grade') {
+                            $link = 'without-grade-round_wise_summary.php';
+                            $type='Feedback';
                         } elseif ($r_name === 'Photo Report') {
                             $link = 'photo_report_before_after.php';
                             $type='photo_report';
@@ -437,6 +440,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="reports[]"
+                                                        value="Round Wise Summary Without Grade" id="roundwisesummaryWithoutGrade" <?php if (isset($existing_reports_map['Round Wise Summary Without Grade'])) echo 'checked data-locked="1"'; elseif(in_array('Round Wise Summary Without Grade', $existing_reports)) echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="roundwisesummaryWithoutGrade">
+                                                        Round wise Summary Report Without Grade
+                                                    </label>
+                                                    <?php if (!empty($existing_reports_map['Round Wise Summary Without Grade'])): ?>
+                                                        <?php $rep = $existing_reports_map['Round Wise Summary Without Grade']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="reports[]"
                                                         value="Photo Report" id="photoreportafterbefore" <?php if (isset($existing_reports_map['Photo Report'])) echo 'checked data-locked="1"'; elseif(in_array('Photo Report', $existing_reports)) echo 'checked'; ?>>
                                                     <label class="form-check-label" for="photoreportafterbefore">
                                                         Photo Report After Before
@@ -602,7 +618,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         
                                         <!-- Questions Section -->
                                         <div id="questionsSectionRoundWise"
-                                            style="display: <?php echo in_array('Round Wise Summary', $existing_reports) ? 'block' : 'none'; ?>;">
+                                            style="display: <?php echo (in_array('Round Wise Summary', $existing_reports) || in_array('Round Wise Summary Without Grade', $existing_reports)) ? 'block' : 'none'; ?>;">
                                             <h5 class="mb-3">Questions for Round Wise Summary</h5>
                                             <div id="questionsContainer">
                                                 <?php if (!empty($existing_questions)): ?>
@@ -688,19 +704,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             const addQuestionBtn = document.getElementById('addQuestion');
                                             const questionsSectionRoundWise = document.getElementById('questionsSectionRoundWise');
                                             const roundwisesummary = document.getElementById('roundwisesummary');
+                                            const roundwisesummaryWithoutGrade = document.getElementById('roundwisesummaryWithoutGrade');
 
-                                            // Show/hide questions section based on checkbox
-                                            roundwisesummary.addEventListener('change', function () {
-                                                if (this.checked) {
+                                            function toggleQuestionsSection() {
+                                                if (roundwisesummary.checked || roundwisesummaryWithoutGrade.checked) {
                                                     questionsSectionRoundWise.style.display = 'block';
                                                     const newQuestionsContainer = document.getElementById('newQuestionsContainer');
-                                                    newQuestionsContainer.querySelectorAll('input, select').forEach(el => el.required = true);
+                                                    newQuestionsContainer.querySelectorAll('input, select').forEach(el => el.required = false);
                                                 } else {
                                                     questionsSectionRoundWise.style.display = 'none';
                                                     const newQuestionsContainer = document.getElementById('newQuestionsContainer');
                                                     newQuestionsContainer.querySelectorAll('input, select').forEach(el => el.required = false);
                                                 }
-                                            });
+                                            }
+
+                                            roundwisesummary.addEventListener('change', toggleQuestionsSection);
+                                            roundwisesummaryWithoutGrade.addEventListener('change', toggleQuestionsSection);
 
                                             addQuestionBtn.addEventListener('click', function () {
                                                 const newQuestionsContainer = document.getElementById('newQuestionsContainer');

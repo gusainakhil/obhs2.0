@@ -67,6 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               if ($r_name === 'Round Wise Summary') {
                 $empty_link = 'round_wise_summary.php';
                 $type = 'Feedback';
+              } elseif ($r_name === 'Round Wise Summary Without Grade') {
+                $empty_link = 'without-grade-round_wise_summary.php';
+                $type = 'Feedback';
               } elseif ($r_name === 'Photo Report') {
                 $empty_link = 'photo_report_before_after.php';
                 $type = 'photo_report';
@@ -308,6 +311,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                           </label>
                         </div>
                         <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="reports[]"
+                            value="Round Wise Summary Without Grade" id="roundwisesummaryWithoutGrade">
+                          <label class="form-check-label" for="roundwisesummaryWithoutGrade">
+                            Round wise Summary Report Without Grade
+                          </label>
+                        </div>
+                        <div class="form-check">
                           <input class="form-check-input" type="checkbox" name="reports[]" value="Photo Report"
                             id="photoreportafterbefore">
                           <label class="form-check-label" for="photoreportafterbefore">
@@ -470,10 +480,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     const addQuestionBtn = document.getElementById('addQuestion');
                     const questionsSectionRoundWise = document.getElementById('questionsSectionRoundWise');
                     const roundwisesummary = document.getElementById('roundwisesummary');
+                    const roundwisesummaryWithoutGrade = document.getElementById('roundwisesummaryWithoutGrade');
 
-                    // Show/hide questions section based on checkbox
-                    roundwisesummary.addEventListener('change', function () {
-                      if (this.checked) {
+                    function toggleQuestionsSection() {
+                      if (roundwisesummary.checked || roundwisesummaryWithoutGrade.checked) {
                         questionsSectionRoundWise.style.display = 'block';
                         // Enable required on questions
                         questionsContainer.querySelectorAll('input, select').forEach(el => el.required = true);
@@ -482,7 +492,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         // Disable required on questions
                         questionsContainer.querySelectorAll('input, select').forEach(el => el.required = false);
                       }
-                    });
+                    }
+
+                    roundwisesummary.addEventListener('change', toggleQuestionsSection);
+                    roundwisesummaryWithoutGrade.addEventListener('change', toggleQuestionsSection);
 
                     addQuestionBtn.addEventListener('click', function () {
                       const questionItem = document.createElement('div');
