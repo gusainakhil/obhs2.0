@@ -1,10 +1,10 @@
 <?php
 session_start();
-include './includes/connection.php';
-include './includes/helpers.php';
+require_once './includes/connection.php';
+require_once './includes/helpers.php';
 
 // Optional: enable detailed error output in development only
-$debug = true; // set to false in production
+$debug = false; // set to true only in local development
 if ($debug) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -13,125 +13,363 @@ if ($debug) {
 
 // Call reusable login check
 checkLogin();
-checkSubscription($_SESSION['station_id']);
+$station_id = (int) ($_SESSION['station_id'] ?? 0);
+$station_id_text = (string) $station_id;
+$user_id = (int) ($_SESSION['user_id'] ?? 0);
 
-// Now fetch station name
-$station_name = getStationName($_SESSION['station_id']);
-$station_id = $_SESSION['station_id'];
+checkSubscription($station_id);
 
-// Fetch trains from base_fb_target
-$trains = [];
-$train_query = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no ASC";
-$stmt = $mysqli->prepare($train_query);
-$stmt->bind_param("i", $station_id);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $trains[] = $row['train_no'];
+// Dashboard only reads session data; release the lock before heavier DB work.
+if (session_status() === PHP_SESSION_ACTIVE) {
+    session_write_close();
 }
-$stmt->close();
+
+function dashboard_empty_day_counts($ordered_days)
+{
+    $data = [];
+    foreach ($ordered_days as $day) {
+        $data[$day] = 0;
+    }
+
+    return $data;
+}
+
+function dashboard_activity_summary($mysqli, $source, $station_id, $station_id_text, $ordered_days, $week_date_map)
+{
+    $sources = [
+        'attendance' => [
+            'table' => 'base_attendance',
+            'date_column' => 'created_at',
+            'station_type' => 'i',
+        ],
+        'photo' => [
+            'table' => 'base_photo_report',
+            'date_column' => 'created_at',
+            'station_type' => 's',
+        ],
+        'feedback' => [
+            'table' => 'OBHS_passenger',
+            'date_column' => 'created',
+            'station_type' => 's',
+        ],
+    ];
+
+    $summary = [
+        'today' => 0,
+        'month' => 0,
+        'weekly' => dashboard_empty_day_counts($ordered_days),
+    ];
+
+    if (!isset($sources[$source])) {
+        return $summary;
+    }
+
+    $table = $sources[$source]['table'];
+    $date_column = $sources[$source]['date_column'];
+
+    $sql = "
+        SELECT
+            DATE({$date_column}) AS report_date,
+            COUNT(*) AS day_count,
+            SUM(CASE
+                WHEN {$date_column} >= CURDATE()
+                 AND {$date_column} < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+                THEN 1 ELSE 0
+            END) AS today_count,
+            SUM(CASE
+                WHEN {$date_column} >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+                 AND {$date_column} < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+                THEN 1 ELSE 0
+            END) AS month_count
+        FROM {$table}
+        WHERE station_id = ?
+          AND {$date_column} >= DATE_SUB(CURDATE(), INTERVAL 31 DAY)
+          AND {$date_column} < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+        GROUP BY report_date
+        ORDER BY report_date ASC";
+
+    $stmt = $mysqli->prepare($sql);
+    if (!$stmt) {
+        error_log('Dashboard activity prepare failed: ' . $mysqli->error);
+        return $summary;
+    }
+
+    if ($sources[$source]['station_type'] === 'i') {
+        $station_param = $station_id;
+        $stmt->bind_param('i', $station_param);
+    } else {
+        $station_param = $station_id_text;
+        $stmt->bind_param('s', $station_param);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $report_date = $row['report_date'] ?? '';
+        if (isset($week_date_map[$report_date])) {
+            $summary['weekly'][$week_date_map[$report_date]] = (int) $row['day_count'];
+        }
+
+        $summary['today'] += (int) ($row['today_count'] ?? 0);
+        $summary['month'] += (int) ($row['month_count'] ?? 0);
+    }
+
+    $stmt->close();
+
+    return $summary;
+}
+
+function dashboard_feedback_counts($mysqli, $station_id_text)
+{
+    $counts = ['today' => 0, 'month' => 0];
+
+    $sql = "
+        SELECT
+            COUNT(DISTINCT CASE
+                WHEN p.created >= CURDATE()
+                 AND p.created < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+                THEN p.id
+            END) AS today_count,
+            COUNT(DISTINCT CASE
+                WHEN p.created >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+                 AND p.created < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+                THEN p.id
+            END) AS month_count
+        FROM OBHS_feedback f
+        INNER JOIN OBHS_passenger p ON p.id = f.passenger_id
+        WHERE p.station_id = ?
+          AND p.created >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+          AND p.created < DATE_ADD(CURDATE(), INTERVAL 1 DAY)";
+
+    $stmt = $mysqli->prepare($sql);
+    if (!$stmt) {
+        error_log('Dashboard feedback count prepare failed: ' . $mysqli->error);
+        return $counts;
+    }
+
+    $stmt->bind_param('s', $station_id_text);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        $counts['today'] = (int) ($row['today_count'] ?? 0);
+        $counts['month'] = (int) ($row['month_count'] ?? 0);
+    }
+
+    $stmt->close();
+
+    return $counts;
+}
+
+function dashboard_train_activity_counts($mysqli, $station_id, $station_id_text)
+{
+    $counts = ['today' => 0, 'month' => 0];
+
+    $sql = "
+        SELECT
+            COUNT(DISTINCT CASE
+                WHEN event_date >= CURDATE()
+                 AND event_date < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+                THEN train_no
+            END) AS today_count,
+            COUNT(DISTINCT train_no) AS month_count
+        FROM (
+            SELECT train_no COLLATE utf8mb4_unicode_ci AS train_no, created_at AS event_date
+            FROM base_attendance
+            WHERE station_id = ?
+              AND created_at >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+              AND created_at < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+
+            UNION ALL
+
+            SELECT train_no COLLATE utf8mb4_unicode_ci AS train_no, created AS event_date
+            FROM OBHS_passenger
+            WHERE station_id = ?
+              AND created >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+              AND created < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+
+            UNION ALL
+
+            SELECT train_no COLLATE utf8mb4_unicode_ci AS train_no, created_at AS event_date
+            FROM base_photo_report
+            WHERE station_id = ?
+              AND created_at >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+              AND created_at < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+        ) AS all_trains";
+
+    $stmt = $mysqli->prepare($sql);
+    if (!$stmt) {
+        error_log('Dashboard train count prepare failed: ' . $mysqli->error);
+        return $counts;
+    }
+
+    $station_param = $station_id;
+    $passenger_station_param = $station_id_text;
+    $photo_station_param = $station_id_text;
+    $stmt->bind_param('iss', $station_param, $passenger_station_param, $photo_station_param);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        $counts['today'] = (int) ($row['today_count'] ?? 0);
+        $counts['month'] = (int) ($row['month_count'] ?? 0);
+    }
+
+    $stmt->close();
+
+    return $counts;
+}
+
+function dashboard_train_list($mysqli, $station_id_text)
+{
+    $trains = [];
+    $sql = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no ASC";
+    $stmt = $mysqli->prepare($sql);
+    if (!$stmt) {
+        error_log('Dashboard train list prepare failed: ' . $mysqli->error);
+        return $trains;
+    }
+
+    $stmt->bind_param('s', $station_id_text);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $trains[] = $row['train_no'];
+    }
+
+    $stmt->close();
+
+    return $trains;
+}
+
+function dashboard_subscription($mysqli, $user_id)
+{
+    $subscription = [
+        'exists' => false,
+        'is_active' => false,
+        'days_left' => 0,
+        'status_color' => 'red',
+        'status_text' => 'EXPIRED',
+        'end_date_display' => '',
+        'progress_width' => 0,
+    ];
+
+    $sql = "SELECT start_date, end_date FROM OBHS_users WHERE user_id = ? LIMIT 1";
+    $stmt = $mysqli->prepare($sql);
+    if (!$stmt) {
+        error_log('Dashboard subscription prepare failed: ' . $mysqli->error);
+        return $subscription;
+    }
+
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        try {
+            $end_date = new DateTimeImmutable($row['end_date']);
+            $now = new DateTimeImmutable();
+            $days_left = $end_date > $now ? $now->diff($end_date)->days : 0;
+            $is_active = $end_date > $now;
+            $status_color = $days_left > 30 ? 'green' : ($days_left > 0 ? 'amber' : 'red');
+
+            $subscription = [
+                'exists' => true,
+                'is_active' => $is_active,
+                'days_left' => $days_left,
+                'status_color' => $status_color,
+                'status_text' => $is_active ? 'ACTIVE' : 'EXPIRED',
+                'end_date_display' => $end_date->format('d M Y'),
+                'progress_width' => min(100, ($days_left / 365) * 100),
+            ];
+        } catch (Exception $e) {
+            error_log('Dashboard subscription date parse failed: ' . $e->getMessage());
+        }
+    }
+
+    $stmt->close();
+
+    return $subscription;
+}
+
+function dashboard_latest_feedback($mysqli, $station_id_text)
+{
+    $feedback = [];
+    $sql = "
+        SELECT train_no, name, pnr_number, ph_number, created AS created_at
+        FROM OBHS_passenger
+        WHERE station_id = ?
+        ORDER BY created DESC
+        LIMIT 5";
+
+    $stmt = $mysqli->prepare($sql);
+    if (!$stmt) {
+        error_log('Dashboard latest feedback prepare failed: ' . $mysqli->error);
+        return $feedback;
+    }
+
+    $stmt->bind_param('s', $station_id_text);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $feedback[] = $row;
+    }
+
+    $stmt->close();
+
+    return $feedback;
+}
+
+function dashboard_chart_rows($ordered_days, $data)
+{
+    $rows = [];
+    foreach ($ordered_days as $day) {
+        $rows[] = [$day, isset($data[$day]) ? (int) $data[$day] : 0];
+    }
+
+    return $rows;
+}
+
+$station_name = getStationName($station_id);
+$station_name_safe = htmlspecialchars($station_name, ENT_QUOTES, 'UTF-8');
+$station_name = $station_name_safe;
+
+$ordered_days = [];
+$week_date_map = [];
+$today = new DateTimeImmutable('today');
+for ($i = 6; $i >= 0; $i--) {
+    $date = $today->modify("-{$i} days");
+    $day_name = $date->format('D');
+    $ordered_days[] = $day_name;
+    $week_date_map[$date->format('Y-m-d')] = $day_name;
+}
+
+$trains = dashboard_train_list($mysqli, $station_id_text);
 $total_trains = count($trains);
 
-// Fetch weekly attendance count for the last 7 days
-$attendance_data = [];
-$days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+$attendance_summary = dashboard_activity_summary($mysqli, 'attendance', $station_id, $station_id_text, $ordered_days, $week_date_map);
+$photo_summary = dashboard_activity_summary($mysqli, 'photo', $station_id, $station_id_text, $ordered_days, $week_date_map);
+$feedback_summary = dashboard_activity_summary($mysqli, 'feedback', $station_id, $station_id_text, $ordered_days, $week_date_map);
 
-// Initialize array with 0 for each day
-foreach ($days as $day) {
-    $attendance_data[$day] = 0;
-}
+$attendance_data = $attendance_summary['weekly'];
+$photo_data = $photo_summary['weekly'];
+$feedback_data = $feedback_summary['weekly'];
 
-// Get attendance count grouped by day of week for the last 7 days
-$attendance_query = "SELECT DATE(created_at) as date, DATE_FORMAT(created_at, '%a') as day_name, COUNT(*) as count 
-                     FROM base_attendance 
-                     WHERE station_id = ? 
-                     AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-                     GROUP BY DATE(created_at)
-                     ORDER BY date ASC";
-$stmt = $mysqli->prepare($attendance_query);
-$stmt->bind_param("i", $station_id);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $attendance_data[$row['day_name']] = (int)$row['count'];
-}
-$stmt->close();
+$today_attendance = $attendance_summary['today'];
+$month_attendance = $attendance_summary['month'];
+$today_photos = $photo_summary['today'];
+$month_photos = $photo_summary['month'];
+$counts = dashboard_feedback_counts($mysqli, $station_id_text);
+$train_counts = dashboard_train_activity_counts($mysqli, $station_id, $station_id_text);
+$subscription = dashboard_subscription($mysqli, $user_id);
+$latest_feedback = dashboard_latest_feedback($mysqli, $station_id_text);
 
-// Fetch weekly photo report count for the last 7 days
-$photo_data = [];
-
-// Initialize array with 0 for each day
-foreach ($days as $day) {
-    $photo_data[$day] = 0;
-}
-
-// Get photo report count grouped by day of week for the last 7 days
-$photo_query = "SELECT DATE(created_at) as date, DATE_FORMAT(created_at, '%a') as day_name, COUNT(*) as count 
-                FROM base_photo_report 
-                WHERE station_id = ? 
-                AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-                GROUP BY DATE(created_at)
-                ORDER BY date ASC";
-$stmt = $mysqli->prepare($photo_query);
-$stmt->bind_param("i", $station_id);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $photo_data[$row['day_name']] = (int)$row['count'];
-}
-$stmt->close();
-
-// Fetch cleanliness pics count for TODAY and THIS MONTH
-$today_photos = 0;
-$month_photos = 0;
-
-// Get today's count
-$today_query = "SELECT COUNT(*) as count FROM base_photo_report WHERE station_id = ? AND DATE(created_at) = CURDATE()";
-$stmt = $mysqli->prepare($today_query);
-$stmt->bind_param("i", $station_id);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $today_photos = (int)$row['count'];
-}
-$stmt->close();
-
-// Get this month's count
-$month_query = "SELECT COUNT(*) as count FROM base_photo_report WHERE station_id = ? AND MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())";
-$stmt = $mysqli->prepare($month_query);
-$stmt->bind_param("i", $station_id);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $month_photos = (int)$row['count'];
-}
-$stmt->close();
-
-// Fetch attendance count for TODAY and THIS MONTH
-$today_attendance = 0;
-$month_attendance = 0;
-
-// Get today's attendance count
-$today_att_query = "SELECT COUNT(*) as count FROM base_attendance WHERE station_id = ? AND DATE(created_at) = CURDATE()";
-$stmt = $mysqli->prepare($today_att_query);
-$stmt->bind_param("i", $station_id);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $today_attendance = (int)$row['count'];
-}
-$stmt->close();
-
-// Get this month's attendance count
-$month_att_query = "SELECT COUNT(*) as count FROM base_attendance WHERE station_id = ? AND MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())";
-$stmt = $mysqli->prepare($month_att_query);
-$stmt->bind_param("i", $station_id);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $month_attendance = (int)$row['count'];
-}
-$stmt->close();
+$attendance_chart_rows = dashboard_chart_rows($ordered_days, $attendance_data);
+$photo_chart_rows = dashboard_chart_rows($ordered_days, $photo_data);
+$feedback_chart_rows = dashboard_chart_rows($ordered_days, $feedback_data);
 
 ?>
 
@@ -144,7 +382,7 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - <?php echo $station_name; ?> </title>
+    <title>Home - <?php echo $station_name_safe; ?> </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -191,16 +429,16 @@ $stmt->close();
     <!-- Mobile Sidebar Overlay -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
     <!-- sidebar  -->
-   <?php 
-   require_once 'includes/sidebar.php'
+   <?php
+   require_once 'includes/sidebar.php';
    ?>
 
     <!-- Main Content -->
     <div class="lg:ml-64 min-h-screen">
 
         <!-- Top Navigation Bar -->
-       <?php 
-       require_once 'includes/header.php'
+       <?php
+       require_once 'includes/header.php';
        ?>
 
 
@@ -230,7 +468,7 @@ $stmt->close();
                             <div class="flex items-center justify-between gap-2">
                                 <div class="text-center">
                                     <p class="text-[10px] text-gray-500 font-semibold mb-0.5">TODAY</p>
-                                    <p class="text-xl font-bold text-gray-900 leading-tight"><?php $counts = feedback_count(); echo $counts['today']; ?></p>
+                                    <p class="text-xl font-bold text-gray-900 leading-tight"><?php echo $counts['today']; ?></p>
                                 </div>
                                 <div class="text-center">
                                     <p class="text-[10px] text-gray-500 font-semibold mb-0.5">THIS MONTH</p>
@@ -299,11 +537,11 @@ $stmt->close();
                             <div class="flex items-center justify-between gap-2">
                                 <div class="text-center">
                                     <p class="text-[10px] text-gray-500 font-semibold mb-0.5">TODAY</p>
-                                    <p class="text-xl font-bold text-gray-900 leading-tight"><?php echo train_today_count($_SESSION['station_id']); ?></p>
+                                    <p class="text-xl font-bold text-gray-900 leading-tight"><?php echo $train_counts['today']; ?></p>
                                 </div>
                                 <div class="text-center">
                                     <p class="text-[10px] text-gray-500 font-semibold mb-0.5">THIS MONTH</p>
-                                    <p class="text-xl font-bold text-gray-900 leading-tight"><?php echo train_month_count($_SESSION['station_id']); ?></p>
+                                    <p class="text-xl font-bold text-gray-900 leading-tight"><?php echo $train_counts['month']; ?></p>
                                 </div>
                             </div>
                         </div>
@@ -323,22 +561,7 @@ $stmt->close();
                     </div>
                     
                     <div class="space-y-3">
-                        <?php
-                        $subscription_query = "SELECT start_date, end_date FROM OBHS_users WHERE user_id = ?";
-                        $stmt = $mysqli->prepare($subscription_query);
-                        $stmt->bind_param("i", $_SESSION['user_id']);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        
-                        if ($row = $result->fetch_assoc()) {
-                            $end_date = new DateTime($row['end_date']);
-                            $today = new DateTime();
-                            $days_left = $end_date > $today ? $today->diff($end_date)->days : 0;
-                            $is_active = $end_date > $today;
-                            $status_color = $days_left > 30 ? 'green' : ($days_left > 0 ? 'amber' : 'red');
-                            $status_text = $is_active ? 'ACTIVE' : 'EXPIRED';
-                        
-                        if (!$is_active): ?>
+                        <?php if (!$subscription['exists'] || !$subscription['is_active']): ?>
                         <!-- Expired Subscription View -->
                         <div class="flex flex-col items-center justify-center p-6 bg-red-50 rounded-lg border border-red-200">
                             <i class="fas fa-exclamation-circle text-5xl text-red-500 mb-3"></i>
@@ -350,29 +573,26 @@ $stmt->close();
                         <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
                             <div>
                                 <p class="text-xs text-slate-500 font-medium">Status</p>
-                                <p class="text-lg font-bold text-<?php echo $status_color; ?>-600"><?php echo $status_text; ?></p>
+                                <p class="text-lg font-bold text-<?php echo $subscription['status_color']; ?>-600"><?php echo $subscription['status_text']; ?></p>
                             </div>
-                            <i class="fas fa-check-circle text-2xl text-<?php echo $status_color; ?>-500"></i>
+                            <i class="fas fa-check-circle text-2xl text-<?php echo $subscription['status_color']; ?>-500"></i>
                         </div>
-                        
+
                         <div class="grid grid-cols-2 gap-2 text-sm">
                             <div class="p-2 bg-slate-50 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500">Days Left</p>
-                                <p class="text-xl font-bold text-slate-800"><?php echo $days_left; ?></p>
+                                <p class="text-xl font-bold text-slate-800"><?php echo $subscription['days_left']; ?></p>
                             </div>
                             <div class="p-2 bg-slate-50 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500">Expires</p>
-                                <p class="font-semibold text-slate-800"><?php echo $end_date->format('d M Y'); ?></p>
+                                <p class="font-semibold text-slate-800"><?php echo htmlspecialchars($subscription['end_date_display'], ENT_QUOTES, 'UTF-8'); ?></p>
                             </div>
                         </div>
-                        
+
                         <div class="w-full bg-slate-200 rounded-full h-1.5">
-                            <div class="bg-<?php echo $status_color; ?>-500 h-full rounded-full" style="width: <?php echo min(100, ($days_left / 365) * 100); ?>%"></div>
+                            <div class="bg-<?php echo $subscription['status_color']; ?>-500 h-full rounded-full" style="width: <?php echo $subscription['progress_width']; ?>%"></div>
                         </div>
-                        <?php endif;
-                        }
-                        $stmt->close();
-                        ?>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -383,34 +603,21 @@ $stmt->close();
                         <h2 class="text-sm font-semibold text-slate-700">Latest Feedback </h2>
                     </div>
                     <div class="space-y-3 max-h-48 overflow-y-auto">
-                        <?php 
-                        $feedback_query = "SELECT train_no, name, Pnr_number, ph_number, created_at FROM OBHS_passenger WHERE station_id = ? ORDER BY created_at DESC LIMIT 5";
-                        $stmt = $mysqli->prepare($feedback_query);
-                        $stmt->bind_param("i", $station_id);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        
-                        if ($result->num_rows > 0):
-                            while ($row = $result->fetch_assoc()): 
-                        ?>
+                        <?php if (count($latest_feedback) > 0): ?>
+                            <?php foreach ($latest_feedback as $row): ?>
                         <div class="flex items-center justify-between py-2 border-b border-slate-100">
                             <div>
-                                <p class="text-blue-500 font-semibold text-sm mb-1"><?php echo htmlspecialchars($row['name']) . " - " . $row['ph_number'];  ?> </p>
-                                <p class="text-slate-600 text-xs">PNR: <span class="font-bold text-slate-800"><?php echo($row['Pnr_number'])." - ".($row['train_no']);  ?></span></p>
+                                <p class="text-blue-500 font-semibold text-sm mb-1"><?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . " - " . htmlspecialchars($row['ph_number'], ENT_QUOTES, 'UTF-8'); ?> </p>
+                                <p class="text-slate-600 text-xs">PNR: <span class="font-bold text-slate-800"><?php echo htmlspecialchars($row['pnr_number'], ENT_QUOTES, 'UTF-8') . " - " . htmlspecialchars($row['train_no'], ENT_QUOTES, 'UTF-8'); ?></span></p>
                             </div>
                             <div class="text-xs text-blue-400"><?php echo date('m/d/Y', strtotime($row['created_at'])); ?></div>
                         </div>
-                        <?php 
-                            endwhile;
-                        else:
-                        ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
                         <div class="text-center py-4 text-slate-500 text-sm">
                             No feedback yet
                         </div>
-                        <?php 
-                        endif;
-                        $stmt->close();
-                        ?>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -467,42 +674,11 @@ $stmt->close();
                     </div>
                     <div id="cleanlinessChart" style="width: 100%; height: 200px;"></div>
                 </div>
-               
-
-                <?php
-                // Fetch weekly feedback count for the last 7 days
-                $feedback_data = [];
-                foreach ($days as $day) {
-                    $feedback_data[$day] = 0;
-                }
-
-                // Get feedback count grouped by actual date for the last 7 days (ending today)
-                $feedback_query = "SELECT DATE(created_at) as date, DATE_FORMAT(created_at, '%a') as day_name, COUNT(*) as count 
-                                   FROM OBHS_passenger 
-                                   WHERE station_id = ? 
-                                   AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-                                   GROUP BY DATE(created_at)
-                                   ORDER BY date ASC";
-                $stmt = $mysqli->prepare($feedback_query);
-                $stmt->bind_param("i", $station_id);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                while ($row = $result->fetch_assoc()) {
-                    $feedback_data[$row['day_name']] = (int)$row['count'];
-                }
-                $stmt->close();
-                // Build ordered days: last 7 days ending today (oldest to newest)
-                $ordered_days = [];
-                for ($i = 6; $i >= 0; $i--) {
-                    $ordered_days[] = date('D', strtotime("-{$i} day")); // e.g., Sat, Sun, Mon, ... Today
-                }
-                ?>
-
             </div>
 
             <!-- Footer -->
            <?php
-            require_once 'includes/footer.php'
+            require_once 'includes/footer.php';
            ?>
 
         </main>
@@ -522,9 +698,7 @@ $stmt->close();
 
         // Weekly Cleanliness Photos Count Chart
         function drawCleanlinessChart() {
-            var rows = <?php echo json_encode(array_map(function($d) use ($photo_data) {
-                return [$d, isset($photo_data[$d]) ? (int)$photo_data[$d] : 0];
-            }, $ordered_days)); ?>;
+            var rows = <?php echo json_encode($photo_chart_rows); ?>;
 
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Day');
@@ -557,9 +731,7 @@ $stmt->close();
 
         // Weekly Attendance Count Chart
         function drawAttendanceChart() {
-            var rows = <?php echo json_encode(array_map(function($d) use ($attendance_data) {
-                return [$d, isset($attendance_data[$d]) ? (int)$attendance_data[$d] : 0];
-            }, $ordered_days)); ?>;
+            var rows = <?php echo json_encode($attendance_chart_rows); ?>;
 
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Day');
@@ -592,9 +764,7 @@ $stmt->close();
 
         // Weekly Feedback Count Chart
         function drawFeedbackChart() {
-            var rows = <?php echo json_encode(array_map(function($d) use ($feedback_data) {
-                return [$d, isset($feedback_data[$d]) ? (int)$feedback_data[$d] : 0];
-            }, $ordered_days)); ?>;
+            var rows = <?php echo json_encode($feedback_chart_rows); ?>;
 
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Day');
@@ -626,8 +796,10 @@ $stmt->close();
         }
 
         // Redraw charts on window resize for responsiveness
+        let resizeTimer;
         window.addEventListener('resize', function () {
-            drawCharts();
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(drawCharts, 150);
         });
 
         // Mobile Sidebar Toggle
@@ -636,20 +808,22 @@ $stmt->close();
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const closeSidebar = document.getElementById('closeSidebar');
 
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.remove('-translate-x-full');
-            sidebarOverlay.classList.remove('hidden');
-        });
+        if (menuToggle && sidebar && sidebarOverlay && closeSidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+            });
 
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
-        });
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
 
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
-        });
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
+        }
     </script>
 
 </body>

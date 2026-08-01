@@ -271,7 +271,7 @@ function getAllFeedbackDetails($train_no, $grade, $from_date, $to_date, $coach_t
 
         // Build headers
         $headers = ['SR.', 'Date', 'Seat No', 'Coach No', 'Customer Name', 'PNR No'];
-        if ($_SESSION['station_id'] != 16) {
+        if ($_SESSION['station_id'] != 16 && $_SESSION['station_id'] != 23 && $_SESSION['station_id'] != 25) {
             $headers[] = 'Phone';
         }
         $headers = array_merge($headers, ['Train No', 'Grade']);
@@ -317,13 +317,13 @@ function getAllFeedbackDetails($train_no, $grade, $from_date, $to_date, $coach_t
                         
                         echo '<tr>';
                         echo '<td>' . $sr . '</td>';
-                        echo '<td>' . (($_SESSION['station_id'] == 16 || $_SESSION['station_id'] == 23 || $_SESSION['station_id'] == 25) ? date('d/m/Y', strtotime($pd['created'])) : date('d/m/Y H:i', strtotime($pd['created']))) . '</td>';
+                        echo '<td>' . (($_SESSION['station_id'] == 16 || $_SESSION['station_id']==33 || $_SESSION['station_id'] == 23 || $_SESSION['station_id'] == 25) ? date('d/m/Y', strtotime($pd['created'])) : date('d/m/Y H:i', strtotime($pd['created']))) . '</td>';
                         echo '<td>' . htmlspecialchars($pd['seat_no']) . '</td>';
                         echo '<td>' . htmlspecialchars($pd['coach_no']) . '</td>';
                         echo '<td>' . htmlspecialchars($pd['name']) . '</td>';
                         echo '<td>' . htmlspecialchars($pd['pnr_number']) . '</td>';
                         
-                        if ($_SESSION['station_id'] != 16) {
+                        if ($_SESSION['station_id'] != 16  && $_SESSION['station_id'] != 23 && $_SESSION['station_id'] != 25) {
                             echo '<td>' . htmlspecialchars($pd['ph_number']) . '</td>';
                         }
                         
