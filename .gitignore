@@ -1,1 +1,20 @@
 .DS_Store
+# =========================
+# Audit Reports
+# =========================
+
+PERFORMANCE_AUDIT_REPORT.md
+DATABASE_AUDIT.md
+SQL_OPTIMIZATION_REPORT.md
+PHP_CODE_REVIEW.md
+SECURITY_AUDIT.md
+ARCHITECTURE_REVIEW.md
+PERFORMANCE_IMPROVEMENT_PLAN.md
+FINAL_SUMMARY.md
+
+# Ignore all markdown files inside audit folders
+audit/
+reports/
+docs/audit/
+**/audit/*.md
+**/reports/*.md
