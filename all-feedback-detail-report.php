@@ -503,7 +503,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
                                     echo "<tr>";
                                     echo "<td>{$sr}</td>";
-                                    echo "<td>" . ($_SESSION['station_id'] == 16 || $_SESSION['station_id'] == 23 || $_SESSION['station_id'] == 25 ? date('d/m/Y', strtotime($pd['feedback_date'])) : date('d/m/Y H:i:s', strtotime($pd['feedback_date']))) . "</td>";
+                                    echo "<td>" . ($_SESSION['station_id'] == 16 || $_SESSION['station_id'] == 23 || $_SESSION['station_id'] == 25 || $_SESSION['station_id'] == 33 ? date('d/m/Y', strtotime($pd['feedback_date'])) : date('d/m/Y H:i:s', strtotime($pd['feedback_date']))) . "</td>";
                                     echo "<td>{$pd['seat_no']}</td>";
                                     echo "<td>{$pd['coach_no']}</td>";
                                     echo "<td><a href='employee-card.php?passenger_id={$pd['passenger_id']}"
@@ -520,7 +520,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                         . "{$pd['name']}</a></td>";
                                        
                                     echo "<td>{$pd['pnr_number']}</td>";
-                                     if ($_SESSION['station_id'] != 16) {
+                                     if ($_SESSION['station_id'] != 16  && $_SESSION['station_id'] != 23 && $_SESSION['station_id'] != 25) {
                                             echo "  <td>{$pd['ph_number']}</td>";
                                         }
                                     echo "<td>{$pd['train_no']}</td>";
