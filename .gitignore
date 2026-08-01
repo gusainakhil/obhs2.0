@@ -17,4 +17,4 @@ audit/
 reports/
 docs/audit/
 **/audit/*.md
-**/reports/*.md
+**/reports/*.md*.md
