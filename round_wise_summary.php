@@ -1,10 +1,10 @@
 <?php
 session_start();
-include './includes/connection.php';
-include './includes/helpers.php';
+require_once './includes/connection.php';
+require_once './includes/helpers.php';
 
 // Optional: enable detailed error output in development only
-$debug = true; // set to false in production
+$debug = false; // set to true only in local development
 if ($debug) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -14,8 +14,118 @@ if ($debug) {
 // Call reusable login check
 checkLogin();
 
-// Now fetch station name
-$station_name = getStationName($_SESSION['station_id']);
+$station_id = (int) ($_SESSION['station_id'] ?? 0);
+$station_id_text = (string) $station_id;
+$station_name = getStationName($station_id);
+
+function roundWiseEscape($value)
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
+
+function roundWiseFetchTrainOptions($mysqli, $station_id)
+{
+    $trains = [];
+    $sql = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no ASC";
+    $stmt = $mysqli->prepare($sql);
+
+    if (!$stmt) {
+        error_log('Round-wise train list prepare failed: ' . $mysqli->error);
+        return $trains;
+    }
+
+    $stmt->bind_param("s", $station_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $trains[] = $row['train_no'];
+    }
+
+    $stmt->close();
+
+    return $trains;
+}
+
+function roundWiseEmptyCoachData()
+{
+    return [
+        'ac' => 0,
+        'non_ac' => 0,
+        'total' => 0,
+        'feed_ac' => 0,
+        'feed_non_ac' => 0,
+        'tte' => 0,
+        'total_feed' => 0,
+    ];
+}
+
+function roundWiseEmptyAchievedData()
+{
+    return [
+        'ac_achived_coaches' => 0,
+        'non_ac_achived_coaches' => 0,
+        'distinct_coach' => 0,
+        'ac' => 0,
+        'non_ac' => 0,
+        'tte' => 0,
+        'ac_non_ac' => 0,
+        'total' => 0,
+    ];
+}
+
+function roundWisePercentage($train_no, $from_date, $to_date, $coach_type, $grade)
+{
+    if ($train_no === '') {
+        return ['avg_percentage' => 0];
+    }
+
+    return calculateCoachWisePercentage($train_no, $from_date, $to_date, $coach_type, $grade);
+}
+
+function roundWiseBuildTrainSummary($train_no, $from_date, $to_date, $grade)
+{
+    $coach = $train_no !== '' ? get_coach_count($train_no) : false;
+    $achieve = $train_no !== '' ? acheived_feedback($train_no, $from_date, $to_date, $grade) : false;
+
+    $coach = array_merge(roundWiseEmptyCoachData(), is_array($coach) ? $coach : []);
+    $achieve = array_merge(roundWiseEmptyAchievedData(), is_array($achieve) ? $achieve : []);
+
+    $ac = roundWisePercentage($train_no, $from_date, $to_date, 'AC', $grade);
+    $non_ac = roundWisePercentage($train_no, $from_date, $to_date, 'NON-AC', $grade);
+    $tte = roundWisePercentage($train_no, $from_date, $to_date, 'TTE', $grade);
+
+    $ac_total = (int) $coach['ac'];
+    $non_ac_total = (int) $coach['non_ac'];
+    $ac_feed_total = $ac_total * (int) $coach['feed_ac'];
+    $non_ac_feed_total = $non_ac_total * (int) $coach['feed_non_ac'];
+    $tte_total = (int) $coach['tte'];
+
+    $final_psi = calculateFinalPSI([
+        ['total' => $ac_total, 'percent' => $ac['avg_percentage']],
+        ['total' => $non_ac_total, 'percent' => $non_ac['avg_percentage']],
+        ['total' => $tte_total, 'percent' => $tte['avg_percentage']],
+    ]);
+
+    return [
+        'coach' => $coach,
+        'achieve' => $achieve,
+        'ac_total' => $ac_total,
+        'non_ac_total' => $non_ac_total,
+        'ac_feed_total' => $ac_feed_total,
+        'non_ac_feed_total' => $non_ac_feed_total,
+        'tte_total' => $tte_total,
+        'total_target' => (int) $coach['total_feed'] + $tte_total,
+        'total_achieved' => (int) $achieve['tte'] + (int) $achieve['ac_non_ac'],
+        'final_psi' => $final_psi,
+    ];
+}
+
+$train_options = roundWiseFetchTrainOptions($mysqli, $station_id_text);
+
+if (session_status() === PHP_SESSION_ACTIVE) {
+    session_write_close();
+}
 
 ?>
 <!DOCTYPE html>
@@ -125,7 +235,7 @@ $station_name = getStationName($_SESSION['station_id']);
         </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Round-Wise Summary - <?php echo $station_name ?></title>
+    <title>Round-Wise Summary - <?php echo roundWiseEscape($station_name) ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -177,60 +287,31 @@ $station_name = getStationName($_SESSION['station_id']);
                         </select>
                     </div>
 
-                    <?php
-                    // Fetch train numbers for UP select 
-                    $train_query = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no ASC";
-                    $stmt = $mysqli->prepare($train_query);
-                    $stmt->bind_param("i", $_SESSION['station_id']);
-                    $stmt->execute();
-                    $train_result = $stmt->get_result();
-                    ?>
-                    <div class=""> 
+                    <div class="">
                         <!-- filter-group -->
                         <label for="upFilter">UP</label>
                         <select id="upFilter" name="up" class="filter-select">
                             <option value="">-- All --</option>
                             <?php
-                            $first = true;
-                            while ($train = $train_result->fetch_assoc()) {
-                                $tn = $train['train_no'];
-                                if (isset($_GET['up'])) {
-                                    $selected = ($_GET['up'] == $tn) ? 'selected' : '';
-                                } else {
-                                    $selected = $first ? 'selected' : '';
-                                }
-                                echo '<option value="' . htmlspecialchars($tn) . '" ' . $selected . '>' . htmlspecialchars($tn) . '</option>';
-                                $first = false;
+                            $selected_up = $_GET['up'] ?? ($train_options[0] ?? '');
+                            foreach ($train_options as $tn) {
+                                $selected = ((string) $selected_up === (string) $tn) ? 'selected' : '';
+                                echo '<option value="' . roundWiseEscape($tn) . '" ' . $selected . '>' . roundWiseEscape($tn) . '</option>';
                             }
-                            $stmt->close();
                             ?>
                         </select>
                     </div>
 
-                    <?php
-                    // Fetch train numbers for DOWN select (same query; keep separate to reset result pointer)
-                    $stmt_down = $mysqli->prepare($train_query);
-                    $stmt_down->bind_param("i", $_SESSION['station_id']);
-                    $stmt_down->execute();
-                    $train_result_down = $stmt_down->get_result();
-                    ?>
                     <div class="">
                         <label for="downFilter">Down</label>
                         <select id="downFilter" name="down" class="filter-select">
                             <option value="">-- All --</option>
                             <?php
-                            $first_down = true;
-                            while ($train_down = $train_result_down->fetch_assoc()) {
-                                $tn = $train_down['train_no'];
-                                if (isset($_GET['down'])) {
-                                    $selected = ($_GET['down'] == $tn) ? 'selected' : '';
-                                } else {
-                                    $selected = $first_down ? 'selected' : '';
-                                }
-                                echo '<option value="' . htmlspecialchars($tn) . '" ' . $selected . '>' . htmlspecialchars($tn) . '</option>';
-                                $first_down = false;
+                            $selected_down = $_GET['down'] ?? ($train_options[0] ?? '');
+                            foreach ($train_options as $tn) {
+                                $selected = ((string) $selected_down === (string) $tn) ? 'selected' : '';
+                                echo '<option value="' . roundWiseEscape($tn) . '" ' . $selected . '>' . roundWiseEscape($tn) . '</option>';
                             }
-                            $stmt_down->close();
                             ?>
                         </select>
                     </div>
@@ -238,13 +319,13 @@ $station_name = getStationName($_SESSION['station_id']);
                     <div class="">
                         <label for="fromDate">From</label>
                         <input type="date" id="fromDate" name="from_date" class="filter-input"
-                            value="<?php echo isset($_GET['from_date']) ? htmlspecialchars($_GET['from_date']) : date('Y-m-d'); ?>">
+                            value="<?php echo isset($_GET['from_date']) ? roundWiseEscape($_GET['from_date']) : date('Y-m-d'); ?>">
                     </div>
 
                     <div class="">
                         <label for="toDate">To</label>
                         <input type="date" id="toDate" name="to_date" class="filter-input"
-                            value="<?php echo isset($_GET['to_date']) ? htmlspecialchars($_GET['to_date']) : date('Y-m-d'); ?>">
+                            value="<?php echo isset($_GET['to_date']) ? roundWiseEscape($_GET['to_date']) : date('Y-m-d'); ?>">
                     </div>
 
                     <div class="filter-group" style="flex-shrink: 0;">
@@ -344,15 +425,23 @@ $station_name = getStationName($_SESSION['station_id']);
                             window.URL.revokeObjectURL(url);
                         }
 
-                        document.getElementById('printButton').addEventListener('click', function() {
-                            window.print();
-                        });
+                        const printButton = document.getElementById('printButton');
+                        if (printButton) {
+                            printButton.addEventListener('click', function() {
+                                window.print();
+                            });
+                        }
 
-                        document.getElementById('excelButton').addEventListener('click', function() {
-                            exportToExcel();
-                        });
+                        const excelButton = document.getElementById('excelButton');
+                        if (excelButton) {
+                            excelButton.addEventListener('click', function() {
+                                exportToExcel();
+                            });
+                        }
 
-                        document.getElementById('downloadAllButton').addEventListener('click', function() {
+                        const downloadAllButton = document.getElementById('downloadAllButton');
+                        if (downloadAllButton) {
+                            downloadAllButton.addEventListener('click', function() {
                             // Get current filter values
                             const urlParams = new URLSearchParams(window.location.search);
                             const params = new URLSearchParams({
@@ -368,11 +457,13 @@ $station_name = getStationName($_SESSION['station_id']);
                                 alert('Please submit the form first to generate reports!');
                                 return;
                             }
-                            
-                            window.open('download-all-reports-pdf.php?' + params.toString(), '_blank');
-                        });
-                        
-                        document.getElementById('downloadAllExcelButton').addEventListener('click', function() {
+                                window.open('download-all-reports-pdf.php?' + params.toString(), '_blank');
+                            });
+                        }
+
+                        const downloadAllExcelButton = document.getElementById('downloadAllExcelButton');
+                        if (downloadAllExcelButton) {
+                            downloadAllExcelButton.addEventListener('click', function() {
                             // Get current filter values
                             const urlParams = new URLSearchParams(window.location.search);
                             const params = new URLSearchParams({
@@ -388,9 +479,9 @@ $station_name = getStationName($_SESSION['station_id']);
                                 alert('Please submit the form first to generate reports!');
                                 return;
                             }
-                            
-                            window.open('download-all-reports-excel.php?' + params.toString(), '_blank');
-                        });
+                                window.open('download-all-reports-excel.php?' + params.toString(), '_blank');
+                            });
+                        }
                     </script>
 
                     <div class="export-buttons"
@@ -403,23 +494,39 @@ $station_name = getStationName($_SESSION['station_id']);
 
             <?php
             if (isset($_GET['from_date']) && isset($_GET['to_date'])) {
-                $from_date = htmlspecialchars($_GET['from_date']);
-                $to_date = htmlspecialchars($_GET['to_date']);
-                $grade = $_GET['grade'];
-                $station_id = $_SESSION['station_id'];
-                $up = $_GET['up'];
-                $down = $_GET['down'];
+                $from_date = (string) ($_GET['from_date'] ?? '');
+                $to_date = (string) ($_GET['to_date'] ?? '');
+                $grade = (string) ($_GET['grade'] ?? '');
+                $up = (string) ($_GET['up'] ?? '');
+                $down = (string) ($_GET['down'] ?? '');
 
-                // normalize datetimes to include time portion
-                // $from_datetime = $from_date . ' 00:00:00';
-                // $to_datetime   = $to_date   . ' 23:59:59';
-            
-                // ensure variables are defined
-                $grade = isset($grade) ? $grade : '';
-                $up = isset($up) ? $up : '';
-                $down = isset($down) ? $down : '';
+                $upSummary = roundWiseBuildTrainSummary($up, $from_date, $to_date, $grade);
+                $downSummary = roundWiseBuildTrainSummary($down, $from_date, $to_date, $grade);
 
+                $upCoach = $upSummary['coach'];
+                $upAchieve = $upSummary['achieve'];
+                $downCoach = $downSummary['coach'];
+                $downAchieve = $downSummary['achieve'];
 
+                $up_ac_total = $upSummary['ac_total'];
+                $up_non_ac_total = $upSummary['non_ac_total'];
+                $up_ac_feed_total = $upSummary['ac_feed_total'];
+                $up_non_ac_feed_total = $upSummary['non_ac_feed_total'];
+                $up_tte_total = $upSummary['tte_total'];
+                $up_total_target = $upSummary['total_target'];
+                $up_total_achieved = $upSummary['total_achieved'];
+                $upFinalPSI = $upSummary['final_psi'];
+
+                $down_ac_total = $downSummary['ac_total'];
+                $down_non_ac_total = $downSummary['non_ac_total'];
+                $down_ac_feed_total = $downSummary['ac_feed_total'];
+                $down_non_ac_feed_total = $downSummary['non_ac_feed_total'];
+                $down_tte_total = $downSummary['tte_total'];
+                $down_total_target = $downSummary['total_target'];
+                $down_total_achieved = $downSummary['total_achieved'];
+                $downFinalPSI = $downSummary['final_psi'];
+
+                $up_down_PSI = number_format(($upFinalPSI + $downFinalPSI) / 2, 2);
             } else {
                 echo '<p> </p>';
                 exit();
@@ -428,12 +535,12 @@ $station_name = getStationName($_SESSION['station_id']);
             ?>
             <!-- Summary Information -->
             <div class="summary-header" style="text-align: center;">
-                Station: <?php echo $station_name ?> &nbsp;&nbsp;|&nbsp;&nbsp; UP: <?php echo $up ?>
-                &nbsp;&nbsp;|&nbsp;&nbsp; Down: <?php echo $down ?>
+                Station: <?php echo roundWiseEscape($station_name) ?> &nbsp;&nbsp;|&nbsp;&nbsp; UP: <?php echo roundWiseEscape($up) ?>
+                &nbsp;&nbsp;|&nbsp;&nbsp; Down: <?php echo roundWiseEscape($down) ?>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
-                From: <span id="displayFrom"><?php echo $from_date ?></span> &nbsp;&nbsp;|&nbsp;&nbsp;
-                To: <span id="displayTo"><?php echo $to_date ?></span> &nbsp;&nbsp;|&nbsp;&nbsp;
-                Grade: <span class="grade-badge"><?php echo $grade ?> </span>
+                From: <span id="displayFrom"><?php echo roundWiseEscape($from_date) ?></span> &nbsp;&nbsp;|&nbsp;&nbsp;
+                To: <span id="displayTo"><?php echo roundWiseEscape($to_date) ?></span> &nbsp;&nbsp;|&nbsp;&nbsp;
+                Grade: <span class="grade-badge"><?php echo roundWiseEscape($grade) ?> </span>
             </div>
 
             <div class="summary-info" id="summaryInfo">
@@ -475,171 +582,44 @@ $station_name = getStationName($_SESSION['station_id']);
                 </tr>
             </thead>
                     
-                    <?php
-                    
-                    $upCoach   = get_coach_count($up);
-                    $upAchieve = acheived_feedback($up, $from_date, $to_date, $grade);
-                    
-                    $up_ac_total        = $upCoach['ac'];
-                    $up_non_ac_total    = $upCoach['non_ac'];
-                    $up_ac_feed_total   = $upCoach['ac'] * $upCoach['feed_ac'];
-                    $up_non_ac_feed_total = $upCoach['non_ac'] * $upCoach['feed_non_ac'];
-                    $up_tte_total       = $upCoach['tte'];
-                    
-                    $up_total_target    = $upCoach['total_feed'] + $upCoach['tte'];
-                    $up_total_achieved  = $upAchieve['tte'] + $upAchieve['ac_non_ac'];
-                    
-                    
-                    $downCoach   = get_coach_count($down);
-                    $downAchieve = acheived_feedback($down, $from_date, $to_date, $grade);
-                    
-                    $down_ac_total        = $downCoach['ac'];
-                    $down_non_ac_total    = $downCoach['non_ac'];
-                    $down_ac_feed_total   = $downCoach['ac'] * $downCoach['feed_ac'];
-                    $down_non_ac_feed_total = $downCoach['non_ac'] * $downCoach['feed_non_ac'];
-                    $down_tte_total       = $downCoach['tte'];
-                    
-                    $down_total_target    = $downCoach['total_feed'] + $downCoach['tte'];
-                    $down_total_achieved  = $downAchieve['tte'] + $downAchieve['ac_non_ac'];
-                    
-                    $up_ac  = calculateCoachWisePercentage($up, $from_date, $to_date, 'AC', $grade);
-                    $up_non = calculateCoachWisePercentage($up, $from_date, $to_date, 'NON-AC', $grade);
-                    $up_tte = calculateCoachWisePercentage($up, $from_date, $to_date, 'TTE', $grade);    
-                    
-                    
-                    $down_ac  = calculateCoachWisePercentage($down, $from_date, $to_date, 'AC', $grade);
-                    $down_non = calculateCoachWisePercentage($down, $from_date, $to_date, 'NON-AC', $grade);
-                    $down_tte = calculateCoachWisePercentage($down, $from_date, $to_date, 'TTE', $grade);
-                    
-                    $upFinalPSI = calculateFinalPSI([
-                        [
-                            'total'   => $up_ac_total,
-                            'percent' => $up_ac['avg_percentage']
-                        ],
-                        [
-                            'total'   => $up_non_ac_total,
-                            'percent' => $up_non['avg_percentage']
-                        ],
-                        [
-                            'total'   => $upCoach['tte'],
-                            'percent' => $up_tte['avg_percentage']
-                        ]
-                    ]);
-                    
-                    
-                    $downFinalPSI = calculateFinalPSI([
-                        [
-                            'total'   => $down_ac_total,
-                            'percent' => $down_ac['avg_percentage']
-                        ],
-                        [
-                            'total'   => $down_non_ac_total,
-                            'percent' => $down_non['avg_percentage']
-                        ],
-                        [
-                            'total'   => $downCoach['tte'],
-                            'percent' => $down_tte['avg_percentage']
-                        ]
-                    ]);
-
-             
-                    $up_down_PSI = number_format(($upFinalPSI + $downFinalPSI) / 2, 2);
-
-                    
-                    ?>
-                    
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td><a href="<?php echo 'train-report.php?' . http_build_query(['train_no' => $up, 'grade' => $grade, 'from_date' => $from_date, 'to_date' => $to_date]); ?>"
+                            <td><a href="<?php echo roundWiseEscape('train-report.php?' . http_build_query(['train_no' => $up, 'grade' => $grade, 'from_date' => $from_date, 'to_date' => $to_date])); ?>"
                                     target="_blank" rel="noopener noreferrer"
-                                    class="train-link"><?php echo htmlspecialchars($up); ?></a></td>
-                                    
-                            <td><?php $trainUpData = get_coach_count($up);
-                            echo $trainUpData['ac']; ?> </td>
-                            <td><?php $uptrainachivedata = acheived_feedback($up, $from_date, $to_date, $grade);
-                            echo $uptrainachivedata['ac_achived_coaches']; ?>
-                            </td>
-                            <td><?php $trainUpData = get_coach_count($up);
-                            echo $trainUpData['non_ac']; ?> </td>
-                            <td><?php $uptrainachivedata = acheived_feedback($up, $from_date, $to_date, $grade);
-                            echo $uptrainachivedata['non_ac_achived_coaches']; ?>
-                            </td>
-                            
-
-                            <td>
-                                <?php
-                                    $trainUpData = get_coach_count($up);
-                                    $total_ac = $trainUpData['ac'] * $trainUpData['feed_ac'];
-                                    echo $total_ac;
-                                ?>
-                            </td>
-                            <td><?php echo $uptrainachivedata['ac']; ?></td>
-
-                            <td>
-                                <?php
-                                    $trainUpData = get_coach_count($up);
-                                    $total_non_ac = $trainUpData['non_ac'] * $trainUpData['feed_non_ac'];
-                                    echo $total_non_ac;
-                                ?>
-                            </td>
-                            <td><?php echo $uptrainachivedata['non_ac']; ?></td>
-
-                            <td><?php echo $trainUpData['tte']; ?></td>
-                            <td><?php echo $uptrainachivedata['tte']; ?></td>
-                            
-                            
-                            <td><?php echo $trainUpData['total_feed'] + $trainUpData['tte']; ?></td>
-                            <td><?php echo $uptrainachivedata['tte'] + $uptrainachivedata['ac_non_ac']; ?></td>
-                            <td><?php echo $up_train_psi = $upFinalPSI ?>%</td>
+                                    class="train-link"><?php echo roundWiseEscape($up); ?></a></td>
+                            <td><?php echo $up_ac_total; ?></td>
+                            <td><?php echo $upAchieve['ac_achived_coaches']; ?></td>
+                            <td><?php echo $up_non_ac_total; ?></td>
+                            <td><?php echo $upAchieve['non_ac_achived_coaches']; ?></td>
+                            <td><?php echo $up_ac_feed_total; ?></td>
+                            <td><?php echo $upAchieve['ac']; ?></td>
+                            <td><?php echo $up_non_ac_feed_total; ?></td>
+                            <td><?php echo $upAchieve['non_ac']; ?></td>
+                            <td><?php echo $up_tte_total; ?></td>
+                            <td><?php echo $upAchieve['tte']; ?></td>
+                            <td><?php echo $up_total_target; ?></td>
+                            <td><?php echo $up_total_achieved; ?></td>
+                            <td><?php echo $upFinalPSI; ?>%</td>
                         </tr>
                         <tr>
                             <td>2</td>
-                            <td><a href="<?php echo 'train-report.php?' . http_build_query(['train_no' => $down, 'grade' => $grade, 'from_date' => $from_date, 'to_date' => $to_date]); ?>"
+                            <td><a href="<?php echo roundWiseEscape('train-report.php?' . http_build_query(['train_no' => $down, 'grade' => $grade, 'from_date' => $from_date, 'to_date' => $to_date])); ?>"
                                     target="_blank" rel="noopener noreferrer"
-                                    class="train-link"><?php echo htmlspecialchars($down); ?></a></td>
-                            <td><?php $trainDownData = get_coach_count($down);
-                            echo $trainDownData['ac']; ?> </td>
-                            <td><?php $downtrainachivedata = acheived_feedback($down, $from_date, $to_date, $grade);
-                            echo $downtrainachivedata['ac_achived_coaches']; ?>
-                            </td>
-                            <td><?php $trainDownData = get_coach_count($down);
-                            echo $trainDownData['non_ac']; ?> </td>
-                            <td><?php $downtrainachivedata = acheived_feedback($down, $from_date, $to_date, $grade);
-                            echo $downtrainachivedata['non_ac_achived_coaches']; ?>
-                            </td>
-                            
-
-                            <td>
-                                <?php
-                                    $trainDownData = get_coach_count($down);
-                                    $total_ac = $trainDownData['ac'] * $trainDownData['feed_ac'];
-                                    echo $total_ac;
-                                ?>
-                            </td>
-                            <td><?php echo $downtrainachivedata['ac']; ?></td>
-
-                            <td>
-                                <?php
-                                    $trainDownData = get_coach_count($down);
-                                    $total_non_ac = $trainDownData['non_ac'] * $trainDownData['feed_non_ac'];
-                                    echo $total_non_ac;
-                                ?>
-                            </td>
-                            <td><?php echo $downtrainachivedata['non_ac']; ?></td>
-
-                            <td><?php echo $trainDownData['tte']; ?></td>
-                            <td><?php echo $downtrainachivedata['tte']; ?></td>
-                            
-                            
-                            <td><?php echo $trainDownData['total_feed'] + $trainDownData['tte']; ?></td>
-                            <td><?php echo $downtrainachivedata['tte'] + $downtrainachivedata['ac_non_ac']; ?></td>
-                            <td><?php echo $down_train_psi = $downFinalPSI ?> %</td>
-            <!-- Print Footer (only visible when printing) -->
-            <div class="print-footer" style=" margin-top: 20px; margin-bottom: 20px;">
-               Station: <?php echo $station_name; ?> | UP Train: <?php echo $up; ?> | DOWN Train: <?php echo $down; ?> | Grade: <?php echo $grade; ?> | Report Date: From <?php echo $from_date; ?> To <?php echo $to_date; ?>
-            </div>
-        
+                                    class="train-link"><?php echo roundWiseEscape($down); ?></a></td>
+                            <td><?php echo $down_ac_total; ?></td>
+                            <td><?php echo $downAchieve['ac_achived_coaches']; ?></td>
+                            <td><?php echo $down_non_ac_total; ?></td>
+                            <td><?php echo $downAchieve['non_ac_achived_coaches']; ?></td>
+                            <td><?php echo $down_ac_feed_total; ?></td>
+                            <td><?php echo $downAchieve['ac']; ?></td>
+                            <td><?php echo $down_non_ac_feed_total; ?></td>
+                            <td><?php echo $downAchieve['non_ac']; ?></td>
+                            <td><?php echo $down_tte_total; ?></td>
+                            <td><?php echo $downAchieve['tte']; ?></td>
+                            <td><?php echo $down_total_target; ?></td>
+                            <td><?php echo $down_total_achieved; ?></td>
+                            <td><?php echo $downFinalPSI; ?>%</td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -679,6 +659,10 @@ $station_name = getStationName($_SESSION['station_id']);
                     </tfoot>
 
                 </table>
+                <!-- Print Footer (only visible when printing) -->
+                <div class="print-footer" style=" margin-top: 20px; margin-bottom: 20px;">
+                    Station: <?php echo roundWiseEscape($station_name); ?> | UP Train: <?php echo roundWiseEscape($up); ?> | DOWN Train: <?php echo roundWiseEscape($down); ?> | Grade: <?php echo roundWiseEscape($grade); ?> | Report Date: From <?php echo roundWiseEscape($from_date); ?> To <?php echo roundWiseEscape($to_date); ?>
+                </div>
             </div>
 
 
