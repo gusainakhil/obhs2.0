@@ -1,10 +1,10 @@
 <?php
 session_start();
-include './includes/connection.php';
-include './includes/helpers.php';
+require_once './includes/connection.php';
+require_once './includes/helpers.php';
 
 // Optional: enable detailed error output in development only
-$debug = true; // set to false in production
+$debug = false; // set to true only in local development
 if ($debug) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -14,107 +14,156 @@ if ($debug) {
 // Call reusable login check
 checkLogin();
 
-// Now fetch station name
-$station_name = getStationName($_SESSION['station_id']);
-$station_id = $_SESSION['station_id'];
-
-// Fetch train numbers from base_fb_target table for the station
-$trains = [];
-$train_query = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no";
-$stmt = $mysqli->prepare($train_query);
-$stmt->bind_param("s", $station_id);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $trains[] = $row['train_no'];
+function viewAttendanceEscape($value)
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
-$stmt->close();
 
-// Initialize variables for filters
-$selected_grade = $_POST['grade'] ?? '';
-$selected_train_from = $_POST['trainFrom'] ?? '';
-$selected_train_to = $_POST['trainTo'] ?? '';
-$date_from = $_POST['dateFrom'] ?? date('Y-m-01');
-$date_to = $_POST['dateTo'] ?? date('Y-m-d');
+function viewAttendanceFetchTrains($mysqli, $station_id)
+{
+    $trains = [];
+    $sql = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no";
+    $stmt = $mysqli->prepare($sql);
 
-// Fetch attendance data if form is submitted
-$attendance_data = [];
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($selected_grade)) {
-    // Build the query to get attendance data
-    $query = "SELECT 
-    employee_id,
-    employee_name,
+    if (!$stmt) {
+        error_log('View attendance train list prepare failed: ' . $mysqli->error);
+        return $trains;
+    }
 
-    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Start of journey' THEN 1 ELSE 0 END) AS trip1_start,
-    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Mid of journey' THEN 1 ELSE 0 END)   AS trip1_mid,
-    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'End of journey' THEN 1 ELSE 0 END)   AS trip1_end,
+    $stmt->bind_param("i", $station_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Start of journey' THEN 1 ELSE 0 END) AS trip2_start,
-    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Mid of journey' THEN 1 ELSE 0 END)   AS trip2_mid,
-    MAX(CASE WHEN train_no = ? AND type_of_attendance = 'End of journey' THEN 1 ELSE 0 END)   AS trip2_end
+    while ($row = $result->fetch_assoc()) {
+        $trains[] = $row['train_no'];
+    }
 
-FROM base_attendance
-WHERE station_id = ?
-AND grade = ?
-AND DATE(created_at) BETWEEN ? AND ?
-";
-    
-    // Build parameters array - 6 train parameters (3 for each train) + 3 base parameters
+    $stmt->close();
+
+    return $trains;
+}
+
+function viewAttendancePercentage($actual, $total)
+{
+    return $actual > 0 ? round(($actual / $total) * 100, 2) : 0;
+}
+
+function viewAttendanceFetchData($mysqli, $station_id, $selected_grade, $selected_train_from, $selected_train_to, $date_from, $date_to)
+{
+    if ($selected_grade === '') {
+        return [];
+    }
+
+    $date_from_start = $date_from . ' 00:00:00';
+    $date_to_next_day = strtotime($date_to . ' +1 day');
+    $date_to_exclusive = $date_to_next_day
+        ? date('Y-m-d', $date_to_next_day) . ' 00:00:00'
+        : $date_to . ' 23:59:59';
+
+    $query = "SELECT
+            employee_id,
+            employee_name,
+            MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Start of journey' THEN 1 ELSE 0 END) AS trip1_start,
+            MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Mid of journey' THEN 1 ELSE 0 END) AS trip1_mid,
+            MAX(CASE WHEN train_no = ? AND type_of_attendance = 'End of journey' THEN 1 ELSE 0 END) AS trip1_end,
+            MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Start of journey' THEN 1 ELSE 0 END) AS trip2_start,
+            MAX(CASE WHEN train_no = ? AND type_of_attendance = 'Mid of journey' THEN 1 ELSE 0 END) AS trip2_mid,
+            MAX(CASE WHEN train_no = ? AND type_of_attendance = 'End of journey' THEN 1 ELSE 0 END) AS trip2_end
+        FROM base_attendance
+        WHERE station_id = ?
+          AND grade = ?
+          AND created_at >= ?
+          AND created_at < ?";
+
     $bind_params = [
-        $selected_train_from, $selected_train_from, $selected_train_from,  // Trip 1 (Start, Mid, End)
-        $selected_train_to, $selected_train_to, $selected_train_to,        // Trip 2 (Start, Mid, End)
-        $station_id, $selected_grade, $date_from, $date_to
+        $selected_train_from,
+        $selected_train_from,
+        $selected_train_from,
+        $selected_train_to,
+        $selected_train_to,
+        $selected_train_to,
+        $station_id,
+        $selected_grade,
+        $date_from_start,
+        $date_to_exclusive,
     ];
-    $type_string = "ssssssssss";
-    
-    // Add train filters if selected
-    if (!empty($selected_train_from) && !empty($selected_train_to)) {
+    $type_string = "ssssssisss";
+
+    if ($selected_train_from !== '' && $selected_train_to !== '') {
         $query .= " AND train_no IN (?, ?)";
         $bind_params[] = $selected_train_from;
         $bind_params[] = $selected_train_to;
         $type_string .= "ss";
-    } elseif (!empty($selected_train_from)) {
+    } elseif ($selected_train_from !== '') {
         $query .= " AND train_no = ?";
         $bind_params[] = $selected_train_from;
         $type_string .= "s";
-    } elseif (!empty($selected_train_to)) {
+    } elseif ($selected_train_to !== '') {
         $query .= " AND train_no = ?";
         $bind_params[] = $selected_train_to;
         $type_string .= "s";
     }
-    
+
     $query .= " GROUP BY employee_id, employee_name ORDER BY employee_name";
-    
     $stmt = $mysqli->prepare($query);
-    
-    // Bind parameters dynamically
+
+    if (!$stmt) {
+        error_log('View attendance data prepare failed: ' . $mysqli->error);
+        return [];
+    }
+
     $stmt->bind_param($type_string, ...$bind_params);
-    
     $stmt->execute();
     $result = $stmt->get_result();
-    
+    $attendance_data = [];
+
     while ($row = $result->fetch_assoc()) {
-        // Trip 1 percentage: count actual checkpoints out of 3
-        $trip1_actual = $row['trip1_start'] + $row['trip1_mid'] + $row['trip1_end'];
-        $trip1_percentage = ($trip1_actual > 0) ? round(($trip1_actual / 3) * 100, 2) : 0;
-        
-        // Trip 2 percentage: count actual checkpoints out of 3
-        $trip2_actual = $row['trip2_start'] + $row['trip2_mid'] + $row['trip2_end'];
-        $trip2_percentage = ($trip2_actual > 0) ? round(($trip2_actual / 3) * 100, 2) : 0;
-        
-        // Round trip percentage: combined attendance out of 6
+        $trip1_actual = (int) $row['trip1_start'] + (int) $row['trip1_mid'] + (int) $row['trip1_end'];
+        $trip2_actual = (int) $row['trip2_start'] + (int) $row['trip2_mid'] + (int) $row['trip2_end'];
         $round_actual = $trip1_actual + $trip2_actual;
-        $round_percentage = ($round_actual > 0) ? round(($round_actual / 6) * 100, 2) : 0;
-        
+
         $attendance_data[] = [
             'employee_id' => $row['employee_id'],
             'employee_name' => $row['employee_name'],
-            'trip1_percentage' => $trip1_percentage,
-            'trip2_percentage' => $trip2_percentage,
-            'round_percentage' => $round_percentage
+            'trip1_percentage' => viewAttendancePercentage($trip1_actual, 3),
+            'trip2_percentage' => viewAttendancePercentage($trip2_actual, 3),
+            'round_percentage' => viewAttendancePercentage($round_actual, 6),
         ];
     }
+
     $stmt->close();
+
+    return $attendance_data;
+}
+
+$station_id = (int) ($_SESSION['station_id'] ?? 0);
+$station_name = viewAttendanceEscape(getStationName($station_id));
+$is_post = $_SERVER['REQUEST_METHOD'] === 'POST';
+
+// Initialize variables for filters
+$selected_grade = (string) ($_POST['grade'] ?? '');
+$selected_train_from = (string) ($_POST['trainFrom'] ?? '');
+$selected_train_to = (string) ($_POST['trainTo'] ?? '');
+$date_from = (string) ($_POST['dateFrom'] ?? date('Y-m-01'));
+$date_to = (string) ($_POST['dateTo'] ?? date('Y-m-d'));
+$trains = viewAttendanceFetchTrains($mysqli, $station_id);
+
+// Fetch attendance data if form is submitted
+$attendance_data = [];
+if ($is_post && !empty($selected_grade)) {
+    $attendance_data = viewAttendanceFetchData(
+        $mysqli,
+        $station_id,
+        $selected_grade,
+        $selected_train_from,
+        $selected_train_to,
+        $date_from,
+        $date_to
+    );
+}
+
+if (session_status() === PHP_SESSION_ACTIVE) {
+    session_write_close();
 }
 
 ?>
@@ -408,8 +457,8 @@ AND DATE(created_at) BETWEEN ? AND ?
                             <select name="trainFrom" id="trainFrom" class="filter-select">
                                 <option value="">Select Train</option>
                                 <?php foreach ($trains as $train): ?>
-                                    <option value="<?php echo htmlspecialchars($train); ?>" <?php echo $selected_train_from === $train ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($train); ?>
+                                    <option value="<?php echo viewAttendanceEscape($train); ?>" <?php echo $selected_train_from === $train ? 'selected' : ''; ?>>
+                                        <?php echo viewAttendanceEscape($train); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -421,8 +470,8 @@ AND DATE(created_at) BETWEEN ? AND ?
                             <select name="trainTo" id="trainTo" class="filter-select">
                                 <option value="">Select Train</option>
                                 <?php foreach ($trains as $train): ?>
-                                    <option value="<?php echo htmlspecialchars($train); ?>" <?php echo $selected_train_to === $train ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($train); ?>
+                                    <option value="<?php echo viewAttendanceEscape($train); ?>" <?php echo $selected_train_to === $train ? 'selected' : ''; ?>>
+                                        <?php echo viewAttendanceEscape($train); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -431,13 +480,13 @@ AND DATE(created_at) BETWEEN ? AND ?
                         <!-- Date From -->
                         <div>
                             <label class="filter-label">From Date</label>
-                            <input type="date" name="dateFrom" id="dateFrom" class="filter-input" value="<?php echo htmlspecialchars($date_from); ?>" required>
+                            <input type="date" name="dateFrom" id="dateFrom" class="filter-input" value="<?php echo viewAttendanceEscape($date_from); ?>" required>
                         </div>
 
                         <!-- Date To -->
                         <div>
                             <label class="filter-label">To Date</label>
-                            <input type="date" name="dateTo" id="dateTo" class="filter-input" value="<?php echo htmlspecialchars($date_to); ?>" required>
+                            <input type="date" name="dateTo" id="dateTo" class="filter-input" value="<?php echo viewAttendanceEscape($date_to); ?>" required>
                         </div>
 
                     </div>
@@ -472,17 +521,17 @@ AND DATE(created_at) BETWEEN ? AND ?
                         <?php if (!empty($attendance_data)): ?>
                             <?php foreach ($attendance_data as $attendance): ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($attendance['employee_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($attendance['employee_id']); ?></td>
-                                    <td><span class="attendance-percentage"><?php echo $attendance['trip1_percentage']; ?>%</span></td>
-                                    <td><span class="attendance-percentage"><?php echo $attendance['trip2_percentage']; ?>%</span></td>
-                                    <td><span class="attendance-percentage"><?php echo $attendance['round_percentage']; ?>%</span></td>
+                                    <td><?php echo viewAttendanceEscape($attendance['employee_name']); ?></td>
+                                    <td><?php echo viewAttendanceEscape($attendance['employee_id']); ?></td>
+                                    <td><span class="attendance-percentage"><?php echo viewAttendanceEscape($attendance['trip1_percentage']); ?>%</span></td>
+                                    <td><span class="attendance-percentage"><?php echo viewAttendanceEscape($attendance['trip2_percentage']); ?>%</span></td>
+                                    <td><span class="attendance-percentage"><?php echo viewAttendanceEscape($attendance['round_percentage']); ?>%</span></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
                                 <td colspan="5" style="text-align: center; padding: 20px; color: #64748b;">
-                                    <?php echo ($_SERVER['REQUEST_METHOD'] === 'POST') ? 'No attendance records found for the selected filters.' : 'Please select filters and click Submit to view attendance.'; ?>
+                                    <?php echo $is_post ? 'No attendance records found for the selected filters.' : 'Please select filters and click Submit to view attendance.'; ?>
                                 </td>
                             </tr>
                         <?php endif; ?>
@@ -536,20 +585,22 @@ AND DATE(created_at) BETWEEN ? AND ?
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const closeSidebar = document.getElementById('closeSidebar');
 
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.remove('-translate-x-full');
-            sidebarOverlay.classList.remove('hidden');
-        });
+        if (menuToggle && sidebar && sidebarOverlay && closeSidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+            });
 
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
-        });
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
 
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
-        });
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
+        }
         
         // View All Attendance with filters
         function viewAllAttendance() {

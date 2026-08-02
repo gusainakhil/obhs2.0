@@ -1,10 +1,10 @@
 <?php
 session_start();
-include './includes/connection.php';
-include './includes/helpers.php';
+require_once './includes/connection.php';
+require_once './includes/helpers.php';
 
 // Optional: enable detailed error output in development only
-$debug = true; // set to false in production
+$debug = false; // set to true only in local development
 if ($debug) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -14,30 +14,49 @@ if ($debug) {
 // Call reusable login check
 checkLogin();
 
-// Now fetch station name
-$station_name = getStationName($_SESSION['station_id']);
-$station_id = $_SESSION['station_id'];
-
-// Fetch train numbers from base_fb_target table for the station
-$trains = [];
-$train_query = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no";
-$stmt = $mysqli->prepare($train_query);
-$stmt->bind_param("s", $station_id);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $trains[] = $row['train_no'];
+function attendancePhotosEscape($value)
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
-$stmt->close();
 
-// Get filter parameters from URL or POST
-$selected_grade = $_REQUEST['grade'] ?? '';
-$selected_train_from = $_REQUEST['trainFrom'] ?? '';
-$selected_train_to = $_REQUEST['trainTo'] ?? '';
-$date_from = $_REQUEST['dateFrom'] ?? date('Y-m-01');
-$date_to = $_REQUEST['dateTo'] ?? date('Y-m-d');
+function attendancePhotosRequestValue($key, $default = '')
+{
+    if (isset($_POST[$key])) {
+        return (string) $_POST[$key];
+    }
 
-function getDisplayFullAddress($fullLocationRaw)
+    if (isset($_GET[$key])) {
+        return (string) $_GET[$key];
+    }
+
+    return (string) $default;
+}
+
+function attendancePhotosFetchTrains($mysqli, $station_id)
+{
+    $trains = [];
+    $sql = "SELECT DISTINCT train_no FROM base_fb_target WHERE station = ? ORDER BY train_no";
+    $stmt = $mysqli->prepare($sql);
+
+    if (!$stmt) {
+        error_log('Attendance photos train list prepare failed: ' . $mysqli->error);
+        return $trains;
+    }
+
+    $stmt->bind_param("i", $station_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $trains[] = $row['train_no'];
+    }
+
+    $stmt->close();
+
+    return $trains;
+}
+
+function attendancePhotosDisplayFullAddress($fullLocationRaw)
 {
     $fullLocationRaw = trim((string)$fullLocationRaw);
     if ($fullLocationRaw === '') {
@@ -61,7 +80,7 @@ function getDisplayFullAddress($fullLocationRaw)
     return trim($address);
 }
 
-function parseAttendanceLocation($rawLocation)
+function attendancePhotosParseLocation($rawLocation)
 {
     $location = html_entity_decode((string)$rawLocation, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     $location = preg_replace('/[\x00-\x1F\x7F]/u', ' ', $location);
@@ -88,10 +107,66 @@ function parseAttendanceLocation($rawLocation)
     ];
 }
 
-// Fetch attendance data with photos (optimized with LEFT JOIN to avoid N+1 query)
-$attendance_data = [];
-if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_train_to)) {
-    $query = "SELECT 
+function attendancePhotosResolveImagePath($directory, $filename, $fallback_url, array &$cache)
+{
+    $filename = ltrim(str_replace('\\', '/', trim((string) $filename)), '/');
+
+    if ($filename === '' || strpos($filename, '..') !== false) {
+        return $fallback_url;
+    }
+
+    $path = rtrim($directory, '/') . '/' . $filename;
+
+    if (!array_key_exists($path, $cache)) {
+        $cache[$path] = is_file($path);
+    }
+
+    return $cache[$path] ? $path : $fallback_url;
+}
+
+function attendancePhotosFormatDate($created_at, $show_time)
+{
+    $timestamp = strtotime((string) $created_at);
+
+    if (!$timestamp) {
+        return '';
+    }
+
+    return date($show_time ? 'd/m/Y H:i:s' : 'd/m/Y', $timestamp);
+}
+
+function attendancePhotosBuildCheckpointData($row, $station_id, $show_time, array &$attendance_photo_cache)
+{
+    $parsedLocation = attendancePhotosParseLocation($row['location'] ?? '');
+
+    return [
+        'photo_path' => attendancePhotosResolveImagePath(
+            'uploads/attendence',
+            $row['photo'] ?? '',
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png',
+            $attendance_photo_cache
+        ),
+        'latitude' => $parsedLocation['latitude'],
+        'longitude' => $parsedLocation['longitude'],
+        'location_name' => $parsedLocation['location_name'],
+        'display_full_address' => attendancePhotosDisplayFullAddress($row['fullLocation'] ?? ''),
+        'display_date' => attendancePhotosFormatDate($row['created_at'] ?? '', $show_time),
+    ];
+}
+
+function attendancePhotosFetchData($mysqli, $station_id, $selected_grade, $selected_train_from, $selected_train_to, $date_from, $date_to, $debug = false)
+{
+    if ($selected_grade === '' || $selected_train_from === '' || $selected_train_to === '') {
+        return [];
+    }
+
+    $date_from_start = $date_from . ' 00:00:00';
+    $date_to_next_day = strtotime($date_to . ' +1 day');
+    $date_to_exclusive = $date_to_next_day
+        ? date('Y-m-d', $date_to_next_day) . ' 00:00:00'
+        : $date_to . ' 23:59:59';
+
+    $query = "SELECT
                 ba.employee_id,
                 ba.employee_name,
                 ba.train_no,
@@ -106,53 +181,115 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
               WHERE ba.station_id = ?
               AND ba.grade = ?
               AND ba.train_no IN (?, ?)
-              AND DATE(ba.created_at) BETWEEN ? AND ?
+              AND ba.created_at >= ?
+              AND ba.created_at < ?
               ORDER BY ba.employee_name, ba.train_no, FIELD(ba.type_of_attendance, 'Start of journey', 'Mid of journey', 'End of journey')";
 
     $stmt = $mysqli->prepare($query);
-    $stmt->bind_param("sssssss", $station_id, $station_id, $selected_grade, $selected_train_from, $selected_train_to, $date_from, $date_to);
+
+    if (!$stmt) {
+        error_log('Attendance photos data prepare failed: ' . $mysqli->error);
+        return [];
+    }
+
+    $stmt->bind_param("iisssss", $station_id, $station_id, $selected_grade, $selected_train_from, $selected_train_to, $date_from_start, $date_to_exclusive);
     $stmt->execute();
     $result = $stmt->get_result();
+    $attendance_data = [];
+    $employee_photo_cache = [];
+    $attendance_photo_cache = [];
+    $show_time = (int) $station_id !== 23;
 
-    // Organize data by employee
     while ($row = $result->fetch_assoc()) {
         $emp_id = $row['employee_id'];
 
         if (!isset($attendance_data[$emp_id])) {
-            $employee_photo = $row['employee_photo'] ?? '';
+            $employee_photo = attendancePhotosResolveImagePath(
+                'uploads/employee',
+                $row['employee_photo'] ?? '',
+                'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png',
+                $employee_photo_cache
+            );
 
-            // Debug: Log if no photo found
-            if ($debug && empty($employee_photo)) {
+            if ($debug && empty($row['employee_photo'])) {
                 error_log("No photo found for employee: $emp_id, station: $station_id");
             }
 
             $attendance_data[$emp_id] = [
                 'employee_name' => $row['employee_name'],
                 'employee_id' => $row['employee_id'],
-                'employee_photo' => $employee_photo,
+                'employee_photo_path' => $employee_photo,
                 'train_from' => [],
                 'train_to' => []
             ];
         }
 
-        // Organize by train and checkpoint type
+        $checkpoint_data = attendancePhotosBuildCheckpointData($row, $station_id, $show_time, $attendance_photo_cache);
+
         if ($row['train_no'] == $selected_train_from) {
-            $attendance_data[$emp_id]['train_from'][$row['type_of_attendance']] = [
-                'location' => $row['location'],
-                'fullLocation' => $row['fullLocation'],
-                'photo' => $row['photo'],
-                'created_at' => $row['created_at']
-            ];
+            $attendance_data[$emp_id]['train_from'][$row['type_of_attendance']] = $checkpoint_data;
         } elseif ($row['train_no'] == $selected_train_to) {
-            $attendance_data[$emp_id]['train_to'][$row['type_of_attendance']] = [
-                'location' => $row['location'],
-                'fullLocation' => $row['fullLocation'],
-                'photo' => $row['photo'],
-                'created_at' => $row['created_at']
-            ];
+            $attendance_data[$emp_id]['train_to'][$row['type_of_attendance']] = $checkpoint_data;
         }
     }
+
     $stmt->close();
+
+    return $attendance_data;
+}
+
+function attendancePhotosRenderCheckpointCell($data, $station_id)
+{
+    if (!$data) {
+        echo '<div style="color: #94a3b8;">No Data</div>';
+        return;
+    }
+    ?>
+    <img src="<?php echo attendancePhotosEscape($data['photo_path']); ?>" alt="Report" class="report-icon">
+    <div class="coordinates">
+        <?php if (!empty($data['latitude'])): ?>
+            Lati: <?php echo attendancePhotosEscape($data['latitude']); ?><br>
+            Longi: <?php echo attendancePhotosEscape($data['longitude']); ?><br>
+        <?php endif; ?>
+        <?php if ((string) $station_id !== '25'): ?>
+            location: <?php echo attendancePhotosEscape($data['location_name'] ?: 'NA'); ?>
+        <?php endif; ?>
+
+        <?php if (!empty($data['display_full_address']) && (string) $station_id === '25'): ?>
+            location: <?php echo attendancePhotosEscape($data['display_full_address']); ?>
+        <?php endif; ?>
+    </div>
+    <div class="date-time">
+        Date:
+        <?php echo attendancePhotosEscape($data['display_date']); ?>
+    </div>
+    <?php
+}
+
+$station_id = (int) ($_SESSION['station_id'] ?? 0);
+$station_name = attendancePhotosEscape(getStationName($station_id));
+
+// Get filter parameters from URL or POST
+$selected_grade = attendancePhotosRequestValue('grade');
+$selected_train_from = attendancePhotosRequestValue('trainFrom');
+$selected_train_to = attendancePhotosRequestValue('trainTo');
+$date_from = attendancePhotosRequestValue('dateFrom', date('Y-m-01'));
+$date_to = attendancePhotosRequestValue('dateTo', date('Y-m-d'));
+$trains = attendancePhotosFetchTrains($mysqli, $station_id);
+$checkpoints = ['Start of journey', 'Mid of journey', 'End of journey'];
+$attendance_data = attendancePhotosFetchData(
+    $mysqli,
+    $station_id,
+    $selected_grade,
+    $selected_train_from,
+    $selected_train_to,
+    $date_from,
+    $date_to,
+    $debug
+);
+
+if (session_status() === PHP_SESSION_ACTIVE) {
+    session_write_close();
 }
 
 ?>
@@ -528,8 +665,8 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                             <select name="trainFrom" id="trainFrom" class="filter-select" required>
                                 <option value="">Select Train</option>
                                 <?php foreach ($trains as $train): ?>
-                                    <option value="<?php echo htmlspecialchars($train); ?>" <?php echo $selected_train_from === $train ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($train); ?>
+                                    <option value="<?php echo attendancePhotosEscape($train); ?>" <?php echo $selected_train_from === $train ? 'selected' : ''; ?>>
+                                        <?php echo attendancePhotosEscape($train); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -541,8 +678,8 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                             <select name="trainTo" id="trainTo" class="filter-select" required>
                                 <option value="">Select Train</option>
                                 <?php foreach ($trains as $train): ?>
-                                    <option value="<?php echo htmlspecialchars($train); ?>" <?php echo $selected_train_to === $train ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($train); ?>
+                                    <option value="<?php echo attendancePhotosEscape($train); ?>" <?php echo $selected_train_to === $train ? 'selected' : ''; ?>>
+                                        <?php echo attendancePhotosEscape($train); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -552,14 +689,14 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                         <div>
                             <label class="filter-label">From</label>
                             <input type="date" name="dateFrom" id="dateFrom" class="filter-input"
-                                value="<?php echo htmlspecialchars($date_from); ?>" required>
+                                value="<?php echo attendancePhotosEscape($date_from); ?>" required>
                         </div>
 
                         <!-- Date To -->
                         <div>
                             <label class="filter-label">To</label>
                             <input type="date" name="dateTo" id="dateTo" class="filter-input"
-                                value="<?php echo htmlspecialchars($date_to); ?>" required>
+                                value="<?php echo attendancePhotosEscape($date_to); ?>" required>
                         </div>
 
                     </div>
@@ -584,9 +721,9 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                         <tr>
                             <th rowspan="2" style="width: 250px;">Employee Name</th>
                             <th colspan="3" class="journey-header">Train Up No.
-                                <?php echo htmlspecialchars($selected_train_from ?: 'N/A'); ?></th>
+                                <?php echo attendancePhotosEscape($selected_train_from ?: 'N/A'); ?></th>
                             <th colspan="3" class="journey-header">Train Down No.
-                                <?php echo htmlspecialchars($selected_train_to ?: 'N/A'); ?></th>
+                                <?php echo attendancePhotosEscape($selected_train_to ?: 'N/A'); ?></th>
                         </tr>
                         <tr>
                             <th>Start of journey</th>
@@ -607,25 +744,18 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                             <div class="counter-badge"><?php echo $counter++; ?></div>
 
                                             <div class="employee-photo-wrapper">
-                                                <?php
-                                                $employee_photo = 'uploads/employee/' . $employee['employee_photo'];
-                                                if (empty($employee['employee_photo']) || !file_exists($employee_photo)) {
-                                                    $employee_photo = 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png';
-                                                }
-                                                ?>
-
-                                                <img src="<?php echo htmlspecialchars($employee_photo); ?>" alt="Photo"
+                                                <img src="<?php echo attendancePhotosEscape($employee['employee_photo_path']); ?>" alt="Photo"
                                                     class="employee-photo">
 
                                                 <div class="employee-details">
                                                     <div class="employee-name">
                                                         <strong>Emp Name:</strong>
-                                                        <?php echo htmlspecialchars($employee['employee_name']); ?>
+                                                        <?php echo attendancePhotosEscape($employee['employee_name']); ?>
                                                     </div>
 
                                                     <div class="employee-id">
                                                         <strong>Emp ID:</strong>
-                                                        <strong><?php echo htmlspecialchars($employee['employee_id']); ?></strong>
+                                                        <strong><?php echo attendancePhotosEscape($employee['employee_id']); ?></strong>
                                                     </div>
                                                 </div>
                                             </div>
@@ -633,54 +763,11 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                     </td>
 
 
-                                    <?php
-                                    $checkpoints = ['Start of journey', 'Mid of journey', 'End of journey'];
-                                    foreach ($checkpoints as $checkpoint):
+                                    <?php foreach ($checkpoints as $checkpoint):
                                         $data = $employee['train_from'][$checkpoint] ?? null;
                                         ?>
                                         <td>
-                                            <?php if ($data): ?>
-                                                <?php
-                                                $photo_path = 'uploads/attendence/' . $data['photo'];
-                                                if (!file_exists($photo_path)) {
-                                                    $photo_path = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
-                                                }
-
-                                                // Parse location data
-                                                $parsedLocation = parseAttendanceLocation($data['location'] ?? '');
-                                                $latitude = $parsedLocation['latitude'];
-                                                $longitude = $parsedLocation['longitude'];
-                                                $location_name = $parsedLocation['location_name'];
-                                                $displayFullAddress = getDisplayFullAddress($data['fullLocation'] ?? '');
-                                                ?>
-                                                <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report"
-                                                    class="report-icon">
-                                                  <div class="coordinates">
-                                                    <?php if (!empty($latitude)): ?>
-                                                        Lati: <?php echo htmlspecialchars($latitude); ?><br>
-                                                        Longi: <?php echo htmlspecialchars($longitude); ?><br>
-                                                    <?php endif; ?>
-                                                    <?php if ((string)$station_id !== '25'): ?>
-                                                        location: <?php echo htmlspecialchars($location_name ?: 'NA'); ?>
-                                                    <?php endif; ?>
-                                            
-                                                    <?php if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
-                                                        location: <?php echo htmlspecialchars($displayFullAddress); ?>
-                                                    <?php endif; ?>
-                                                </div>
-                                                <div class="date-time">
-                                                    Date:
-                                                    <?php 
-                                                    if ( $_SESSION['station_id'] == 23) {
-                                                        echo date('d/m/Y', strtotime($data['created_at']));
-                                                    } else {
-                                                        echo date('d/m/Y H:i:s', strtotime($data['created_at']));
-                                                    }
-                                                    ?>
-                                                </div>
-                                            <?php else: ?>
-                                                <div style="color: #94a3b8;">No Data</div>
-                                            <?php endif; ?>
+                                            <?php attendancePhotosRenderCheckpointCell($data, $station_id); ?>
                                         </td>
                                     <?php endforeach; ?>
 
@@ -688,48 +775,7 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
                                         $data = $employee['train_to'][$checkpoint] ?? null;
                                         ?>
                                         <td>
-                                            <?php if ($data): ?>
-                                                <?php
-                                                $photo_path = 'uploads/attendence/' . $data['photo'];
-                                                if (!file_exists($photo_path)) {
-                                                    $photo_path = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
-                                                }
-
-                                                // Parse location data
-                                                $parsedLocation = parseAttendanceLocation($data['location'] ?? '');
-                                                $latitude = $parsedLocation['latitude'];
-                                                $longitude = $parsedLocation['longitude'];
-                                                $location_name = $parsedLocation['location_name'];
-                                                $displayFullAddress = getDisplayFullAddress($data['fullLocation'] ?? '');
-                                                ?>
-                                                <img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Report"
-                                                    class="report-icon">
-                                                <div class="coordinates">
-                                                    <?php if (!empty($latitude)): ?>
-                                                        Lati: <?php echo htmlspecialchars($latitude); ?><br>
-                                                        Longi: <?php echo htmlspecialchars($longitude); ?><br>
-                                                    <?php endif; ?>
-                                                    <?php if ((string)$station_id !== '25'): ?>
-                                                        location: <?php echo htmlspecialchars($location_name ?: 'NA'); ?>
-                                                    <?php endif; ?>
-                                            
-                                                    <?php if (!empty($displayFullAddress) && (string)$station_id === '25'): ?>
-                                                         location: <?php echo htmlspecialchars($displayFullAddress); ?>
-                                                    <?php endif; ?>
-                                                </div>
-                                                <div class="date-time">
-                                                    Date:
-                                                    <?php 
-                                                    if ( $_SESSION['station_id'] == 23) {
-                                                        echo date('d/m/Y', strtotime($data['created_at']));
-                                                    } else {
-                                                        echo date('d/m/Y H:i:s', strtotime($data['created_at']));
-                                                    }
-                                                    ?>
-                                                </div>
-                                            <?php else: ?>
-                                                <div style="color: #94a3b8;">No Data</div>
-                                            <?php endif; ?>
+                                            <?php attendancePhotosRenderCheckpointCell($data, $station_id); ?>
                                         </td>
                                     <?php endforeach; ?>
                                 </tr>
@@ -765,20 +811,22 @@ if (!empty($selected_grade) && !empty($selected_train_from) && !empty($selected_
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const closeSidebar = document.getElementById('closeSidebar');
 
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.remove('-translate-x-full');
-            sidebarOverlay.classList.remove('hidden');
-        });
+        if (menuToggle && sidebar && sidebarOverlay && closeSidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+            });
 
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
-        });
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
 
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
-        });
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
+        }
 
 
 

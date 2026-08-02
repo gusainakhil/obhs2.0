@@ -1,10 +1,10 @@
 <?php
 session_start();
-include './includes/connection.php';
-include './includes/helpers.php';
+require_once './includes/connection.php';
+require_once './includes/helpers.php';
 
 // Optional: enable detailed error output in development only
-$debug = true; // set to false in production
+$debug = false; // set to true only in local development
 if ($debug) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -14,78 +14,147 @@ if ($debug) {
 // Call reusable login check
 checkLogin();
 
-// Now fetch station name
-$station_name = getStationName($_SESSION['station_id']);
-$station_id = $_SESSION['station_id'];
+function viewEmployeeEscape($value)
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
+function viewEmployeeJson($value)
+{
+    $encoded = json_encode((string) $value, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+
+    return $encoded === false ? '""' : $encoded;
+}
+
+function viewEmployeePhotoFilename($filename)
+{
+    $filename = basename(str_replace('\\', '/', trim((string) $filename)));
+
+    if ($filename === '' || $filename === '.' || $filename === '..') {
+        return '';
+    }
+
+    return $filename;
+}
+
+function viewEmployeePhotoPath($filename)
+{
+    $filename = viewEmployeePhotoFilename($filename);
+
+    if ($filename === '') {
+        return 'uploads/user_13984171.png';
+    }
+
+    $path = 'uploads/employee/' . $filename;
+
+    return is_file($path) ? $path : 'user_13984171.png';
+}
+
+function viewEmployeeDeletePhoto($filename)
+{
+    $filename = viewEmployeePhotoFilename($filename);
+
+    if ($filename === '') {
+        return;
+    }
+
+    $path = 'uploads/employee/' . $filename;
+    if (is_file($path)) {
+        unlink($path);
+    }
+}
+
+function viewEmployeeFetchPhoto($mysqli, $employee_id, $station_id)
+{
+    $sql = "SELECT photo FROM base_employees WHERE id = ? AND station_id = ? LIMIT 1";
+    $stmt = $mysqli->prepare($sql);
+
+    if (!$stmt) {
+        error_log('View employee photo fetch prepare failed: ' . $mysqli->error);
+        return null;
+    }
+
+    $stmt->bind_param("ii", $employee_id, $station_id);
+    $stmt->execute();
+    $row = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    return $row;
+}
+
+function viewEmployeeResolvePerPage($value)
+{
+    $allowed = ['10', '25', '50', '100', 'all'];
+    $value = (string) $value;
+
+    return in_array($value, $allowed, true) ? $value : '10';
+}
+
+$station_id = (int) ($_SESSION['station_id'] ?? 0);
+$station_name = viewEmployeeEscape(getStationName($station_id));
 
 // Handle delete request
 if (isset($_POST['delete_employee'])) {
-    $employee_id = intval($_POST['employee_id']);
-    
+    $employee_id = (int) ($_POST['employee_id'] ?? 0);
+
     // Get employee photo before deleting
-    $query = "SELECT photo FROM base_employees WHERE id = ? AND station_id = ?";
-    $stmt = $mysqli->prepare($query);
-    $stmt->bind_param("ii", $employee_id, $station_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $emp_data = $result->fetch_assoc();
-    $stmt->close();
-    
+    $emp_data = $employee_id > 0 ? viewEmployeeFetchPhoto($mysqli, $employee_id, $station_id) : null;
+
     if ($emp_data) {
         // Delete from database
         $delete_query = "DELETE FROM base_employees WHERE id = ? AND station_id = ?";
         $stmt = $mysqli->prepare($delete_query);
-        $stmt->bind_param("ii", $employee_id, $station_id);
-        
-        if ($stmt->execute()) {
-            // Delete photo file if exists
-            if (!empty($emp_data['photo'])) {
-                $photo_file = 'uploads/employee/' . $emp_data['photo'];
-                if (file_exists($photo_file)) {
-                    unlink($photo_file);
-                }
+        if ($stmt) {
+            $stmt->bind_param("ii", $employee_id, $station_id);
+
+            if ($stmt->execute()) {
+                // Delete photo file if exists
+                viewEmployeeDeletePhoto($emp_data['photo'] ?? '');
+                $_SESSION['success_msg'] = 'Employee deleted successfully!';
+            } else {
+                $_SESSION['error_msg'] = 'Failed to delete employee.';
             }
-            $_SESSION['success_msg'] = 'Employee deleted successfully!';
+            $stmt->close();
         } else {
             $_SESSION['error_msg'] = 'Failed to delete employee.';
         }
-        $stmt->close();
     }
-    
+
     header("Location: view-employee.php");
     exit();
 }
 
 // Handle edit/update request
 if (isset($_POST['update_employee'])) {
-    $employee_id = intval($_POST['edit_employee_id']);
-    $name = $_POST['edit_name'];
-    $employee_code = $_POST['edit_employee_id_code'];
-    $designation = $_POST['edit_designation'];
-    $old_photo = $_POST['old_photo'];
+    $employee_id = (int) ($_POST['edit_employee_id'] ?? 0);
+    $name = trim((string) ($_POST['edit_name'] ?? ''));
+    $employee_code = trim((string) ($_POST['edit_employee_id_code'] ?? ''));
+    $designation = trim((string) ($_POST['edit_designation'] ?? ''));
+    $current_employee = $employee_id > 0 ? viewEmployeeFetchPhoto($mysqli, $employee_id, $station_id) : null;
+    $old_photo = $current_employee['photo'] ?? '';
     $photo_name = $old_photo;
-    
+
     // Handle photo upload if new photo is provided
-    if (isset($_FILES['edit_photo']) && $_FILES['edit_photo']['error'] == 0) {
+    if ($current_employee && isset($_FILES['edit_photo']) && $_FILES['edit_photo']['error'] === UPLOAD_ERR_OK) {
         $upload_dir = 'uploads/employee/';
-        if (!file_exists($upload_dir)) {
+        if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0777, true);
         }
-        
+
         $file_tmp = $_FILES['edit_photo']['tmp_name'];
         $file_name = $_FILES['edit_photo']['name'];
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
-        
-        if (in_array($file_ext, $allowed_extensions)) {
-            $photo_name = $employee_code . '_' . time() . '_' . uniqid() . '.' . $file_ext;
+
+        if (in_array($file_ext, $allowed_extensions, true) && is_uploaded_file($file_tmp)) {
+            $safe_employee_code = preg_replace('/[^A-Za-z0-9_-]+/', '_', $employee_code);
+            $safe_employee_code = trim($safe_employee_code, '_') ?: 'employee';
+            $photo_name = $safe_employee_code . '_' . time() . '_' . uniqid() . '.' . $file_ext;
             $target_file = $upload_dir . $photo_name;
-            
+
             if (move_uploaded_file($file_tmp, $target_file)) {
                 // Delete old photo if exists
-                if (!empty($old_photo) && file_exists($upload_dir . $old_photo)) {
-                    unlink($upload_dir . $old_photo);
-                }
+                viewEmployeeDeletePhoto($old_photo);
             } else {
                 $photo_name = $old_photo; // Keep old photo if upload fails
             }
@@ -95,15 +164,19 @@ if (isset($_POST['update_employee'])) {
     // Update database
     $update_query = "UPDATE base_employees SET name = ?, employee_id = ?, desination = ?, photo = ?, updated_at = NOW() WHERE id = ? AND station_id = ?";
     $stmt = $mysqli->prepare($update_query);
-    $stmt->bind_param("ssssii", $name, $employee_code, $designation, $photo_name, $employee_id, $station_id);
-    
-    if ($stmt->execute()) {
-        $_SESSION['success_msg'] = 'Employee updated successfully!';
+    if ($stmt) {
+        $stmt->bind_param("ssssii", $name, $employee_code, $designation, $photo_name, $employee_id, $station_id);
+
+        if ($stmt->execute()) {
+            $_SESSION['success_msg'] = 'Employee updated successfully!';
+        } else {
+            $_SESSION['error_msg'] = 'Failed to update employee.';
+        }
+        $stmt->close();
     } else {
         $_SESSION['error_msg'] = 'Failed to update employee.';
     }
-    $stmt->close();
-    
+
     header("Location: view-employee.php");
     exit();
 }
@@ -112,32 +185,59 @@ if (isset($_POST['update_employee'])) {
 $employees = [];
 
 // Pagination settings
-$per_page_param = isset($_GET['per_page']) ? $_GET['per_page'] : '10';
-$records_per_page = ($per_page_param === 'all') ? PHP_INT_MAX : intval($per_page_param);
-$current_page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$per_page_param = viewEmployeeResolvePerPage($_GET['per_page'] ?? '10');
+$records_per_page = ($per_page_param === 'all') ? 0 : (int) $per_page_param;
+$current_page = max(1, (int) ($_GET['page'] ?? 1));
 $offset = ($per_page_param === 'all') ? 0 : (($current_page - 1) * $records_per_page);
 
 // Get total count
 $count_query = "SELECT COUNT(*) as total FROM base_employees WHERE station_id = ?";
 $stmt = $mysqli->prepare($count_query);
-$stmt->bind_param("i", $station_id);
-$stmt->execute();
-$count_result = $stmt->get_result();
-$total_records = $count_result->fetch_assoc()['total'];
-$stmt->close();
+$total_records = 0;
+if ($stmt) {
+    $stmt->bind_param("i", $station_id);
+    $stmt->execute();
+    $count_result = $stmt->get_result();
+    $total_records = (int) ($count_result->fetch_assoc()['total'] ?? 0);
+    $stmt->close();
+}
 
-$total_pages = ($per_page_param === 'all') ? 1 : ceil($total_records / $records_per_page);
+$total_pages = ($per_page_param === 'all') ? 1 : max(1, (int) ceil($total_records / $records_per_page));
+if ($current_page > $total_pages) {
+    $current_page = $total_pages;
+    $offset = ($per_page_param === 'all') ? 0 : (($current_page - 1) * $records_per_page);
+}
 
 // Fetch paginated employees
-$query = "SELECT * FROM base_employees WHERE station_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?";
-$stmt = $mysqli->prepare($query);
-$stmt->bind_param("iii", $station_id, $records_per_page, $offset);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $employees[] = $row;
+$query = "SELECT id, name, employee_id, desination, photo FROM base_employees WHERE station_id = ? ORDER BY created_at DESC";
+if ($per_page_param !== 'all') {
+    $query .= " LIMIT ? OFFSET ?";
 }
-$stmt->close();
+
+$stmt = $mysqli->prepare($query);
+if ($stmt) {
+    if ($per_page_param === 'all') {
+        $stmt->bind_param("i", $station_id);
+    } else {
+        $stmt->bind_param("iii", $station_id, $records_per_page, $offset);
+    }
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $row['photo_path'] = viewEmployeePhotoPath($row['photo'] ?? '');
+        $employees[] = $row;
+    }
+    $stmt->close();
+}
+
+$success_msg = $_SESSION['success_msg'] ?? '';
+$error_msg = $_SESSION['error_msg'] ?? '';
+unset($_SESSION['success_msg'], $_SESSION['error_msg']);
+$display_to = ($per_page_param === 'all') ? $total_records : min($offset + $records_per_page, $total_records);
+
+if (session_status() === PHP_SESSION_ACTIVE) {
+    session_write_close();
+}
 
 ?>
 <!DOCTYPE html>
@@ -407,15 +507,15 @@ $stmt->close();
                 <p class="text-sm text-slate-600 mt-1">Manage all employee records</p>
             </div>
 
-            <?php if (isset($_SESSION['success_msg'])): ?>
+            <?php if ($success_msg !== ''): ?>
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
-                <span class="block sm:inline"><i class="fas fa-check-circle mr-2"></i><?php echo $_SESSION['success_msg']; unset($_SESSION['success_msg']); ?></span>
+                <span class="block sm:inline"><i class="fas fa-check-circle mr-2"></i><?php echo viewEmployeeEscape($success_msg); ?></span>
             </div>
             <?php endif; ?>
 
-            <?php if (isset($_SESSION['error_msg'])): ?>
+            <?php if ($error_msg !== ''): ?>
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-                <span class="block sm:inline"><i class="fas fa-exclamation-circle mr-2"></i><?php echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?></span>
+                <span class="block sm:inline"><i class="fas fa-exclamation-circle mr-2"></i><?php echo viewEmployeeEscape($error_msg); ?></span>
             </div>
             <?php endif; ?>
 
@@ -462,24 +562,20 @@ $stmt->close();
                     </thead>
                     <tbody id="employeeTableBody">
                         <?php 
-                        if (count($employees) > 0):
+                        if (!empty($employees)):
                             $sr_no = 1;
                             foreach ($employees as $employee):
-                                $photo_path = !empty($employee['photo']) ? 'uploads/employee/' . $employee['photo'] : 'uploads/user_13984171.png';
-                                if (!empty($employee['photo']) && !file_exists($photo_path)) {
-                                    $photo_path = 'user_13984171.png';
-                                }
                         ?>
                         <tr>
                             <td><?php echo $sr_no++; ?></td>
-                            <td><img src="<?php echo htmlspecialchars($photo_path); ?>" alt="Employee" class="employee-photo mx-auto"></td>
-                            <td><?php echo htmlspecialchars($employee['name']); ?></td>
-                            <td><?php echo htmlspecialchars($employee['employee_id']); ?></td>
-                            <td><?php echo htmlspecialchars($employee['desination']); ?></td>
+                            <td><img src="<?php echo viewEmployeeEscape($employee['photo_path']); ?>" alt="Employee" class="employee-photo mx-auto"></td>
+                            <td><?php echo viewEmployeeEscape($employee['name']); ?></td>
+                            <td><?php echo viewEmployeeEscape($employee['employee_id']); ?></td>
+                            <td><?php echo viewEmployeeEscape($employee['desination']); ?></td>
                             <td>
                                 <div class="action-btns">
-                                    <button class="btn-edit" onclick="openEditModal(<?php echo $employee['id']; ?>, '<?php echo addslashes($employee['name']); ?>', '<?php echo addslashes($employee['employee_id']); ?>', '<?php echo addslashes($employee['desination']); ?>', '<?php echo addslashes($employee['photo']); ?>')"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(<?php echo $employee['id']; ?>)"><i class="fas fa-trash"></i></button>
+                                    <button class="btn-edit" onclick="openEditModal(<?php echo (int) $employee['id']; ?>, <?php echo viewEmployeeJson($employee['name']); ?>, <?php echo viewEmployeeJson($employee['employee_id']); ?>, <?php echo viewEmployeeJson($employee['desination']); ?>, <?php echo viewEmployeeJson(viewEmployeePhotoFilename($employee['photo'] ?? '')); ?>)"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-delete" onclick="deleteEmployee(<?php echo (int) $employee['id']; ?>)"><i class="fas fa-trash"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -501,7 +597,7 @@ $stmt->close();
             <!-- Pagination -->
             <div class="pagination-wrapper">
                 <div class="pagination-info">
-                    Showing <?php echo $total_records > 0 ? $offset + 1 : 0; ?> to <?php echo min($offset + $records_per_page, $total_records); ?> of <?php echo $total_records; ?> entries
+                    Showing <?php echo $total_records > 0 ? $offset + 1 : 0; ?> to <?php echo $display_to; ?> of <?php echo $total_records; ?> entries
                 </div>
                 <div class="pagination-controls">
                     <?php if ($current_page > 1): ?>
@@ -628,7 +724,12 @@ $stmt->close();
             // Show current photo
             const photoPreview = document.getElementById('current_photo_preview');
             if (photo) {
-                photoPreview.innerHTML = '<img src="uploads/employee/' + photo + '" alt="Current Photo" class="w-20 h-20 object-cover rounded border">';
+                photoPreview.textContent = '';
+                const img = document.createElement('img');
+                img.src = 'uploads/employee/' + encodeURIComponent(photo);
+                img.alt = 'Current Photo';
+                img.className = 'w-20 h-20 object-cover rounded border';
+                photoPreview.appendChild(img);
             } else {
                 photoPreview.innerHTML = '<p class="text-sm text-slate-500">No photo uploaded</p>';
             }
@@ -699,20 +800,22 @@ $stmt->close();
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const closeSidebar = document.getElementById('closeSidebar');
 
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.remove('-translate-x-full');
-            sidebarOverlay.classList.remove('hidden');
-        });
+        if (menuToggle && sidebar && sidebarOverlay && closeSidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+            });
 
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
-        });
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
 
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.classList.add('hidden');
-        });
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
+        }
     </script>
 
 </body>
