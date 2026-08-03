@@ -520,7 +520,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                         . "{$pd['name']}</a></td>";
                                        
                                     echo "<td>{$pd['pnr_number']}</td>";
-                                     if ($_SESSION['station_id'] != 16  && $_SESSION['station_id'] != 23 && $_SESSION['station_id'] != 25) {
+                                     if ($_SESSION['station_id'] != 16  && $_SESSION['station_id'] != 23 ) {
                                             echo "  <td>{$pd['ph_number']}</td>";
                                         }
                                     echo "<td>{$pd['train_no']}</td>";
