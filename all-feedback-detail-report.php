@@ -676,4 +676,4 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
 
 </body>
 
-</html>
+</html
