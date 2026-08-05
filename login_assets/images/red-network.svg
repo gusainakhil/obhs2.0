@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ed1c24" stop-opacity=".25"/><stop offset="1" stop-color="#ed1c24" stop-opacity="0"/></radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="8"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="#05090d"/>
+  <circle cx="1280" cy="230" r="390" fill="url(#g)"/>
+  <g stroke="#ed1c24" stroke-opacity=".22" fill="none">
+    <path d="M40 680 C260 510 340 790 570 560 S940 280 1130 480 1410 620 1580 390"/>
+    <path d="M0 420 C220 290 360 460 590 330 S1010 120 1290 300 1470 350 1600 210"/>
+    <path d="M120 820 C360 690 620 810 790 650 S1210 470 1530 700"/>
+  </g>
+  <g fill="#ed1c24">
+    <circle cx="210" cy="555" r="4"/><circle cx="450" cy="650" r="4"/><circle cx="690" cy="460" r="4"/><circle cx="960" cy="330" r="4"/><circle cx="1190" cy="515" r="4"/><circle cx="1410" cy="570" r="4"/>
+  </g>
+  <g opacity=".12" stroke="#fff">
+    <path d="M0 100H1600M0 200H1600M0 300H1600M0 400H1600M0 500H1600M0 600H1600M0 700H1600M0 800H1600"/>
+    <path d="M100 0V900M200 0V900M300 0V900M400 0V900M500 0V900M600 0V900M700 0V900M800 0V900M900 0V900M1000 0V900M1100 0V900M1200 0V900M1300 0V900M1400 0V900M1500 0V900"/>
+  </g>
+</svg>
