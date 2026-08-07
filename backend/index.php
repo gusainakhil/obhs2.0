@@ -16,7 +16,41 @@ checkLogin();
 
 // Get station information
 $station_name = getStationName($_SESSION['station_id']);
-$station_id = $_SESSION['station_id'];
+$station_id = (int) ($_SESSION['station_id'] ?? 0);
+
+$show_otp_skip_toggle = false;
+$otp_skip_status = 0;
+$current_user_id = (int) ($_SESSION['user_id'] ?? 0);
+
+if ($station_id === 33 && $current_user_id > 0) {
+    $show_otp_skip_toggle = true;
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_passenger_otp_skip'])) {
+        $new_otp_skip_status = isset($_POST['passenger_otp_skip']) ? 1 : 0;
+
+        $update_stmt = $mysqli->prepare("UPDATE OBHS_users SET passenger_otp_skip = ? WHERE user_id = ? LIMIT 1");
+        if ($update_stmt) {
+            $update_stmt->bind_param("ii", $new_otp_skip_status, $current_user_id);
+            $update_stmt->execute();
+            $update_stmt->close();
+            $otp_skip_status = $new_otp_skip_status;
+        }
+    }
+
+    $status_stmt = $mysqli->prepare("SELECT passenger_otp_skip FROM OBHS_users WHERE user_id = ? LIMIT 1");
+    if ($status_stmt) {
+        $status_stmt->bind_param("i", $current_user_id);
+        $status_stmt->execute();
+        $status_result = $status_stmt->get_result();
+
+        if ($status_result && $status_result->num_rows > 0) {
+            $status_row = $status_result->fetch_assoc();
+            $otp_skip_status = (int) ($status_row['passenger_otp_skip'] ?? 0);
+        }
+
+        $status_stmt->close();
+    }
+}
 ?>
 <?php $pageTitle = "Dashboard"; ?>
 <?php include 'header.php'; ?>
@@ -28,6 +62,23 @@ $station_id = $_SESSION['station_id'];
         <!-- Content Area -->
         <div class="content">
             <div class="content-section">
+                <?php if ($show_otp_skip_toggle) { ?>
+                <div class="otp-skip-box">
+                    <div class="otp-skip-box__header">
+                        <h3>Passenger OTP Skip</h3>
+                        <span class="otp-skip-box__badge <?php echo $otp_skip_status ? 'on' : 'off'; ?>"><?php echo $otp_skip_status ? 'ON' : 'OFF'; ?></span>
+                    </div>
+                    <form method="POST" class="otp-skip-form">
+                        <input type="hidden" name="update_passenger_otp_skip" value="1">
+                        <label class="otp-switch">
+                            <input type="checkbox" name="passenger_otp_skip" value="1" <?php echo $otp_skip_status ? 'checked' : ''; ?>>
+                            <span class="otp-slider"></span>
+                        </label>
+                        <button type="submit" class="otp-update-btn">Update</button>
+                    </form>
+                </div>
+                <?php } ?>
+
                 <!-- Quick Actions -->
                 <div class="quick-actions">
                     <h3 style="margin-bottom: 20px; color: #20a779;">Quick Actions</h3>
@@ -70,6 +121,107 @@ $station_id = $_SESSION['station_id'];
         </div>
 
     <style>
+        .otp-skip-box {
+            background: #f8fbff;
+            border: 1px solid #dce7f1;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .otp-skip-box__header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .otp-skip-box__header h3 {
+            margin: 0;
+            color: #1f4e79;
+            font-size: 16px;
+        }
+
+        .otp-skip-box__badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .otp-skip-box__badge.on {
+            background: #e8f8ef;
+            color: #1b7f4b;
+        }
+
+        .otp-skip-box__badge.off {
+            background: #fde8e8;
+            color: #c0392b;
+        }
+
+        .otp-skip-form {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .otp-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .otp-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .otp-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #ccc;
+            border-radius: 999px;
+            transition: 0.3s;
+        }
+
+        .otp-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .otp-switch input:checked + .otp-slider {
+            background-color: #20a779;
+        }
+
+        .otp-switch input:checked + .otp-slider:before {
+            transform: translateX(22px);
+        }
+
+        .otp-update-btn {
+            background: #20a779;
+            color: #fff;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
         .quick-actions {
             margin: 0;
         }
