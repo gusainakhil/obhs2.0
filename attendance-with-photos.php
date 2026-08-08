@@ -539,8 +539,8 @@ if (session_status() === PHP_SESSION_ACTIVE) {
         }
 
         .report-icon {
-            width: 110px;
-            height: 110px;
+            width: 150px;
+            height: 150px;
             cursor: pointer;
             transition: transform 0.2s ease;
             display: block;
