@@ -507,6 +507,7 @@ $coach_type = isset($_GET['coach_type']) ? $_GET['coach_type'] : null;
                                     echo "<td>{$pd['seat_no']}</td>";
                                     echo "<td>{$pd['coach_no']}</td>";
                                     echo "<td><a href='employee-card.php?passenger_id={$pd['passenger_id']}"
+                                     ."&feedback_date={$pd['feedback_date']}" 
                                         . "&station_id={$_SESSION['station_id']}"
                                         . "&train_no={$pd['train_no']}"
                                         . "&coach_no={$pd['coach_no']}"

@@ -14,6 +14,8 @@ $seat_no = isset($_GET['seat_no']) ? $_GET['seat_no'] : '';
 $phone = isset($_GET['phone']) ? $_GET['phone'] : '';
 $pnr_number = isset($_GET['pnr_number']) ? $_GET['pnr_number'] : '';
 $name = isset($_GET['name']) ? $_GET['name'] : '';
+$feedback_date = isset($_GET['feedback_date']) ? $_GET['feedback_date'] : '';
+
 
 ?>
 <!DOCTYPE html>
@@ -243,7 +245,7 @@ $name = isset($_GET['name']) ? $_GET['name'] : '';
                     </div>
                     <div class="info-col" style="flex:1; display:flex; align-items:center; gap:10px;">
                         <span class="info-label"><strong>Date:</strong></span>
-                        <span class="info-value"><?php echo $date_from; ?></span>
+                        <span class="info-value"><?php echo date('Y-m-d', strtotime($feedback_date)); ?></span>
                     </div>
                 </div>
 
