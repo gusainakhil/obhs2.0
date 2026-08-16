@@ -574,7 +574,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                             <td><?php echo viewEmployeeEscape($employee['desination']); ?></td>
                             <td>
                                 <div class="action-btns">
-                                    <button class="btn-edit" onclick="openEditModal(<?php echo (int) $employee['id']; ?>, <?php echo viewEmployeeJson($employee['name']); ?>, <?php echo viewEmployeeJson($employee['employee_id']); ?>, <?php echo viewEmployeeJson($employee['desination']); ?>, <?php echo viewEmployeeJson(viewEmployeePhotoFilename($employee['photo'] ?? '')); ?>)"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-edit" onclick='openEditModal(<?php echo (int) $employee['id']; ?>, <?php echo viewEmployeeJson($employee['name']); ?>, <?php echo viewEmployeeJson($employee['employee_id']); ?>, <?php echo viewEmployeeJson($employee['desination']); ?>, <?php echo viewEmployeeJson(viewEmployeePhotoFilename($employee['photo'] ?? '')); ?>)'><i class="fas fa-edit"></i></button>
                                     <button class="btn-delete" onclick="deleteEmployee(<?php echo (int) $employee['id']; ?>)"><i class="fas fa-trash"></i></button>
                                 </div>
                             </td>
