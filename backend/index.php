@@ -22,7 +22,7 @@ $show_otp_skip_toggle = false;
 $otp_skip_status = 0;
 $current_user_id = (int) ($_SESSION['user_id'] ?? 0);
 
-if ($station_id === 33 && $current_user_id > 0) {
+if ($station_id === 0 && $current_user_id > 0) {
     $show_otp_skip_toggle = true;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_passenger_otp_skip'])) {

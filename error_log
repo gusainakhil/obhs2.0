@@ -1,0 +1,873 @@
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 532, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 777, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 890, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 693, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 464, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 942, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 64, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 1049, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 360, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 155, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 265, station: 25
+[31-Jul-2026 13:30:06 UTC] No photo found for employee: 886, station: 25
+[31-Jul-2026 13:46:15 UTC] No photo found for employee: 49, station: 25
+[31-Jul-2026 13:46:15 UTC] No photo found for employee: 1130, station: 25
+[31-Jul-2026 14:12:47 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[31-Jul-2026 14:12:47 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[31-Jul-2026 14:13:06 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[31-Jul-2026 14:13:06 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[31-Jul-2026 14:57:44 UTC] No photo found for employee: 49, station: 25
+[31-Jul-2026 14:57:44 UTC] No photo found for employee: 1130, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 1047, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 1198, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 1119, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 340, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 128, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 1154, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 923, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 951, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 1087, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 301, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 104, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 1177, station: 25
+[31-Jul-2026 14:59:29 UTC] No photo found for employee: 117, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 568, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 1155, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 632, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 629, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 185, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 43, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 958, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 324, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 293, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 945, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 1160, station: 25
+[31-Jul-2026 15:07:26 UTC] No photo found for employee: 1043, station: 25
+[31-Jul-2026 15:07:55 UTC] No photo found for employee: 1139, station: 25
+[31-Jul-2026 15:07:55 UTC] No photo found for employee: 298, station: 25
+[31-Jul-2026 15:07:55 UTC] No photo found for employee: 1242, station: 25
+[31-Jul-2026 15:07:55 UTC] No photo found for employee: 1193, station: 25
+[31-Jul-2026 15:07:55 UTC] No photo found for employee: 683, station: 25
+[31-Jul-2026 15:07:55 UTC] No photo found for employee: 721, station: 25
+[31-Jul-2026 15:07:55 UTC] No photo found for employee: 1191, station: 25
+[31-Jul-2026 15:07:55 UTC] No photo found for employee: 933, station: 25
+[31-Jul-2026 15:07:55 UTC] No photo found for employee: 1239, station: 25
+[31-Jul-2026 15:07:55 UTC] No photo found for employee: 1250, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 929, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 249, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 1052, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 079, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 181, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 31, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 732, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 106, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 213, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 94, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 367, station: 25
+[31-Jul-2026 15:08:34 UTC] No photo found for employee: 321, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 532, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 777, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 890, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 972, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 693, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 464, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 942, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 64, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 360, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 155, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 265, station: 25
+[31-Jul-2026 15:12:40 UTC] No photo found for employee: 852, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 796, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 268, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 763, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 1061, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 1033, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 189, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 1058, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 144, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 1062, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 05, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 1226, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 1056, station: 25
+[31-Jul-2026 15:13:30 UTC] No photo found for employee: 1221, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 926, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 1238, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 1140, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 663, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 470, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 1001, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 1179, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 1151, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 393, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 1219, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 251, station: 25
+[31-Jul-2026 15:30:13 UTC] No photo found for employee: 255, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 1101, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 1249, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 1157, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 1166, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 454, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 529, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 893, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 1213, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 1159, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 1183, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 469, station: 25
+[31-Jul-2026 15:30:57 UTC] No photo found for employee: 1230, station: 25
+[31-Jul-2026 15:31:22 UTC] No photo found for employee: 1108, station: 25
+[31-Jul-2026 15:31:22 UTC] No photo found for employee: 960, station: 25
+[31-Jul-2026 15:31:22 UTC] No photo found for employee: 800, station: 25
+[31-Jul-2026 15:31:22 UTC] No photo found for employee: 971, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 1202, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 872, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 835, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 1137, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 878, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 742, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 44, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 1211, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 1246, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 1247, station: 25
+[31-Jul-2026 16:32:26 UTC] No photo found for employee: 1248, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 796, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 268, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 763, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 1061, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 1033, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 189, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 1058, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 144, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 1062, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 05, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 1226, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 1056, station: 25
+[31-Jul-2026 16:33:31 UTC] No photo found for employee: 1221, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 273, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 351, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 705, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 620, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 1175, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 04, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 419, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 03, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 114, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 1201, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 318, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 241, station: 25
+[31-Jul-2026 16:33:54 UTC] No photo found for employee: 356, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 1202, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 872, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 835, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 1137, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 878, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 742, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 44, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 1211, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 1246, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 1247, station: 25
+[31-Jul-2026 16:34:54 UTC] No photo found for employee: 1248, station: 25
+[31-Jul-2026 17:48:07 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[31-Jul-2026 17:48:07 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: HK-557, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: A-1274, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: HK-431, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: A-2422, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: A-590, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: A-1702, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: A-2320, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: A-2592, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: HK-546, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: E-1067, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: A-2356, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: A-2345, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: HK-229, station: 17
+[01-Aug-2026 03:45:24 UTC] No photo found for employee: A-2421, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: HK-557, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: A-1274, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: A-2307, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: HK-431, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: A-2422, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: A-1702, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: A-2320, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: A-2380, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: HK-546, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: E-1067, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: a-2535, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: A-2356, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: A-2345, station: 17
+[01-Aug-2026 03:45:56 UTC] No photo found for employee: A-2421, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: HK-557, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: A-1274, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: HK-431, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: A-2422, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: A-590, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: A-1702, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: A-2320, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: A-2592, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: HK-546, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: E-1067, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: A-2356, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: A-2345, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: HK-229, station: 17
+[01-Aug-2026 03:48:35 UTC] No photo found for employee: A-2421, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: HK-557, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: A-1274, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: HK-431, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: A-2422, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: A-590, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: A-1702, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: A-2320, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: A-2592, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: HK-546, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: E-1067, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: A-2356, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: A-2345, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: HK-229, station: 17
+[01-Aug-2026 03:49:47 UTC] No photo found for employee: A-2421, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: HK-557, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: A-1274, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: HK-431, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: A-2422, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: A-590, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: A-1702, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: A-2320, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: A-2592, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: HK-546, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: E-1067, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: A-2356, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: A-2345, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: HK-229, station: 17
+[01-Aug-2026 03:50:52 UTC] No photo found for employee: A-2421, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: HK-557, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: A-1274, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: HK-431, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: A-2422, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: A-590, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: A-1702, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: A-2320, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: A-2592, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: HK-546, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: E-1067, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: A-2356, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: A-2345, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: HK-229, station: 17
+[01-Aug-2026 03:51:59 UTC] No photo found for employee: A-2421, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: A-1274, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: HK-431, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: A-2422, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: A-1702, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: A-2320, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: A-2223, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: HK-546, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: A-2168, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: A-2356, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: A-2345, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: A-2421, station: 17
+[01-Aug-2026 03:52:17 UTC] No photo found for employee: A-2381, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: HK-557, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: A-1274, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: HK-431, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: A-2422, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: A-590, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: A-1702, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: A-2320, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: A-2592, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: HK-546, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: E-1067, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: A-2356, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: A-2345, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: HK-229, station: 17
+[01-Aug-2026 03:53:43 UTC] No photo found for employee: A-2421, station: 17
+[01-Aug-2026 04:52:15 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:52:15 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:53:00 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:53:00 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:16 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:16 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:38 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:38 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:40 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:40 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:43 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:43 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:45 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:45 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:46 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:46 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:50 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:50 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:52 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:52 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:54 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:54 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:55 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:55 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:57 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:57 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:54:58 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:54:58 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 04:56:20 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 04:56:20 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 05:09:05 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:09:05 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 05:10:22 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:10:22 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 05:11:40 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:11:40 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 05:11:53 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:11:53 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 05:12:37 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:12:37 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 05:31:17 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:31:17 UTC] No photo found for employee: 1012, station: 23
+[01-Aug-2026 05:31:17 UTC] No photo found for employee: 1027, station: 23
+[01-Aug-2026 05:31:17 UTC] No photo found for employee: 1024, station: 23
+[01-Aug-2026 05:31:17 UTC] No photo found for employee: 1001, station: 23
+[01-Aug-2026 05:31:17 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 05:33:32 UTC] No photo found for employee: 1089, station: 23
+[01-Aug-2026 05:33:32 UTC] No photo found for employee: 1111, station: 23
+[01-Aug-2026 05:33:32 UTC] No photo found for employee: 1125, station: 23
+[01-Aug-2026 05:33:32 UTC] No photo found for employee: 1009, station: 23
+[01-Aug-2026 05:33:32 UTC] No photo found for employee: 1124, station: 23
+[01-Aug-2026 05:33:32 UTC] No photo found for employee: 1098, station: 23
+[01-Aug-2026 05:33:48 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:33:48 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 05:34:06 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:34:06 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 05:34:20 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:34:20 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 05:34:29 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:34:29 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 05:42:22 UTC] No photo found for employee: 107, station: 14
+[01-Aug-2026 05:42:22 UTC] No photo found for employee: 72, station: 14
+[01-Aug-2026 05:42:22 UTC] No photo found for employee: 860, station: 14
+[01-Aug-2026 05:42:22 UTC] No photo found for employee: 100, station: 14
+[01-Aug-2026 05:42:22 UTC] No photo found for employee: 07, station: 14
+[01-Aug-2026 05:56:21 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 05:56:21 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 05:57:19 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 05:57:19 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 06:02:32 UTC] No photo found for employee: 1013, station: 23
+[01-Aug-2026 06:02:32 UTC] No photo found for employee: 1043, station: 23
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 176, station: 25
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 203, station: 25
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 832, station: 25
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 1229, station: 25
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 146, station: 25
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 242, station: 25
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 794, station: 25
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 496, station: 25
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 187, station: 25
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 1237, station: 25
+[01-Aug-2026 06:02:47 UTC] No photo found for employee: 192, station: 25
+[01-Aug-2026 06:07:50 UTC] No photo found for employee: 1139, station: 25
+[01-Aug-2026 06:07:50 UTC] No photo found for employee: 298, station: 25
+[01-Aug-2026 06:07:50 UTC] No photo found for employee: 1242, station: 25
+[01-Aug-2026 06:07:50 UTC] No photo found for employee: 1193, station: 25
+[01-Aug-2026 06:07:50 UTC] No photo found for employee: 683, station: 25
+[01-Aug-2026 06:07:50 UTC] No photo found for employee: 721, station: 25
+[01-Aug-2026 06:07:50 UTC] No photo found for employee: 1191, station: 25
+[01-Aug-2026 06:07:50 UTC] No photo found for employee: 933, station: 25
+[01-Aug-2026 06:07:50 UTC] No photo found for employee: 1239, station: 25
+[01-Aug-2026 06:07:50 UTC] No photo found for employee: 1250, station: 25
+[01-Aug-2026 06:08:31 UTC] No photo found for employee: 1139, station: 25
+[01-Aug-2026 06:08:31 UTC] No photo found for employee: 298, station: 25
+[01-Aug-2026 06:08:31 UTC] No photo found for employee: 1242, station: 25
+[01-Aug-2026 06:08:31 UTC] No photo found for employee: 1193, station: 25
+[01-Aug-2026 06:08:31 UTC] No photo found for employee: 683, station: 25
+[01-Aug-2026 06:08:31 UTC] No photo found for employee: 721, station: 25
+[01-Aug-2026 06:08:31 UTC] No photo found for employee: 1191, station: 25
+[01-Aug-2026 06:08:31 UTC] No photo found for employee: 933, station: 25
+[01-Aug-2026 06:08:31 UTC] No photo found for employee: 1239, station: 25
+[01-Aug-2026 06:08:31 UTC] No photo found for employee: 1250, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 796, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 268, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 763, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 1061, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 1033, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 189, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 1058, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 144, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 1062, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 05, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 1226, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 1056, station: 25
+[01-Aug-2026 06:09:14 UTC] No photo found for employee: 1221, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 992, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 1227, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 079, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 181, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 31, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 630, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 213, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 650, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 1063, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 726, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 321, station: 25
+[01-Aug-2026 06:10:21 UTC] No photo found for employee: 1067, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 273, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 351, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 705, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 620, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 1175, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 04, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 419, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 03, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 114, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 1201, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 318, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 241, station: 25
+[01-Aug-2026 06:12:19 UTC] No photo found for employee: 356, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 973, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 352, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 1212, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 1147, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 1174, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 110, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 1178, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 119, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 286, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 406, station: 25
+[01-Aug-2026 06:13:03 UTC] No photo found for employee: 1245, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 532, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 777, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 890, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 972, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 693, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 464, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 942, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 64, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 360, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 155, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 265, station: 25
+[01-Aug-2026 06:13:54 UTC] No photo found for employee: 852, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 96, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 898, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 1078, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 305, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 424, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 1089, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 808, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 1161, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 1225, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 999, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 1148, station: 25
+[01-Aug-2026 06:14:49 UTC] No photo found for employee: 1196, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 1047, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 1198, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 1119, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 340, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 128, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 1154, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 923, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 951, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 1087, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 301, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 104, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 1177, station: 25
+[01-Aug-2026 06:15:35 UTC] No photo found for employee: 117, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 1143, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 1217, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 861, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 1206, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 455, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 32, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 908, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 859, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 27, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 1142, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 36, station: 25
+[01-Aug-2026 06:17:21 UTC] No photo found for employee: 1218, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 1143, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 1217, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 861, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 1206, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 455, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 32, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 908, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 859, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 27, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 1142, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 36, station: 25
+[01-Aug-2026 06:19:41 UTC] No photo found for employee: 1218, station: 25
+[01-Aug-2026 06:22:14 UTC] No photo found for employee: 1111, station: 23
+[01-Aug-2026 06:22:14 UTC] No photo found for employee: 1112, station: 23
+[01-Aug-2026 06:22:14 UTC] No photo found for employee: 1006, station: 23
+[01-Aug-2026 06:22:14 UTC] No photo found for employee: 1019, station: 23
+[01-Aug-2026 06:22:14 UTC] No photo found for employee: 1009, station: 23
+[01-Aug-2026 06:22:14 UTC] No photo found for employee: 1067, station: 23
+[01-Aug-2026 06:22:14 UTC] No photo found for employee: 1098, station: 23
+[01-Aug-2026 06:28:51 UTC] No photo found for employee: 004, station: 18
+[01-Aug-2026 06:28:51 UTC] No photo found for employee: 052, station: 18
+[01-Aug-2026 06:28:51 UTC] No photo found for employee: 051, station: 18
+[01-Aug-2026 06:28:51 UTC] No photo found for employee: 087, station: 18
+[01-Aug-2026 06:28:51 UTC] No photo found for employee: 191, station: 18
+[01-Aug-2026 06:50:12 UTC] No photo found for employee: 1027, station: 23
+[01-Aug-2026 06:50:12 UTC] No photo found for employee: 1001, station: 23
+[01-Aug-2026 06:50:12 UTC] No photo found for employee: 1125, station: 23
+[01-Aug-2026 06:50:12 UTC] No photo found for employee: 1006, station: 23
+[01-Aug-2026 06:50:12 UTC] No photo found for employee: 1057, station: 23
+[01-Aug-2026 06:50:59 UTC] No photo found for employee: 262, station: 14
+[01-Aug-2026 06:50:59 UTC] No photo found for employee: 265, station: 14
+[01-Aug-2026 06:50:59 UTC] No photo found for employee: 251, station: 14
+[01-Aug-2026 06:50:59 UTC] No photo found for employee: 271, station: 14
+[01-Aug-2026 06:51:41 UTC] No photo found for employee: 392, station: 14
+[01-Aug-2026 06:51:41 UTC] No photo found for employee: 193, station: 14
+[01-Aug-2026 06:51:41 UTC] No photo found for employee: 1045, station: 14
+[01-Aug-2026 06:51:41 UTC] No photo found for employee: 185, station: 14
+[01-Aug-2026 06:55:40 UTC] No photo found for employee: 862, station: 14
+[01-Aug-2026 06:55:40 UTC] No photo found for employee: 279, station: 14
+[01-Aug-2026 06:55:40 UTC] No photo found for employee: 1046, station: 14
+[01-Aug-2026 06:55:40 UTC] No photo found for employee: 981, station: 14
+[01-Aug-2026 06:55:40 UTC] No photo found for employee: 115, station: 14
+[01-Aug-2026 06:56:40 UTC] No photo found for employee: 153, station: 14
+[01-Aug-2026 06:56:40 UTC] No photo found for employee: 367, station: 14
+[01-Aug-2026 06:56:40 UTC] No photo found for employee: 459, station: 14
+[01-Aug-2026 06:56:40 UTC] No photo found for employee: 134, station: 14
+[01-Aug-2026 06:56:40 UTC] No photo found for employee: 143, station: 14
+[01-Aug-2026 06:58:30 UTC] No photo found for employee: 187, station: 14
+[01-Aug-2026 06:58:30 UTC] No photo found for employee: 121, station: 14
+[01-Aug-2026 06:58:30 UTC] No photo found for employee: 496, station: 14
+[01-Aug-2026 06:58:30 UTC] No photo found for employee: 84, station: 14
+[01-Aug-2026 06:58:30 UTC] No photo found for employee: 329, station: 14
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-034, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-367, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-199, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-840, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-098, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-901, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-203, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-202, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-195, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-773, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-201, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-310, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-307, station: 11
+[01-Aug-2026 07:07:02 UTC] No photo found for employee: SKS-902, station: 11
+[01-Aug-2026 07:16:14 UTC] No photo found for employee: 1015, station: 23
+[01-Aug-2026 07:16:14 UTC] No photo found for employee: 1001, station: 23
+[01-Aug-2026 07:16:14 UTC] No photo found for employee: 1129, station: 23
+[01-Aug-2026 07:16:14 UTC] No photo found for employee: 1006, station: 23
+[01-Aug-2026 07:16:14 UTC] No photo found for employee: 1009, station: 23
+[01-Aug-2026 07:16:14 UTC] No photo found for employee: 1054, station: 23
+[01-Aug-2026 07:18:25 UTC] No photo found for employee: 1147, station: 23
+[01-Aug-2026 07:18:25 UTC] No photo found for employee: 1146, station: 23
+[01-Aug-2026 07:18:25 UTC] No photo found for employee: 1003, station: 23
+[01-Aug-2026 07:18:25 UTC] No photo found for employee: 1054, station: 23
+[01-Aug-2026 07:18:25 UTC] No photo found for employee: 1124, station: 23
+[01-Aug-2026 07:18:25 UTC] No photo found for employee: 1145, station: 23
+[01-Aug-2026 07:18:25 UTC] No photo found for employee: 1144, station: 23
+[01-Aug-2026 07:25:31 UTC] No photo found for employee: 417, station: 16
+[01-Aug-2026 07:25:31 UTC] No photo found for employee: 407, station: 16
+[01-Aug-2026 07:25:31 UTC] No photo found for employee: 419, station: 16
+[01-Aug-2026 07:25:31 UTC] No photo found for employee: 442, station: 16
+[01-Aug-2026 07:25:31 UTC] No photo found for employee: 432, station: 16
+[01-Aug-2026 07:34:13 UTC] No photo found for employee: 417, station: 16
+[01-Aug-2026 07:34:13 UTC] No photo found for employee: 407, station: 16
+[01-Aug-2026 07:34:13 UTC] No photo found for employee: 420, station: 16
+[01-Aug-2026 07:34:13 UTC] No photo found for employee: 442, station: 16
+[01-Aug-2026 07:34:13 UTC] No photo found for employee: 432, station: 16
+[01-Aug-2026 08:10:05 UTC] No photo found for employee: 187, station: 14
+[01-Aug-2026 08:10:05 UTC] No photo found for employee: 121, station: 14
+[01-Aug-2026 08:10:05 UTC] No photo found for employee: 496, station: 14
+[01-Aug-2026 08:10:05 UTC] No photo found for employee: 84, station: 14
+[01-Aug-2026 08:10:05 UTC] No photo found for employee: 329, station: 14
+[01-Aug-2026 08:11:20 UTC] No photo found for employee: 417, station: 16
+[01-Aug-2026 08:11:20 UTC] No photo found for employee: 443, station: 16
+[01-Aug-2026 08:11:20 UTC] No photo found for employee: 428, station: 16
+[01-Aug-2026 08:11:20 UTC] No photo found for employee: 446, station: 16
+[01-Aug-2026 08:11:20 UTC] No photo found for employee: 404, station: 16
+[01-Aug-2026 08:11:20 UTC] No photo found for employee: 421, station: 16
+[01-Aug-2026 08:17:34 UTC] No photo found for employee: 417, station: 16
+[01-Aug-2026 08:17:34 UTC] No photo found for employee: 443, station: 16
+[01-Aug-2026 08:17:34 UTC] No photo found for employee: 428, station: 16
+[01-Aug-2026 08:17:34 UTC] No photo found for employee: 446, station: 16
+[01-Aug-2026 08:17:34 UTC] No photo found for employee: 404, station: 16
+[01-Aug-2026 08:17:34 UTC] No photo found for employee: 421, station: 16
+[01-Aug-2026 08:18:06 UTC] No photo found for employee: 417, station: 16
+[01-Aug-2026 08:18:06 UTC] No photo found for employee: 443, station: 16
+[01-Aug-2026 08:18:06 UTC] No photo found for employee: 428, station: 16
+[01-Aug-2026 08:18:06 UTC] No photo found for employee: 446, station: 16
+[01-Aug-2026 08:18:06 UTC] No photo found for employee: 404, station: 16
+[01-Aug-2026 08:18:06 UTC] No photo found for employee: 421, station: 16
+[01-Aug-2026 08:29:55 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 08:29:55 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 08:29:56 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 08:29:56 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 08:34:11 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 08:34:11 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 08:40:46 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[01-Aug-2026 08:40:46 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-106, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-576, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-102, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-115, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-039, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-604, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-056, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-104, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-514, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-101, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-377, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-566, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-520, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-178, station: 11
+[01-Aug-2026 09:32:04 UTC] No photo found for employee: SKS-103, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-106, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-576, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-102, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-115, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-039, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-604, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-056, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-104, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-514, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-101, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-377, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-566, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-520, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-178, station: 11
+[01-Aug-2026 09:32:06 UTC] No photo found for employee: SKS-103, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-106, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-576, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-102, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-115, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-039, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-604, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-056, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-104, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-514, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-101, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-377, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-566, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-520, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-178, station: 11
+[01-Aug-2026 09:32:07 UTC] No photo found for employee: SKS-103, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-106, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-576, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-102, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-115, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-039, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-604, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-056, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-104, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-514, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-101, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-377, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-566, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-520, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-178, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-103, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-106, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-576, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-102, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-115, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-039, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-604, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-056, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-104, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-514, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-101, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-377, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-566, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-520, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-178, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-103, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-106, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-576, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-102, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-115, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-039, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-604, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-056, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-104, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-514, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-101, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-377, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-566, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-520, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-178, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-103, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-106, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-576, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-102, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-115, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-039, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-604, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-056, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-104, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-514, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-101, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-377, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-566, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-520, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-178, station: 11
+[01-Aug-2026 09:32:08 UTC] No photo found for employee: SKS-103, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-106, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-576, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-102, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-115, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-039, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-604, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-056, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-104, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-514, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-101, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-377, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-566, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-520, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-178, station: 11
+[01-Aug-2026 09:32:09 UTC] No photo found for employee: SKS-103, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-106, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-576, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-102, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-115, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-039, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-604, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-056, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-104, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-514, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-101, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-377, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-566, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-520, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-178, station: 11
+[01-Aug-2026 09:32:10 UTC] No photo found for employee: SKS-103, station: 11
+[02-Aug-2026 08:21:13 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[02-Aug-2026 08:21:13 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[02-Aug-2026 10:16:45 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[02-Aug-2026 10:16:45 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[02-Aug-2026 11:35:13 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[02-Aug-2026 11:35:13 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[03-Aug-2026 10:33:16 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[03-Aug-2026 10:33:16 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[03-Aug-2026 10:36:05 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[03-Aug-2026 10:36:05 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[03-Aug-2026 10:36:49 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: '' for column `obhsbeatleanalyt_OBHS`.`base_fb_target`.`feedback_tte` at row 1 in /home/obhsbeatleanalyt/public_html/feedback-target.php:104
+Stack trace:
+#0 /home/obhsbeatleanalyt/public_html/feedback-target.php(104): mysqli_stmt->execute()
+#1 {main}
+  thrown in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 104
+[03-Aug-2026 10:36:54 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[03-Aug-2026 10:36:54 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[03-Aug-2026 10:37:14 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[03-Aug-2026 10:37:14 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[03-Aug-2026 12:32:23 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[03-Aug-2026 12:32:23 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[03-Aug-2026 12:32:47 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[03-Aug-2026 12:32:47 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[04-Aug-2026 07:52:14 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[04-Aug-2026 07:52:14 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[04-Aug-2026 16:05:26 UTC] PHP Warning:  Undefined array key "username" in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[04-Aug-2026 16:05:26 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[04-Aug-2026 16:05:26 UTC] PHP Warning:  Undefined array key "password" in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[04-Aug-2026 16:05:26 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[04-Aug-2026 16:05:27 UTC] PHP Warning:  Undefined array key "username" in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[04-Aug-2026 16:05:27 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[04-Aug-2026 16:05:27 UTC] PHP Warning:  Undefined array key "password" in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[04-Aug-2026 16:05:27 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[04-Aug-2026 16:05:27 UTC] PHP Warning:  Undefined array key "username" in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[04-Aug-2026 16:05:27 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[04-Aug-2026 16:05:27 UTC] PHP Warning:  Undefined array key "password" in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[04-Aug-2026 16:05:27 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[04-Aug-2026 16:05:27 UTC] PHP Warning:  Undefined array key "username" in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[04-Aug-2026 16:05:27 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[04-Aug-2026 16:05:27 UTC] PHP Warning:  Undefined array key "password" in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[04-Aug-2026 16:05:27 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 02:00:55 UTC] PHP Warning:  Undefined array key "username" in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[05-Aug-2026 02:00:55 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[05-Aug-2026 02:00:55 UTC] PHP Warning:  Undefined array key "password" in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 02:00:55 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 02:00:55 UTC] PHP Warning:  Undefined array key "username" in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[05-Aug-2026 02:00:55 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[05-Aug-2026 02:00:55 UTC] PHP Warning:  Undefined array key "password" in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 02:00:55 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 02:00:55 UTC] PHP Warning:  Undefined array key "username" in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[05-Aug-2026 02:00:55 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[05-Aug-2026 02:00:55 UTC] PHP Warning:  Undefined array key "password" in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 02:00:55 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 02:00:55 UTC] PHP Warning:  Undefined array key "username" in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[05-Aug-2026 02:00:55 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[05-Aug-2026 02:00:55 UTC] PHP Warning:  Undefined array key "password" in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 02:00:55 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 07:22:53 UTC] PHP Warning:  Undefined array key "username" in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[05-Aug-2026 07:22:53 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 24
+[05-Aug-2026 07:22:53 UTC] PHP Warning:  Undefined array key "password" in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 07:22:53 UTC] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in /home/obhsbeatleanalyt/public_html/index.php on line 25
+[05-Aug-2026 07:26:41 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[05-Aug-2026 07:26:41 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[05-Aug-2026 07:27:43 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[05-Aug-2026 07:27:43 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[07-Aug-2026 13:01:46 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[07-Aug-2026 13:01:46 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[07-Aug-2026 13:04:40 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[07-Aug-2026 13:04:40 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[08-Aug-2026 06:39:00 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[08-Aug-2026 06:39:00 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[08-Aug-2026 06:40:14 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[08-Aug-2026 06:40:14 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[09-Aug-2026 12:33:08 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[09-Aug-2026 12:33:08 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[10-Aug-2026 07:43:51 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[10-Aug-2026 07:43:51 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[10-Aug-2026 07:46:31 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[10-Aug-2026 07:46:31 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[10-Aug-2026 08:52:30 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[10-Aug-2026 08:52:30 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[10-Aug-2026 12:06:24 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[10-Aug-2026 12:06:24 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[11-Aug-2026 05:29:44 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[11-Aug-2026 05:29:44 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[11-Aug-2026 05:29:55 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[11-Aug-2026 05:29:55 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[13-Aug-2026 07:02:43 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[13-Aug-2026 07:02:43 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[13-Aug-2026 07:06:15 UTC] PHP Warning:  Undefined variable $date in /home/obhsbeatleanalyt/public_html/employee-card.php on line 246
+[13-Aug-2026 09:53:40 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[13-Aug-2026 09:53:40 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[13-Aug-2026 09:56:13 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[13-Aug-2026 09:56:13 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[14-Aug-2026 04:39:34 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[14-Aug-2026 04:39:34 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[14-Aug-2026 04:39:35 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[14-Aug-2026 04:39:35 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[14-Aug-2026 06:40:20 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[14-Aug-2026 06:40:20 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 05:37:51 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 05:37:51 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 05:38:24 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 05:38:24 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 05:38:26 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 05:38:26 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 05:40:17 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 05:40:17 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 07:41:13 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 07:41:13 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 07:48:51 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 07:48:51 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 07:48:53 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 07:48:53 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 07:52:23 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 07:52:23 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 08:01:54 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 08:01:54 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 08:11:04 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 08:11:04 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[16-Aug-2026 08:11:49 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[16-Aug-2026 08:11:49 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[17-Aug-2026 06:10:48 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[17-Aug-2026 06:10:48 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[17-Aug-2026 09:42:12 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[17-Aug-2026 09:42:12 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[17-Aug-2026 10:30:01 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[17-Aug-2026 10:30:01 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[18-Aug-2026 03:02:39 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[18-Aug-2026 03:02:39 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[18-Aug-2026 03:30:20 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[18-Aug-2026 03:30:20 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[18-Aug-2026 03:30:28 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[18-Aug-2026 03:30:28 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[18-Aug-2026 03:31:08 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[18-Aug-2026 03:31:08 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51
+[18-Aug-2026 03:58:25 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/obhsbeatleanalyt/public_html/feedback-target.php on line 402
+[18-Aug-2026 03:58:25 UTC] PHP Fatal error:  Cannot redeclare checkLogin() (previously declared in /home/obhsbeatleanalyt/public_html/includes/helpers.php:16) in /home/obhsbeatleanalyt/public_html/includes/helpers.php on line 51

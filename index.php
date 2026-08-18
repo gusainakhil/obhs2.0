@@ -170,22 +170,22 @@ if (isset($mysqli) && $mysqli instanceof mysqli) {
           <!-- Passenger Amenities -->
           <a
             class="platform-card"
-            href="https://pa.beatlebuddy.com/"
+            href="https://ri.beatleanalytics.com/"
             data-platform="amenities"
             data-title="Passenger Amenities"
             data-subtitle="Passenger Facilities Management"
             aria-label="Open Passenger Amenities platform"
           >
             <i>⌁</i>
-            <h3>Passenger Amenities</h3>
-            <p>Passenger facilities management</p>
+            <h3>Rake Inspection</h3>
+            <p>Rake Inspection</p>
             <span>→</span>
           </a>
 
           <!-- OBHS Feedback -->
           <a
             class="platform-card"
-            href="#"
+            href="https://obhs.beatleanalytics.in/"
             data-platform="obhs"
             data-title="OBHS Feedback"
             data-subtitle="Outbound Housekeeping Feedback"
@@ -254,8 +254,6 @@ if (isset($mysqli) && $mysqli instanceof mysqli) {
             data-title="Station Cleanliness"
             data-subtitle="Cleanliness Monitoring & Reporting"
             aria-label="Open Station Cleanliness platform"
-            target="_blank"
-            rel="noopener noreferrer"
           >
             <i>⌁</i>
             <h3>Station Cleanliness</h3>
@@ -266,7 +264,7 @@ if (isset($mysqli) && $mysqli instanceof mysqli) {
           <!-- Station Cleanliness Feedbacks -->
           <a
             class="platform-card"
-            href="#"
+            href="https://pmc.beatleme.co.in/"
             data-platform="cleanliness_feedback"
             data-title="Station Cleanliness Feedbacks"
             data-subtitle="Cleanliness Feedback Management"

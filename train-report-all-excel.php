@@ -73,7 +73,7 @@
 
         // Build headers
         $headers = ['SR.', 'Date', 'Seat No', 'Coach No', 'Customer Name', 'PNR No'];
-        if ($_SESSION['station_id'] != 16 && $_SESSION['station_id'] != 23 && $_SESSION['station_id'] != 25) {
+        if ($_SESSION['station_id'] != 16 && $_SESSION['station_id'] != 23) {
             $headers[] = 'Phone';
         }
         $headers = array_merge($headers, ['Train No', 'Grade']);
@@ -115,7 +115,7 @@
                 $pd['name'],
                 $pd['pnr_number']
             ];
-            if ($_SESSION['station_id'] != 16 && $_SESSION['station_id'] != 23 && $_SESSION['station_id'] != 25) {
+            if ($_SESSION['station_id'] != 16  && $_SESSION['station_id'] != 23 ) {
                 $rowData[] = $pd['ph_number'];
             }
             $rowData = array_merge($rowData, [
