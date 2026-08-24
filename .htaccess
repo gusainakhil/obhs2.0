@@ -1,0 +1,4 @@
+RewriteEngine On
+
+# Redirect visits to this folder's root to the public website landing page.
+RewriteRule ^$ /website/index.html [L,R=302]
