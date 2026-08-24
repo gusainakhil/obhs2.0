@@ -48,7 +48,7 @@ function sendResponse(
 
 /*
 |--------------------------------------------------------------------------
-| ONLY POST ALLOWED FOR YOUR API
+| ONLY POST ALLOWED
 |--------------------------------------------------------------------------
 */
 
@@ -186,7 +186,7 @@ $authkey = "ccb3614edd5c79ed";
 
 $countryCode = "91";
 
-$sid = "44695";
+$sid = "45130";
 
 $company = "Beatle Analytics";
 
@@ -197,6 +197,11 @@ $time = "5_minutes";
 |--------------------------------------------------------------------------
 | AUTHKEY PARAMETERS
 |--------------------------------------------------------------------------
+|
+| IMPORTANT:
+|
+| Authkey receives `alp` instead of `otp`.
+|
 */
 
 $params = [
@@ -211,7 +216,7 @@ $params = [
 
     "company" => $company,
 
-    "otp" => $finalOtp,
+    "alp" => $finalOtp,
 
     "time" => $time
 
@@ -500,10 +505,10 @@ sendResponse(
 
         "mobile" => $mobile,
 
-        // Example: BEA9895
+        // Frontend response remains `otp`
         "otp" => $finalOtp,
 
-        // Example: 9895
+        // Numeric OTP
         "otp_number" => (string) $otp,
 
         "otp_sent" => true,
