@@ -2,6 +2,7 @@
 session_start();
 include './includes/connection.php';
 include './includes/helpers.php';
+require_once './includes/attendance-report-helpers.php';
 
 checkLogin();
 
@@ -11,6 +12,18 @@ $to_date = isset($_GET['to_date']) ? $_GET['to_date'] : null;
 $grade = isset($_GET['grade']) ? $_GET['grade'] : null;
 $up = isset($_GET['up']) ? $_GET['up'] : null;
 $down = isset($_GET['down']) ? $_GET['down'] : null;
+$station_id = (int) ($_SESSION['station_id'] ?? 0);
+$attendance_checkpoints = ['Start of journey', 'Mid of journey', 'End of journey'];
+$attendance_grade_day = attendanceReportGetGradeDay($grade);
+$attendance_data = attendanceReportFetchData(
+    $mysqli,
+    $station_id,
+    (string) $grade,
+    (string) $up,
+    (string) $down,
+    (string) $from_date,
+    (string) $to_date
+);
 
 // Helper functions
 function getAllFeedbacksForPassenger($passenger_id) {
@@ -44,6 +57,39 @@ function getAllFeedbackDetails($train_no, $grade, $from_date, $to_date, $coach_t
         $data[] = $row;
     }
     return $data;
+}
+
+function downloadAllReportsPdfEscape($value)
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
+
+function downloadAllReportsPdfRenderAttendanceCell($data, $station_id)
+{
+    if (!$data) {
+        echo '<div class="no-attendance-data">No Data</div>';
+        return;
+    }
+
+    echo '<img src="' . downloadAllReportsPdfEscape($data['photo_path']) . '" alt="Attendance" class="attendance-photo-thumbnail">';
+    echo '<div class="attendance-location-info">';
+
+    if (!empty($data['latitude'])) {
+        echo 'Lati: ' . downloadAllReportsPdfEscape($data['latitude']) . '<br>';
+        echo 'Longi: ' . downloadAllReportsPdfEscape($data['longitude']) . '<br>';
+    }
+
+    if ((string) $station_id !== '25') {
+        echo 'Location: ' . downloadAllReportsPdfEscape($data['location_name'] ?: 'NA');
+    } elseif (!empty($data['display_full_address'])) {
+        echo 'Location: ' . downloadAllReportsPdfEscape($data['display_full_address']);
+    }
+
+    echo '</div>';
+
+    if (!empty($data['display_date'])) {
+        echo '<div class="attendance-date-info">Date: ' . downloadAllReportsPdfEscape($data['display_date']) . '</div>';
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -161,6 +207,48 @@ function getAllFeedbackDetails($train_no, $grade, $from_date, $to_date, $coach_t
         .section-divider {
             margin: 30px 0;
             border-top: 3px solid #4472C4;
+        }
+
+        .attendance-report-table {
+            table-layout: fixed;
+        }
+
+        .attendance-report-table th,
+        .attendance-report-table td {
+            font-size: 7px;
+            vertical-align: top;
+        }
+
+        .attendance-employee-cell {
+            width: 120px;
+        }
+
+        .employee-photo-thumbnail,
+        .attendance-photo-thumbnail {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            border: 1px solid #cbd5e1;
+            display: block;
+            margin: 0 auto 4px auto;
+            background: #f8fafc;
+        }
+
+        .attendance-location-info,
+        .attendance-date-info,
+        .attendance-employee-meta {
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .attendance-employee-name {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .no-attendance-data {
+            color: #64748b;
+            font-style: italic;
         }
         
         @media print {
@@ -372,9 +460,6 @@ function getAllFeedbackDetails($train_no, $grade, $from_date, $to_date, $coach_t
 
     <div class="page-break"></div>
 
-    // ============================================
-    // 2. TRAIN REPORTS (UP and DOWN)
-    // ============================================
     <?php
     $trains = [$up, $down];
     $train_index = 0;
@@ -488,11 +573,7 @@ function getAllFeedbackDetails($train_no, $grade, $from_date, $to_date, $coach_t
     }
     
     echo '<div class="page-break"></div>';
-    
-    // ============================================
-    // 3. DETAILED FEEDBACK REPORTS (All Types for each Train)
-    // ============================================
-    
+
     $trains_for_detail = [$up, $down];
     $detail_train_index = 0;
     foreach ($trains_for_detail as $detail_train) {
@@ -627,7 +708,71 @@ function getAllFeedbackDetails($train_no, $grade, $from_date, $to_date, $coach_t
             echo '</table>';
         }
     }
-    
+    ?>
+
+    <div class="page-break"></div>
+    <div class="section-divider"></div>
+    <h1>Attendance Report with Photos</h1>
+    <div class="header-info">
+        Station: <?php echo downloadAllReportsPdfEscape($station_name); ?> |
+        Grade: <?php echo downloadAllReportsPdfEscape($grade); ?>
+        <?php if ($attendance_grade_day !== ''): ?>
+            (<?php echo downloadAllReportsPdfEscape($attendance_grade_day); ?>)
+        <?php endif; ?> |
+        UP: <?php echo downloadAllReportsPdfEscape($up); ?> |
+        DOWN: <?php echo downloadAllReportsPdfEscape($down); ?> |
+        From: <?php echo downloadAllReportsPdfEscape($from_date); ?> |
+        To: <?php echo downloadAllReportsPdfEscape($to_date); ?>
+    </div>
+
+    <table class="attendance-report-table">
+        <thead>
+            <tr>
+                <th rowspan="2" class="attendance-employee-cell">Employee</th>
+                <th colspan="3">Train Up: <?php echo downloadAllReportsPdfEscape($up); ?></th>
+                <th colspan="3">Train Down: <?php echo downloadAllReportsPdfEscape($down); ?></th>
+            </tr>
+            <tr>
+                <th>Start</th>
+                <th>Mid</th>
+                <th>End</th>
+                <th>Start</th>
+                <th>Mid</th>
+                <th>End</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($attendance_data)): ?>
+                <?php $attendance_sr = 1; ?>
+                <?php foreach ($attendance_data as $employee): ?>
+                    <tr>
+                        <td class="attendance-employee-cell">
+                            <div><strong>Sr No:</strong> <?php echo $attendance_sr++; ?></div>
+                            <img src="<?php echo downloadAllReportsPdfEscape($employee['employee_photo_path']); ?>" alt="Employee" class="employee-photo-thumbnail">
+                            <div class="attendance-employee-meta">
+                                <div class="attendance-employee-name"><?php echo downloadAllReportsPdfEscape($employee['employee_name']); ?></div>
+                                <div><strong>ID:</strong> <?php echo downloadAllReportsPdfEscape($employee['employee_id']); ?></div>
+                            </div>
+                        </td>
+
+                        <?php foreach ($attendance_checkpoints as $checkpoint): ?>
+                            <td><?php downloadAllReportsPdfRenderAttendanceCell($employee['train_from'][$checkpoint] ?? null, $station_id); ?></td>
+                        <?php endforeach; ?>
+
+                        <?php foreach ($attendance_checkpoints as $checkpoint): ?>
+                            <td><?php downloadAllReportsPdfRenderAttendanceCell($employee['train_to'][$checkpoint] ?? null, $station_id); ?></td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="7">No attendance records found for the selected filters.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+
+    <?php
     echo '<div style="text-align: center; margin-top: 30px; font-size: 9px; color: #666; padding: 15px; border-top: 2px solid #333;">';
     echo '<strong>Complete Report Generated on:</strong> ' . date('d/m/Y H:i:s') . '<br>';
     echo '<strong>Station:</strong> ' . htmlspecialchars($station_name) . ' | ';

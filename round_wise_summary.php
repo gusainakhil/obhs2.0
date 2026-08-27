@@ -335,8 +335,8 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                     <div class="export-buttons" style="flex-shrink: 0; display: flex; gap: 2px;">
                         <button type="button" class="btn-submit" id="printButton">Print</button>
                         <button type="button" class="btn-submit" id="excelButton">Export to Excel</button>
-                        <!-- <button type="button" class="btn-submit" id="downloadAllButton">📥  All Reports PDF</button>
-                        <button type="button" class="btn-submit" id="downloadAllExcelButton">📊  All Reports Excel</button> -->
+                        <button type="button" class="btn-submit" id="downloadAllButton">📥  All Reports PDF</button>
+                        <button type="button" class="btn-submit" id="downloadAllExcelButton">📊  All Reports Excel</button>
                     </div>
                     <script>
                         function exportToCSV() {

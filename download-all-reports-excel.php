@@ -2,6 +2,7 @@
 session_start();
 include './includes/connection.php';
 include './includes/helpers.php';
+require_once './includes/attendance-report-helpers.php';
 
 checkLogin();
 
@@ -12,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 $station_name = getStationName($_SESSION['station_id']);
 $from_date = isset($_GET['from_date']) ? $_GET['from_date'] : null;
@@ -19,6 +21,18 @@ $to_date = isset($_GET['to_date']) ? $_GET['to_date'] : null;
 $grade = isset($_GET['grade']) ? $_GET['grade'] : null;
 $up = isset($_GET['up']) ? $_GET['up'] : null;
 $down = isset($_GET['down']) ? $_GET['down'] : null;
+$station_id = (int) ($_SESSION['station_id'] ?? 0);
+$attendance_checkpoints = ['Start of journey', 'Mid of journey', 'End of journey'];
+$attendance_grade_day = attendanceReportGetGradeDay($grade);
+$attendance_data = attendanceReportFetchData(
+    $mysqli,
+    $station_id,
+    (string) $grade,
+    (string) $up,
+    (string) $down,
+    (string) $from_date,
+    (string) $to_date
+);
 
 // Helper functions
 function getAllFeedbacksForPassenger($passenger_id) {
@@ -52,6 +66,25 @@ function getAllFeedbackDetails($train_no, $grade, $from_date, $to_date, $coach_t
         $data[] = $row;
     }
     return $data;
+}
+
+function addAttendanceSheetImage($sheet, $cell, $path, $name, $height = 70)
+{
+    if (!is_string($path) || $path === '' || !is_file($path)) {
+        return false;
+    }
+
+    $drawing = new Drawing();
+    $drawing->setName($name);
+    $drawing->setDescription($name);
+    $drawing->setPath($path);
+    $drawing->setCoordinates($cell);
+    $drawing->setOffsetX(5);
+    $drawing->setOffsetY(5);
+    $drawing->setHeight($height);
+    $drawing->setWorksheet($sheet);
+
+    return true;
 }
 
 $spreadsheet = new Spreadsheet();
@@ -482,6 +515,164 @@ foreach ($trains as $train) {
         }
     }
 }
+
+// ============================================
+// ATTENDANCE WITH PHOTOS SHEET
+// ============================================
+
+$sheetIndex++;
+$attendanceSheet = $spreadsheet->createSheet($sheetIndex);
+$attendanceSheet->setTitle('Attendance Photos');
+
+$attendanceSheet->setCellValue('A1', 'Attendance Report with Photos');
+$attendanceSheet->mergeCells('A1:P1');
+$attendanceSheet->getStyle('A1')->applyFromArray([
+    'font' => ['bold' => true, 'size' => 14, 'color' => ['rgb' => 'FFFFFF']],
+    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '0EA5E9']],
+    'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+]);
+
+$attendanceHeaderInfo = "Station: $station_name | Grade: $grade";
+if ($attendance_grade_day !== '') {
+    $attendanceHeaderInfo .= " ($attendance_grade_day)";
+}
+$attendanceHeaderInfo .= " | UP: $up | DOWN: $down | From: $from_date | To: $to_date";
+
+$attendanceSheet->setCellValue('A2', $attendanceHeaderInfo);
+$attendanceSheet->mergeCells('A2:P2');
+$attendanceSheet->getStyle('A2')->applyFromArray([
+    'font' => ['bold' => true],
+    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'E0F2FE']],
+    'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+]);
+
+$attendanceSheet->setCellValue('A3', 'SR. No.');
+$attendanceSheet->setCellValue('B3', 'Employee Name');
+$attendanceSheet->setCellValue('C3', 'Employee ID');
+$attendanceSheet->setCellValue('D3', 'Employee Photo');
+$attendanceSheet->setCellValue('E3', 'Train Up: ' . $up);
+$attendanceSheet->mergeCells('E3:J3');
+$attendanceSheet->setCellValue('K3', 'Train Down: ' . $down);
+$attendanceSheet->mergeCells('K3:P3');
+
+$attendanceSheet->setCellValue('E4', 'Start Photo');
+$attendanceSheet->setCellValue('F4', 'Start Details');
+$attendanceSheet->setCellValue('G4', 'Mid Photo');
+$attendanceSheet->setCellValue('H4', 'Mid Details');
+$attendanceSheet->setCellValue('I4', 'End Photo');
+$attendanceSheet->setCellValue('J4', 'End Details');
+$attendanceSheet->setCellValue('K4', 'Start Photo');
+$attendanceSheet->setCellValue('L4', 'Start Details');
+$attendanceSheet->setCellValue('M4', 'Mid Photo');
+$attendanceSheet->setCellValue('N4', 'Mid Details');
+$attendanceSheet->setCellValue('O4', 'End Photo');
+$attendanceSheet->setCellValue('P4', 'End Details');
+
+$attendanceSheet->mergeCells('A3:A4');
+$attendanceSheet->mergeCells('B3:B4');
+$attendanceSheet->mergeCells('C3:C4');
+$attendanceSheet->mergeCells('D3:D4');
+$attendanceSheet->getStyle('A3:P4')->applyFromArray([
+    'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '0EA5E9']],
+    'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
+    'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+]);
+
+$attendanceDataStyle = [
+    'alignment' => [
+        'horizontal' => Alignment::HORIZONTAL_CENTER,
+        'vertical' => Alignment::VERTICAL_TOP,
+        'wrapText' => true,
+    ],
+    'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+];
+
+$attendanceSheet->freezePane('A5');
+
+$attendanceColumns = [
+    'A' => 10,
+    'B' => 24,
+    'C' => 16,
+    'D' => 18,
+    'E' => 18,
+    'F' => 22,
+    'G' => 18,
+    'H' => 22,
+    'I' => 18,
+    'J' => 22,
+    'K' => 18,
+    'L' => 22,
+    'M' => 18,
+    'N' => 22,
+    'O' => 18,
+    'P' => 22,
+];
+
+foreach ($attendanceColumns as $column => $width) {
+    $attendanceSheet->getColumnDimension($column)->setWidth($width);
+}
+
+$attendanceColumnMap = [
+    ['direction' => 'train_from', 'checkpoint' => 'Start of journey', 'photo' => 'E', 'details' => 'F'],
+    ['direction' => 'train_from', 'checkpoint' => 'Mid of journey', 'photo' => 'G', 'details' => 'H'],
+    ['direction' => 'train_from', 'checkpoint' => 'End of journey', 'photo' => 'I', 'details' => 'J'],
+    ['direction' => 'train_to', 'checkpoint' => 'Start of journey', 'photo' => 'K', 'details' => 'L'],
+    ['direction' => 'train_to', 'checkpoint' => 'Mid of journey', 'photo' => 'M', 'details' => 'N'],
+    ['direction' => 'train_to', 'checkpoint' => 'End of journey', 'photo' => 'O', 'details' => 'P'],
+];
+
+$attendanceRow = 5;
+$attendanceSr = 1;
+
+if (!empty($attendance_data)) {
+    foreach ($attendance_data as $employee) {
+        $attendanceSheet->setCellValue('A' . $attendanceRow, $attendanceSr);
+        $attendanceSheet->setCellValue('B' . $attendanceRow, $employee['employee_name']);
+        $attendanceSheet->setCellValue('C' . $attendanceRow, $employee['employee_id']);
+        $attendanceSheet->getRowDimension($attendanceRow)->setRowHeight(80);
+
+        if (!addAttendanceSheetImage($attendanceSheet, 'D' . $attendanceRow, $employee['employee_photo_path'], 'Employee ' . $attendanceSr, 60)) {
+            $attendanceSheet->setCellValue('D' . $attendanceRow, 'No Image');
+        }
+
+        foreach ($attendanceColumnMap as $columnConfig) {
+            $checkpointData = $employee[$columnConfig['direction']][$columnConfig['checkpoint']] ?? null;
+
+            if ($checkpointData && addAttendanceSheetImage(
+                $attendanceSheet,
+                $columnConfig['photo'] . $attendanceRow,
+                $checkpointData['photo_path'],
+                $columnConfig['checkpoint'] . ' ' . $attendanceSr,
+                60
+            )) {
+                $attendanceSheet->setCellValue($columnConfig['photo'] . $attendanceRow, '');
+            } else {
+                $attendanceSheet->setCellValue(
+                    $columnConfig['photo'] . $attendanceRow,
+                    $checkpointData ? 'No Image' : 'No Data'
+                );
+            }
+
+            $attendanceSheet->setCellValue(
+                $columnConfig['details'] . $attendanceRow,
+                attendanceReportBuildCellText($checkpointData, $station_id)
+            );
+        }
+
+        $attendanceSr++;
+        $attendanceRow++;
+    }
+
+    $attendanceSheet->getStyle('A5:P' . ($attendanceRow - 1))->applyFromArray($attendanceDataStyle);
+} else {
+    $attendanceSheet->setCellValue('A5', 'No attendance records found for the selected filters.');
+    $attendanceSheet->mergeCells('A5:P5');
+    $attendanceSheet->getStyle('A5:P5')->applyFromArray($footerStyle);
+}
+
+$attendanceSheet->getStyle('B5:P' . max(5, $attendanceRow - 1))->getAlignment()->setWrapText(true);
+$spreadsheet->setActiveSheetIndex(0);
 
 // Download
 $filename = 'Complete_Report_' . date('Y-m-d_His') . '.xlsx';
