@@ -212,8 +212,10 @@ if (!$is_newui_sidebar):
   }
   #sidebar.sidebar .brand-copy{min-width:0}
   #sidebar.sidebar .brand img{
-    width:140px;
-    height:52px;
+    width:100%;
+    max-width:100%;
+    height:auto;
+    display:block;
     object-fit:contain;
     object-position:left;
   }
