@@ -930,8 +930,8 @@ foreach ($snapshot_metrics as $snapshot_metric) {
         </div>
       </div>
       <div class="top-actions">
-        <button type="button" class="date-btn">▣ &nbsp; <?php echo uiEscape($display_date); ?> &nbsp;⌄</button>
-        <button type="button" class="bell">♢<span><?php echo uiEscape($latest_feedback_total); ?></span></button>
+        <button type="button" class="date-btn">▣ &nbsp; <?php echo uiEscape($display_date); ?> &nbsp;</button>
+        <!--<button type="button" class="bell">♢<span><?php echo uiEscape($latest_feedback_total); ?></span></button>-->
         <button type="button" class="signout" onclick="window.location.href='logout.php'">↪ &nbsp; Sign Out</button>
       </div>
     </header>
@@ -1028,7 +1028,7 @@ foreach ($snapshot_metrics as $snapshot_metric) {
           </section>
 
           <section class="panel latest">
-            <div class="panel-head">☆ &nbsp; LATEST FEEDBACK <button type="button" onclick="window.location.href='all-feedback-detail-report.php'">View All</button></div>
+            <div class="panel-head">☆ &nbsp; LATEST FEEDBACK </div>
             <div class="latest-scroll">
             <?php if ($latest_feedback_total > 0): ?>
               <?php foreach ($latest_feedback as $row): ?>
@@ -1058,20 +1058,20 @@ foreach ($snapshot_metrics as $snapshot_metric) {
             <div class="train-grid">
               <?php if ($total_trains > 0): ?>
                 <?php foreach ($trains as $index => $train_no): ?>
-              <span<?php echo $index === 0 ? ' class="sel"' : ''; ?>><?php echo uiEscape($train_no); ?></span>
+              <span<?php echo $index === 0 ? ' class=""' : ''; ?>><?php echo uiEscape($train_no); ?></span>
                 <?php endforeach; ?>
               <?php else: ?>
               <span style="grid-column:1/-1;height:auto;padding:8px 10px;text-align:center;">No trains found. Add feedback targets to see trains.</span>
               <?php endif; ?>
             </div>
             </div>
-            <div class="train-slider"><i></i></div>
+            <!--<div class="train-slider"><i></i></div>-->
           </section>
         </div>
 
         <div class="charts">
           <section class="panel chart green-chart">
-            <div class="panel-head"><span>▧</span> WEEKLY FEEDBACK COUNT <b>⋮</b></div>
+            <div class="panel-head"><span>▧</span> WEEKLY FEEDBACK COUNT   </div>
             <div class="chart-area">
               <div class="yaxis">
                 <?php foreach ($feedback_series['chart']['axis_labels'] as $label): ?>
@@ -1103,7 +1103,7 @@ foreach ($snapshot_metrics as $snapshot_metric) {
           </section>
 
           <section class="panel chart purple-chart">
-            <div class="panel-head"><span>▧</span> WEEKLY ATTENDANCE COUNT <b>⋮</b></div>
+            <div class="panel-head"><span>▧</span> WEEKLY ATTENDANCE COUNT   </div>
             <div class="chart-area">
               <div class="yaxis">
                 <?php foreach ($attendance_series['chart']['axis_labels'] as $label): ?>
@@ -1135,7 +1135,7 @@ foreach ($snapshot_metrics as $snapshot_metric) {
           </section>
 
           <section class="panel chart orange-chart">
-            <div class="panel-head"><span>▧</span> WEEKLY CLEANLINESS PHOTOS COUNT <b>⋮</b></div>
+            <div class="panel-head"><span>▧</span> WEEKLY CLEANLINESS PHOTOS COUNT   </div>
             <div class="chart-area">
               <div class="yaxis">
                 <?php foreach ($photo_series['chart']['axis_labels'] as $label): ?>
@@ -1248,11 +1248,11 @@ foreach ($snapshot_metrics as $snapshot_metric) {
       <aside class="rightbar">
         <div class="station">
           <label>SELECT STATION</label>
-          <button type="button">⌖ &nbsp; <?php echo uiEscape($station_name); ?> <span>⌄</span></button>
+          <button type="button">⌖ &nbsp; <?php echo uiEscape($station_name); ?> <span></span></button>
         </div>
 
         <section class="panel health">
-          <div class="panel-head">SYSTEM HEALTH OVERVIEW <span>⋮</span></div>
+          <div class="panel-head">SYSTEM HEALTH OVERVIEW <span></span></div>
           <div class="health-visual">
             <div class="hud-core">
               <svg viewBox="0 0 240 240" class="health-svg">
@@ -1287,7 +1287,7 @@ foreach ($snapshot_metrics as $snapshot_metric) {
             <div><span>◫ &nbsp; Trains Running</span><b><?php echo uiFormatNumber($train_counts['today']); ?> <i class="<?php echo $train_counts['today'] > 0 ? 'ok' : 'warn'; ?>"></i></b></div>
             <div><span>▤ &nbsp; Latest Records</span><b><?php echo uiEscape($latest_feedback_total); ?> <i class="<?php echo $latest_feedback_total > 0 ? 'ok' : 'warn'; ?>"></i></b></div>
           </div>
-          <button type="button" class="health-btn">View System Health →</button>
+          <!--<button type="button" class="health-btn">View System Health →</button>-->
         </section>
       </aside>
     </div>

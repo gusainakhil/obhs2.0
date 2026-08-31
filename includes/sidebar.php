@@ -6,7 +6,6 @@ $executed_script = str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME'] ?? '');
 $executed_directory = basename(dirname($executed_script !== '' ? $executed_script : $current_script));
 $is_newui_sidebar = $executed_directory === 'newui';
 $current_page = basename($executed_script !== '' ? $executed_script : $current_script);
-$link_prefix = $is_newui_sidebar ? '../' : '';
 $dashboard_href = $is_newui_sidebar ? '../dashboard.php' : 'dashboard.php';
 $logo_src = $is_newui_sidebar ? '../dashboard-v2-assets/images/beatle-analytics-logo.png' : 'dashboard-v2-assets/images/beatle-analytics-logo.png';
 
@@ -18,7 +17,57 @@ $escape = static function ($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 };
 
+$build_project_href = static function ($href) use ($is_newui_sidebar) {
+    $href = trim((string) $href);
+
+    if ($href === '') {
+        return '';
+    }
+
+    if (preg_match('#^(?:[a-z][a-z0-9+.-]*:)?//#i', $href) || $href[0] === '#') {
+        return $href;
+    }
+
+    $normalized = preg_replace('#^(\./)+#', '', $href);
+    while (strpos($normalized, '../') === 0) {
+        $normalized = substr($normalized, 3);
+    }
+    $normalized = ltrim($normalized, '/');
+
+    if ($is_newui_sidebar && $normalized !== '') {
+        return '../' . $normalized;
+    }
+
+    return $normalized;
+};
+
+$resolve_sidebar_icon = static function ($label) {
+    static $icon_map = [
+        'Dashboard' => '▦',
+        'Round Wise Summary' => '◉',
+        'Round Wise Summary Without Grade' => '◎',
+        'Photo Report' => '▣',
+        'Photo Report Time Slot' => '◫',
+        'Photo Report Coach Wise' => '▣',
+        'Attendance Report' => '◍',
+        'Attendance Photo Report' => '♙',
+        'Time Interval Attendance' => '⋯',
+        'Daily Attendance Report' => '☰',
+        'Train Report' => '◬',
+        'View PDF Attendence' => '⌘',
+        'Feedback Target' => '◌',
+        'View Feedback Target' => '◈',
+        'Create Employee' => '♟',
+        'View Employee' => '♧',
+        'Change Dashboard Password' => '🔑',
+        'Change App Password' => '🔐',
+    ];
+
+    return $icon_map[$label] ?? '›';
+};
+
 $station_id = (int) ($_SESSION['station_id'] ?? 0);
+$session_user_id = (int) ($_SESSION['user_id'] ?? 0);
 $session_username = trim((string) ($_SESSION['username'] ?? ''));
 $session_organisation = trim((string) ($_SESSION['organisation_name'] ?? ''));
 $resolved_station_name = isset($station_name)
@@ -45,17 +94,99 @@ $resolved_user_id = isset($user_id) && trim((string) $user_id) !== ''
     ? (string) $user_id
     : (string) ($_SESSION['user_id'] ?? '--');
 
+$assigned_report_links = [];
+
+$reports_sql = 'SELECT reports_name, link FROM OBHS_reports WHERE user_id = ? ORDER BY id ASC';
+$reports_stmt = $mysqli->prepare($reports_sql);
+
+if ($reports_stmt) {
+    $reports_stmt->bind_param('i', $session_user_id);
+    $reports_stmt->execute();
+    $reports_result = $reports_stmt->get_result();
+
+    if ($reports_result) {
+        while ($row = $reports_result->fetch_assoc()) {
+            $report_label = trim((string) ($row['reports_name'] ?? ''));
+            $report_href = $build_project_href($row['link'] ?? '');
+
+            if ($report_label === '' || $report_href === '') {
+                continue;
+            }
+
+            $assigned_report_links[] = [
+                'href' => $report_href,
+                'icon' => $resolve_sidebar_icon($report_label),
+                'label' => $report_label,
+            ];
+        }
+    }
+
+    $reports_stmt->close();
+}
+
 $sidebar_links = [
-    ['href' => $dashboard_href, 'icon' => '▦', 'label' => 'Dashboard'],
-    ['href' => $link_prefix . 'round_wise_summary.php', 'icon' => '◉', 'label' => 'Round Wise Summary'],
-    ['href' => $link_prefix . 'photo_report_coach_wise.php', 'icon' => '▣', 'label' => 'Photo Report Coach Wise'],
-    ['href' => $link_prefix . 'attendance-with-photos.php', 'icon' => '♙', 'label' => 'Attendance Photo Report'],
-    ['href' => $link_prefix . 'feedback-target.php', 'icon' => '◌', 'label' => 'Feedback Target'],
-    ['href' => $link_prefix . 'view-feedback-target.php', 'icon' => '◈', 'label' => 'View Feedback Target'],
-    ['href' => $link_prefix . 'create-employee.php', 'icon' => '♙', 'label' => 'Create Employee'],
-    ['href' => $link_prefix . 'view-employee.php', 'icon' => '♧', 'label' => 'View Employee'],
-    ['href' => $link_prefix . 'change-password.php', 'icon' => '🔑', 'label' => 'Change Dashboard Password'],
-    ['href' => $link_prefix . 'change-app-password.php', 'icon' => '🔐', 'label' => 'Change App Password'],
+    ['href' => $dashboard_href, 'icon' => $resolve_sidebar_icon('Dashboard'), 'label' => 'Dashboard'],
+];
+
+$sidebar_links = array_merge($sidebar_links, $assigned_report_links);
+
+if ($station_id === 8) {
+    $sidebar_links[] = [
+        'href' => $build_project_href('feedback-single-train-report.php'),
+        'icon' => $resolve_sidebar_icon('Train Report'),
+        'label' => 'Train Report',
+    ];
+    $sidebar_links[] = [
+        'href' => $build_project_href('view-pdf-attendece.php'),
+        'icon' => $resolve_sidebar_icon('View PDF Attendence'),
+        'label' => 'View PDF Attendence',
+    ];
+}
+
+$sidebar_links[] = [
+    'href' => $build_project_href('feedback-target.php'),
+    'icon' => $resolve_sidebar_icon('Feedback Target'),
+    'label' => 'Feedback Target',
+];
+$sidebar_links[] = [
+    'href' => $build_project_href('view-feedback-target.php'),
+    'icon' => $resolve_sidebar_icon('View Feedback Target'),
+    'label' => 'View Feedback Target',
+];
+
+if ($station_id === 17) {
+    $sidebar_links[] = [
+        'href' => $build_project_href('jodhpur-employees/add-employee-jodhpur.php'),
+        'icon' => $resolve_sidebar_icon('Create Employee'),
+        'label' => 'Create Employee',
+    ];
+    $sidebar_links[] = [
+        'href' => $build_project_href('jodhpur-employees/employee-jodhpur.php'),
+        'icon' => $resolve_sidebar_icon('View Employee'),
+        'label' => 'View Employee',
+    ];
+} else {
+    $sidebar_links[] = [
+        'href' => $build_project_href('create-employee.php'),
+        'icon' => $resolve_sidebar_icon('Create Employee'),
+        'label' => 'Create Employee',
+    ];
+    $sidebar_links[] = [
+        'href' => $build_project_href('view-employee.php'),
+        'icon' => $resolve_sidebar_icon('View Employee'),
+        'label' => 'View Employee',
+    ];
+}
+
+$sidebar_links[] = [
+    'href' => $build_project_href('change-password.php'),
+    'icon' => $resolve_sidebar_icon('Change Dashboard Password'),
+    'label' => 'Change Dashboard Password',
+];
+$sidebar_links[] = [
+    'href' => $build_project_href('change-app-password.php'),
+    'icon' => $resolve_sidebar_icon('Change App Password'),
+    'label' => 'Change App Password',
 ];
 
 if (!$is_newui_sidebar):
@@ -251,7 +382,9 @@ if (!$is_newui_sidebar):
     <?php foreach ($sidebar_links as $link): ?>
     <?php
     $href = (string) $link['href'];
-    $is_active = basename($href) === $current_page;
+    $href_path = (string) parse_url($href, PHP_URL_PATH);
+    $href_page = basename($href_path !== '' ? $href_path : $href);
+    $is_active = $href_page !== '' && $href_page === $current_page;
     ?>
     <a href="<?php echo $escape($href); ?>"<?php echo $is_active ? ' class="active"' : ''; ?>>
       <span><?php echo $escape($link['icon']); ?></span>
@@ -270,10 +403,10 @@ if (!$is_newui_sidebar):
   <section class="profile">
     <div class="avatar"><?php echo $escape($resolved_avatar_text); ?></div>
     <div><strong><?php echo $escape($resolved_user_display); ?></strong><span><?php echo $escape($resolved_profile_label); ?></span></div>
-    <i>⌄</i>
+
     <small>Station: <?php echo $escape($resolved_station_name !== '' ? $resolved_station_name : '--'); ?></small>
-    <small class="online">User ID: <?php echo $escape($resolved_user_id); ?></small>
+    <!--<small class="online">User ID: <?php echo $escape($resolved_user_id); ?></small>-->
   </section>
 
-  <button type="button" class="collapse"><span>≪</span><b>Collapse Menu</b><span>⌁</span></button>
+  <!--<button type="button" class="collapse"><span>≪</span><b>Collapse Menu</b><span>⌁</span></button>-->
 </aside>

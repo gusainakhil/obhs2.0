@@ -223,7 +223,7 @@ footer{
 }
 
 /* Short desktop / common laptop screens: preserve readable fonts and fit */
-@media (min-width:821px) and (max-height:950px){
+@media (min-width:821px) and (max-height:1040px){
   main{grid-template-rows:54px minmax(0,1fr) 18px}
   .content{
     grid-template-rows:106px 196px 212px minmax(146px,1fr);
@@ -251,13 +251,487 @@ footer{
   .health-list div{min-height:31px}
 }
 
-/* Large desktop can breathe closer to the target reference */
-@media (min-width:1500px) and (min-height:950px){
-  .content{grid-template-rows:124px 220px 245px minmax(180px,1fr)}
-  .kmain strong{font-size:24px}
-  .panel-head{font-size:10.5px}
-  .health{grid-template-rows:36px 275px minmax(0,1fr) 44px}
-  .health-visual{grid-template-rows:192px 52px 27px}
-  .hud-core,.health-svg{width:190px;height:190px}
-  .health-copy strong{font-size:33px}
+/* =========================================================
+   Desktop readability pass
+   Large screens were feeling sparse because the base desktop
+   scale kept typography and card density too small.
+   ========================================================= */
+
+@media (min-width:1600px) and (min-height:1000px){
+  .app{
+    grid-template-columns:16rem minmax(0,1fr);
+  }
+
+  main{
+    grid-template-rows:74px minmax(0,1fr) 28px;
+    padding:0 18px 8px;
+  }
+
+  .topbar{
+    padding:10px 0 12px;
+    gap:16px;
+  }
+
+  .welcome{
+    gap:14px;
+  }
+
+  .welcome h1{
+    font-size:clamp(1.5rem,1vw + 1rem,2rem);
+    margin-bottom:6px;
+  }
+
+  .welcome p{
+    font-size:clamp(.92rem,.25vw + .75rem,1.05rem);
+  }
+
+  .top-actions{
+    gap:12px;
+  }
+
+  .top-actions button{
+    height:42px;
+    padding:0 16px;
+    font-size:12px;
+  }
+
+  .dashboard{
+    grid-template-columns:minmax(0,1fr) minmax(290px,19vw);
+    gap:16px;
+  }
+
+  .content{
+    grid-template-rows:minmax(150px,18vh) minmax(265px,28vh) minmax(325px,34vh) minmax(260px,1fr);
+    gap:14px;
+  }
+
+  .kpis{
+    gap:14px;
+  }
+
+  .kpi{
+    grid-template-columns:72px 1fr;
+    gap:14px;
+    padding:18px 18px 48px;
+    border-radius:16px;
+  }
+
+  .icon-wrap{
+    width:68px;
+    height:68px;
+    font-size:28px;
+  }
+
+  .kmain{
+    gap:4px;
+  }
+
+  .kmain span{
+    font-size:12px;
+    letter-spacing:.08em;
+  }
+
+  .kmain small{
+    font-size:11px;
+  }
+
+  .kmain strong{
+    font-size:clamp(1.9rem,1vw + 1.2rem,2.6rem);
+    line-height:1;
+  }
+
+  .mini-chart{
+    left:18px;
+    bottom:14px;
+    width:136px;
+    height:40px;
+  }
+
+  .month{
+    right:16px;
+    bottom:14px;
+  }
+
+  .month small{
+    font-size:10px;
+  }
+
+  .month b{
+    font-size:18px;
+  }
+
+  .panel{
+    border-radius:16px;
+  }
+
+  .panel-head{
+    height:46px;
+    padding:0 18px;
+    font-size:12px;
+    letter-spacing:.05em;
+  }
+
+  .panel-head button{
+    font-size:10px;
+    padding:5px 11px;
+  }
+
+  .middle{
+    grid-template-columns:1fr 1.1fr 1.45fr;
+    gap:14px;
+  }
+
+  .status-box{
+    height:118px;
+    margin:14px 16px;
+    padding:18px;
+    border-radius:12px;
+  }
+
+  .status-box small,
+  .sub-meta small{
+    font-size:10px;
+  }
+
+  .status-box strong{
+    font-size:24px;
+    margin-top:10px;
+  }
+
+  .ok-badge{
+    width:48px;
+    height:48px;
+    font-size:16px;
+  }
+
+  .sub-meta{
+    gap:12px;
+    padding:0 16px;
+  }
+
+  .sub-meta > div{
+    padding:12px;
+    border-radius:12px;
+  }
+
+  .sub-meta b{
+    font-size:16px;
+    margin-top:6px;
+  }
+
+  .progress{
+    height:8px;
+    margin:14px 16px 4px;
+  }
+
+  .remaining{
+    padding-right:16px;
+    font-size:10px;
+  }
+
+  .latest{
+    grid-template-rows:46px minmax(0,1fr);
+  }
+
+  .trains{
+    grid-template-rows:46px minmax(0,1fr) 10px;
+  }
+
+  .feed{
+    height:70px;
+    margin:0 16px;
+  }
+
+  .feed a{
+    font-size:13px;
+  }
+
+  .feed span,
+  .feed time{
+    font-size:10px;
+  }
+
+  .train-grid{
+    grid-template-columns:repeat(auto-fit,minmax(92px,1fr));
+    gap:10px;
+    padding:14px 16px;
+  }
+
+  .train-grid span{
+    min-height:36px;
+    height:auto;
+    padding:8px 6px;
+    font-size:11px;
+  }
+
+  .charts{
+    gap:14px;
+  }
+
+  .chart{
+    grid-template-rows:46px minmax(0,1fr) 22px 76px;
+  }
+
+  .chart-area{
+    margin:10px 16px 0;
+    grid-template-columns:36px 1fr;
+    gap:10px;
+  }
+
+  .yaxis{
+    padding-bottom:8px;
+    font-size:9px;
+  }
+
+  .days{
+    padding:4px 16px 0 52px;
+    font-size:10px;
+  }
+
+  .chart-meta{
+    margin:8px 12px 12px;
+    border-radius:10px;
+  }
+
+  .chart-meta div{
+    padding:10px 8px;
+  }
+
+  .chart-meta b{
+    font-size:18px;
+  }
+
+  .chart-meta span{
+    font-size:9px;
+  }
+
+  .bottom{
+    grid-template-columns:1.02fr 1.38fr;
+    gap:14px;
+  }
+
+  .coach-content{
+    grid-template-columns:220px 1fr;
+    padding:18px;
+  }
+
+  .donut-wrap,
+  .donut{
+    width:178px;
+    height:178px;
+  }
+
+  .donut:after{
+    inset:44px;
+  }
+
+  .donut-center strong{
+    font-size:28px;
+  }
+
+  .donut-center span{
+    font-size:11px;
+  }
+
+  .legend{
+    gap:12px;
+  }
+
+  .legend div{
+    font-size:11px;
+    gap:10px;
+  }
+
+  .legend i{
+    width:10px;
+    height:10px;
+  }
+
+  .targets{
+    grid-template-rows:46px minmax(0,1fr) 44px;
+  }
+
+  .snapshot-grid{
+    padding:16px;
+    gap:14px;
+  }
+
+  .snapshot-card,
+  .snapshot-summary{
+    padding:14px;
+    border-radius:14px;
+  }
+
+  .snapshot-title strong{
+    font-size:11px;
+  }
+
+  .snapshot-pill{
+    padding:4px 9px;
+    font-size:9px;
+  }
+
+  .snapshot-stat small,
+  .snapshot-summary small,
+  .snapshot-bar-row span{
+    font-size:8px;
+  }
+
+  .snapshot-stat b{
+    font-size:19px;
+  }
+
+  .snapshot-track{
+    height:10px;
+  }
+
+  .snapshot-foot{
+    font-size:9px;
+  }
+
+  .snapshot-summary strong{
+    font-size:22px;
+  }
+
+  .snapshot-summary span{
+    font-size:10px;
+  }
+
+  .snapshot-scroll-btn{
+    width:34px;
+    height:34px;
+    font-size:14px;
+  }
+
+  .rightbar{
+    grid-template-rows:72px minmax(0,1fr);
+    gap:14px;
+  }
+
+  .station label{
+    margin:2px 0 8px;
+    font-size:10px;
+  }
+
+  .station button{
+    height:48px;
+    padding:0 14px;
+    font-size:12px;
+  }
+
+  .health{
+    grid-template-rows:46px 318px minmax(0,1fr) 46px;
+  }
+
+  .health-visual{
+    grid-template-rows:206px 58px 30px;
+    padding-top:12px;
+  }
+
+  .hud-core,
+  .health-svg{
+    width:206px;
+    height:206px;
+  }
+
+  .health-copy strong{
+    font-size:36px;
+  }
+
+  .health-copy span{
+    font-size:12px;
+  }
+
+  .health-copy em{
+    font-size:10px;
+  }
+
+  .health-pulse{
+    width:88%;
+    height:28px;
+  }
+
+  .health-list{
+    margin:0 16px;
+  }
+
+  .health-list div{
+    min-height:44px;
+    font-size:11px;
+  }
+
+  .health-btn{
+    margin:0 16px 14px;
+    font-size:10px;
+  }
+
+  footer{
+    font-size:10px;
+  }
+}
+
+@media (min-width:1850px) and (min-height:1100px){
+  main{
+    padding:0 24px 10px;
+  }
+
+  .dashboard{
+    grid-template-columns:minmax(0,1fr) 340px;
+    gap:18px;
+  }
+
+  .content{
+    grid-template-rows:minmax(165px,19vh) minmax(285px,29vh) minmax(345px,34vh) minmax(290px,1fr);
+    gap:16px;
+  }
+
+  .kpi{
+    padding:20px 20px 54px;
+  }
+
+  .icon-wrap{
+    width:72px;
+    height:72px;
+    font-size:30px;
+  }
+
+  .kmain span{
+    font-size:13px;
+  }
+
+  .kmain small{
+    font-size:11.5px;
+  }
+
+  .month b{
+    font-size:20px;
+  }
+
+  .middle,
+  .charts,
+  .bottom{
+    gap:16px;
+  }
+
+  .chart{
+    grid-template-rows:48px minmax(0,1fr) 24px 80px;
+  }
+
+  .coach-content{
+    grid-template-columns:240px 1fr;
+  }
+
+  .donut-wrap,
+  .donut{
+    width:188px;
+    height:188px;
+  }
+
+  .donut:after{
+    inset:46px;
+  }
+
+  .snapshot-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
 }
