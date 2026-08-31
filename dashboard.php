@@ -697,6 +697,7 @@ function uiBuildChart($rows)
 
     return [
         'days' => $days,
+        'values' => $values,
         'bars' => $bars,
         'polyline_points' => implode(' ', $points),
         'fill_points' => implode(' ', $points) . ' ' . $endX . ',' . $baseline . ' ' . $startX . ',' . $baseline,
@@ -1088,11 +1089,27 @@ foreach ($snapshot_metrics as $snapshot_metric) {
                 <polygon fill="url(#fill1)" points="<?php echo uiEscape($feedback_series['chart']['fill_points']); ?>"/>
                 <polyline points="<?php echo uiEscape($feedback_series['chart']['polyline_points']); ?>"/>
                 <g class="dots">
-                  <?php foreach ($feedback_series['chart']['dots'] as $dot): ?>
-                  <circle cx="<?php echo uiEscape($dot['x']); ?>" cy="<?php echo uiEscape($dot['y']); ?>" r="5"/>
+                  <?php foreach ($feedback_series['chart']['dots'] as $index => $dot): ?>
+                  <?php
+                  $dot_day = (string) ($feedback_series['chart']['days'][$index] ?? '--');
+                  $dot_value = (int) ($feedback_series['chart']['values'][$index] ?? 0);
+                  ?>
+                  <circle
+                    class="chart-dot"
+                    cx="<?php echo uiEscape($dot['x']); ?>"
+                    cy="<?php echo uiEscape($dot['y']); ?>"
+                    r="5"
+                    tabindex="0"
+                    focusable="true"
+                    role="button"
+                    data-day="<?php echo uiEscape($dot_day); ?>"
+                    data-value-label="<?php echo uiEscape(uiFormatNumber($dot_value)); ?>"
+                    aria-label="<?php echo uiEscape($dot_day . ' value ' . uiFormatNumber($dot_value)); ?>"
+                  ><title><?php echo uiEscape($dot_day . ': ' . uiFormatNumber($dot_value)); ?></title></circle>
                   <?php endforeach; ?>
                 </g>
               </svg>
+              <div class="chart-tooltip" hidden aria-hidden="true"></div>
             </div>
             <div class="days">
               <?php foreach ($feedback_series['chart']['days'] as $day): ?>
@@ -1120,11 +1137,27 @@ foreach ($snapshot_metrics as $snapshot_metric) {
                 <polygon fill="url(#fill2)" points="<?php echo uiEscape($attendance_series['chart']['fill_points']); ?>"/>
                 <polyline points="<?php echo uiEscape($attendance_series['chart']['polyline_points']); ?>"/>
                 <g class="dots">
-                  <?php foreach ($attendance_series['chart']['dots'] as $dot): ?>
-                  <circle cx="<?php echo uiEscape($dot['x']); ?>" cy="<?php echo uiEscape($dot['y']); ?>" r="5"/>
+                  <?php foreach ($attendance_series['chart']['dots'] as $index => $dot): ?>
+                  <?php
+                  $dot_day = (string) ($attendance_series['chart']['days'][$index] ?? '--');
+                  $dot_value = (int) ($attendance_series['chart']['values'][$index] ?? 0);
+                  ?>
+                  <circle
+                    class="chart-dot"
+                    cx="<?php echo uiEscape($dot['x']); ?>"
+                    cy="<?php echo uiEscape($dot['y']); ?>"
+                    r="5"
+                    tabindex="0"
+                    focusable="true"
+                    role="button"
+                    data-day="<?php echo uiEscape($dot_day); ?>"
+                    data-value-label="<?php echo uiEscape(uiFormatNumber($dot_value)); ?>"
+                    aria-label="<?php echo uiEscape($dot_day . ' value ' . uiFormatNumber($dot_value)); ?>"
+                  ><title><?php echo uiEscape($dot_day . ': ' . uiFormatNumber($dot_value)); ?></title></circle>
                   <?php endforeach; ?>
                 </g>
               </svg>
+              <div class="chart-tooltip" hidden aria-hidden="true"></div>
             </div>
             <div class="days">
               <?php foreach ($attendance_series['chart']['days'] as $day): ?>
@@ -1152,11 +1185,27 @@ foreach ($snapshot_metrics as $snapshot_metric) {
                 <polygon fill="url(#fill3)" points="<?php echo uiEscape($photo_series['chart']['fill_points']); ?>"/>
                 <polyline points="<?php echo uiEscape($photo_series['chart']['polyline_points']); ?>"/>
                 <g class="dots">
-                  <?php foreach ($photo_series['chart']['dots'] as $dot): ?>
-                  <circle cx="<?php echo uiEscape($dot['x']); ?>" cy="<?php echo uiEscape($dot['y']); ?>" r="5"/>
+                  <?php foreach ($photo_series['chart']['dots'] as $index => $dot): ?>
+                  <?php
+                  $dot_day = (string) ($photo_series['chart']['days'][$index] ?? '--');
+                  $dot_value = (int) ($photo_series['chart']['values'][$index] ?? 0);
+                  ?>
+                  <circle
+                    class="chart-dot"
+                    cx="<?php echo uiEscape($dot['x']); ?>"
+                    cy="<?php echo uiEscape($dot['y']); ?>"
+                    r="5"
+                    tabindex="0"
+                    focusable="true"
+                    role="button"
+                    data-day="<?php echo uiEscape($dot_day); ?>"
+                    data-value-label="<?php echo uiEscape(uiFormatNumber($dot_value)); ?>"
+                    aria-label="<?php echo uiEscape($dot_day . ' value ' . uiFormatNumber($dot_value)); ?>"
+                  ><title><?php echo uiEscape($dot_day . ': ' . uiFormatNumber($dot_value)); ?></title></circle>
                   <?php endforeach; ?>
                 </g>
               </svg>
+              <div class="chart-tooltip" hidden aria-hidden="true"></div>
             </div>
             <div class="days">
               <?php foreach ($photo_series['chart']['days'] as $day): ?>
