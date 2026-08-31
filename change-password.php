@@ -104,19 +104,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body class="bg-gray-100">
 
-    <div class="flex h-screen overflow-hidden">
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
 
-        <!-- Sidebar -->
-        <?php include './includes/sidebar.php'; ?>
+    <!-- Sidebar -->
+    <?php include './includes/sidebar.php'; ?>
 
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Main Content -->
+    <div class="lg:ml-64 min-h-screen">
 
-            <!-- Header -->
-            <?php include './includes/header.php'; ?>
+        <!-- Header -->
+        <?php include './includes/header.php'; ?>
 
-            <!-- Page Content -->
-            <main class="flex-1 overflow-y-auto p-4 lg:p-6">
+        <!-- Page Content -->
+        <main class="p-4 lg:p-6">
 
                 <div class="max-w-2xl mx-auto">
                     <!-- Page Title -->
@@ -220,10 +220,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             </main>
 
-            <!-- Footer -->
-            <?php include './includes/footer.php'; ?>
-
-        </div>
+        <!-- Footer -->
+        <?php include './includes/footer.php'; ?>
     </div>
 
     <!-- Toggle Password Visibility Script -->
@@ -250,10 +248,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 setTimeout(() => successAlert.remove(), 500);
             }
         }, 5000);
-    </script>
 
-    <!-- Sidebar Toggle Script -->
-    <script src="./js/sidebar-toggle.js"></script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const closeSidebar = document.getElementById('closeSidebar');
+
+        if (menuToggle && sidebar && sidebarOverlay && closeSidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+            });
+
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
+
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
+        }
+    </script>
 
 </body>
 

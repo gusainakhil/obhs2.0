@@ -1,17 +1,17 @@
 <?php
 session_start();
 
-require_once __DIR__ . "/includes/connection.php";
+require_once __DIR__ . '/../includes/connection.php';
 
 $loginError = '';
 
 if (isset($_SESSION['user_id']) && (int)($_SESSION['type'] ?? 0) === 1) {
-    header("Location: admin/index.php");
+    header('Location: index.php');
     exit;
 }
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
+    header('Location: ../dashboard.php');
     exit;
 }
 
@@ -63,11 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $_SESSION['admin_user_id'] = $row['user_id'];
                         $_SESSION['admin_username'] = $row['username'];
 
-                        header("Location: admin/index.php");
+                        header('Location: index.php');
                         exit;
                     }
 
-                    header("Location: dashboard.php");
+                    header('Location: ../dashboard.php');
                     exit;
                 }
 
@@ -99,14 +99,14 @@ if (isset($mysqli) && $mysqli instanceof mysqli) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="login_assets/css/style.css">
+  <link rel="stylesheet" href="../login_assets/css/style.css">
 </head>
 <body class="login-portal-page">
   <canvas id="networkCanvas" aria-hidden="true"></canvas>
   <div class="cursor-glow" aria-hidden="true"></div>
 
   <header class="site-header" id="top">
-    <a class="brand" href="https://beatleanalytics.com/index.html"><img src="login_assets/images/beatle-logo.png" alt="Beatle Analytics"></a>
+    <a class="brand" href="https://beatleanalytics.com/index.html"><img src="../login_assets/images/beatle-logo.png" alt="Beatle Analytics"></a>
     <nav class="desktop-nav">
       <a href="https://beatleanalytics.com/index.html">Home</a>
       <a href="https://beatleanalytics.com/solutions.html">Solutions</a>
