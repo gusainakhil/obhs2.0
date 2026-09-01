@@ -90,6 +90,16 @@ function viewEmployeeResolvePerPage($value)
     return in_array($value, $allowed, true) ? $value : '10';
 }
 
+function viewEmployeeListUrl($perPage, $page, $editEmployeeId = null)
+{
+    $params = ['per_page' => $perPage, 'page' => $page];
+    if ($editEmployeeId !== null) {
+        $params['edit_employee'] = (int) $editEmployeeId;
+    }
+
+    return 'view-employee.php?' . http_build_query($params);
+}
+
 $station_id = (int) ($_SESSION['station_id'] ?? 0);
 $station_name = viewEmployeeEscape(getStationName($station_id));
 
@@ -200,6 +210,19 @@ if ($stmt) {
     $count_result = $stmt->get_result();
     $total_records = (int) ($count_result->fetch_assoc()['total'] ?? 0);
     $stmt->close();
+}
+
+// Fetch the selected employee for the no-JavaScript edit form.
+$editing_employee = null;
+$edit_employee_id = (int) ($_GET['edit_employee'] ?? 0);
+if ($edit_employee_id > 0) {
+    $stmt = $mysqli->prepare('SELECT id, name, employee_id, desination, photo FROM base_employees WHERE id = ? AND station_id = ? LIMIT 1');
+    if ($stmt) {
+        $stmt->bind_param('ii', $edit_employee_id, $station_id);
+        $stmt->execute();
+        $editing_employee = $stmt->get_result()->fetch_assoc() ?: null;
+        $stmt->close();
+    }
 }
 
 $total_pages = ($per_page_param === 'all') ? 1 : max(1, (int) ceil($total_records / $records_per_page));
@@ -317,6 +340,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
             cursor: pointer;
             transition: all 0.2s ease;
             color: white;
+            text-decoration: none;
         }
 
         .btn-pdf {
@@ -449,6 +473,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
         }
 
         .pagination-controls button,
+        .pagination-controls a,
         .pagination-controls span {
             padding: 6px 12px;
             border: 1px solid #cbd5e1;
@@ -523,7 +548,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
             <div class="controls-bar">
                 <div class="entries-control">
                     <span>Show</span>
-                    <select id="entriesPerPage" onchange="changeEntries(this.value)">
+                    <select id="entriesPerPage">
                         <option value="10" <?php echo $per_page_param == 10 ? 'selected' : ''; ?>>10</option>
                         <option value="25" <?php echo $per_page_param == 25 ? 'selected' : ''; ?>>25</option>
                         <option value="50" <?php echo $per_page_param == 50 ? 'selected' : ''; ?>>50</option>
@@ -535,17 +560,36 @@ if (session_status() === PHP_SESSION_ACTIVE) {
 
                 <div style="display: flex; gap: 12px; align-items: center;">
                     <div class="export-buttons-top">
-                        <button class="btn-export-top btn-pdf" onclick="exportPDF()">PDF</button>
-                        <button class="btn-export-top btn-excel" onclick="exportExcel()">Excel</button>
+                        <a class="btn-export-top btn-pdf" href="export-employee-pdf.php" target="_blank">PDF</a>
+                        <a class="btn-export-top btn-excel" href="export-employee-excel.php" target="_blank">Excel</a>
                     </div>
 
                     <div class="search-control">
                         <span>Search:</span>
-                        <input type="text" class="search-input" id="searchInput" onkeyup="searchTable()"
+                        <input type="text" class="search-input" id="searchInput"
                             placeholder="Search...">
                     </div>
                 </div>
             </div>
+
+            <?php if ($editing_employee): ?>
+            <section class="page-header" aria-labelledby="edit-employee-title">
+                <h3 id="edit-employee-title" class="text-lg font-bold text-slate-800">Edit Employee</h3>
+                <form method="POST" action="" enctype="multipart/form-data" class="mt-4">
+                    <input type="hidden" name="edit_employee_id" value="<?php echo (int) $editing_employee['id']; ?>">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" name="edit_name" required value="<?php echo viewEmployeeEscape($editing_employee['name']); ?>" class="px-3 py-2 border border-slate-300 rounded-md" aria-label="Employee name">
+                        <input type="text" name="edit_employee_id_code" required value="<?php echo viewEmployeeEscape($editing_employee['employee_id']); ?>" class="px-3 py-2 border border-slate-300 rounded-md" aria-label="Employee ID">
+                        <input type="text" name="edit_designation" required value="<?php echo viewEmployeeEscape($editing_employee['desination']); ?>" class="px-3 py-2 border border-slate-300 rounded-md" aria-label="Designation">
+                    </div>
+                    <div class="flex gap-3 mt-4 items-center">
+                        <input type="file" name="edit_photo" accept="image/*" class="text-sm">
+                        <button type="submit" name="update_employee" class="bg-blue-500 text-white px-4 py-2 rounded-md font-semibold">Update</button>
+                        <a href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page)); ?>" class="bg-slate-300 text-slate-700 px-4 py-2 rounded-md font-semibold">Cancel</a>
+                    </div>
+                </form>
+            </section>
+            <?php endif; ?>
 
             <!-- Table Container -->
             <div class="table-container">
@@ -574,8 +618,12 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                             <td><?php echo viewEmployeeEscape($employee['desination']); ?></td>
                             <td>
                                 <div class="action-btns">
-                                    <button class="btn-edit" onclick='openEditModal(<?php echo (int) $employee['id']; ?>, <?php echo viewEmployeeJson($employee['name']); ?>, <?php echo viewEmployeeJson($employee['employee_id']); ?>, <?php echo viewEmployeeJson($employee['desination']); ?>, <?php echo viewEmployeeJson(viewEmployeePhotoFilename($employee['photo'] ?? '')); ?>)'><i class="fas fa-edit"></i></button>
-                                    <button class="btn-delete" onclick="deleteEmployee(<?php echo (int) $employee['id']; ?>)"><i class="fas fa-trash"></i></button>
+                                    <a class="btn-edit" href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page, $employee['id'])); ?>" aria-label="Edit <?php echo viewEmployeeEscape($employee['name']); ?>"><i class="fas fa-edit"></i></a>
+                                    <form method="POST" action="" class="inline">
+                                        <input type="hidden" name="delete_employee" value="1">
+                                        <input type="hidden" name="employee_id" value="<?php echo (int) $employee['id']; ?>">
+                                        <button type="submit" class="btn-delete" aria-label="Delete <?php echo viewEmployeeEscape($employee['name']); ?>"><i class="fas fa-trash"></i></button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -601,7 +649,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                 </div>
                 <div class="pagination-controls">
                     <?php if ($current_page > 1): ?>
-                    <button onclick="goToPage(<?php echo $current_page - 1; ?>)">Previous</button>
+                    <a href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page - 1)); ?>">Previous</a>
                     <?php else: ?>
                     <button disabled>Previous</button>
                     <?php endif; ?>
@@ -612,7 +660,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                     $end_page = min($total_pages, $current_page + 2);
                     
                     if ($start_page > 1) {
-                        echo '<span onclick="goToPage(1)">1</span>';
+                        echo '<a href="' . viewEmployeeEscape(viewEmployeeListUrl($per_page_param, 1)) . '">1</a>';
                         if ($start_page > 2) {
                             echo '<span>...</span>';
                         }
@@ -622,7 +670,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                         if ($i == $current_page) {
                             echo '<span class="active">' . $i . '</span>';
                         } else {
-                            echo '<span onclick="goToPage(' . $i . ')">' . $i . '</span>';
+                            echo '<a href="' . viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $i)) . '">' . $i . '</a>';
                         }
                     }
                     
@@ -630,12 +678,12 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                         if ($end_page < $total_pages - 1) {
                             echo '<span>...</span>';
                         }
-                        echo '<span onclick="goToPage(' . $total_pages . ')">' . $total_pages . '</span>';
+                        echo '<a href="' . viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $total_pages)) . '">' . $total_pages . '</a>';
                     }
                     ?>
                     
                     <?php if ($current_page < $total_pages): ?>
-                    <button onclick="goToPage(<?php echo $current_page + 1; ?>)">Next</button>
+                    <a href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page + 1)); ?>">Next</a>
                     <?php else: ?>
                     <button disabled>Next</button>
                     <?php endif; ?>
@@ -652,170 +700,30 @@ if (session_status() === PHP_SESSION_ACTIVE) {
 
     </div>
 
-    <!-- Edit Employee Modal -->
-    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-slate-800">Edit Employee</h3>
-                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <form method="POST" action="" enctype="multipart/form-data">
-                <input type="hidden" name="edit_employee_id" id="edit_employee_id">
-                <input type="hidden" name="old_photo" id="old_photo">
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Employee Name</label>
-                    <input type="text" name="edit_name" id="edit_name" required
-                        class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Employee ID</label>
-                    <input type="text" name="edit_employee_id_code" id="edit_employee_id_code" required
-                        class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Designation</label>
-                    <input type="text" name="edit_designation" id="edit_designation" required
-                        class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Photo</label>
-                    <div class="mb-2" id="current_photo_preview"></div>
-                    <input type="file" name="edit_photo" id="edit_photo" accept="image/*"
-                        class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <p class="text-xs text-slate-500 mt-1">Leave empty to keep current photo</p>
-                </div>
-                
-                <div class="flex gap-3">
-                    <button type="submit" name="update_employee"
-                        class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 font-semibold">
-                        <i class="fas fa-save mr-2"></i>Update
-                    </button>
-                    <button type="button" onclick="closeEditModal()"
-                        class="flex-1 bg-slate-300 text-slate-700 px-4 py-2 rounded-md hover:bg-slate-400 font-semibold">
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Delete Confirmation Form -->
-    <form id="deleteForm" method="POST" action="" style="display: none;">
-        <input type="hidden" name="delete_employee" value="1">
-        <input type="hidden" name="employee_id" id="delete_employee_id">
-    </form>
-
     <script>
-        // Open edit modal
-        function openEditModal(id, name, employeeId, designation, photo) {
-            document.getElementById('edit_employee_id').value = id;
-            document.getElementById('edit_name').value = name;
-            document.getElementById('edit_employee_id_code').value = employeeId;
-            document.getElementById('edit_designation').value = designation;
-            document.getElementById('old_photo').value = photo;
-            
-            // Show current photo
-            const photoPreview = document.getElementById('current_photo_preview');
-            if (photo) {
-                photoPreview.textContent = '';
-                const img = document.createElement('img');
-                img.src = 'uploads/employee/' + encodeURIComponent(photo);
-                img.alt = 'Current Photo';
-                img.className = 'w-20 h-20 object-cover rounded border';
-                photoPreview.appendChild(img);
-            } else {
-                photoPreview.innerHTML = '<p class="text-sm text-slate-500">No photo uploaded</p>';
+        (() => {
+            const menuToggleButton = document.getElementById('menuToggle');
+            const sidebarElement = document.getElementById('sidebar');
+            const sidebarOverlayElement = document.getElementById('sidebarOverlay');
+            const closeSidebarButton = document.getElementById('closeSidebar');
+
+            if (menuToggleButton && sidebarElement && sidebarOverlayElement && closeSidebarButton) {
+                menuToggleButton.addEventListener('click', () => {
+                    sidebarElement.classList.remove('-translate-x-full');
+                    sidebarOverlayElement.classList.remove('hidden');
+                });
+
+                closeSidebarButton.addEventListener('click', () => {
+                    sidebarElement.classList.add('-translate-x-full');
+                    sidebarOverlayElement.classList.add('hidden');
+                });
+
+                sidebarOverlayElement.addEventListener('click', () => {
+                    sidebarElement.classList.add('-translate-x-full');
+                    sidebarOverlayElement.classList.add('hidden');
+                });
             }
-            
-            document.getElementById('editModal').classList.remove('hidden');
-        }
-        
-        // Close edit modal
-        function closeEditModal() {
-            document.getElementById('editModal').classList.add('hidden');
-        }
-
-        // Delete employee
-        function deleteEmployee(id) {
-            if (confirm('Are you sure you want to delete this employee? This will also delete their photo.')) {
-                document.getElementById('delete_employee_id').value = id;
-                document.getElementById('deleteForm').submit();
-            }
-        }
-
-        // Export PDF
-        function exportPDF() {
-            window.open('export-employee-pdf.php', '_blank');
-        }
-
-        // Export Excel
-        function exportExcel() {
-            window.open('export-employee-excel.php', '_blank');
-        }
-
-        // Change entries per page
-        function changeEntries(perPage) {
-            window.location.href = '?per_page=' + perPage + '&page=1';
-        }
-
-        // Search table
-        function searchTable() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toUpperCase();
-            const table = document.getElementById('employeeTableBody');
-            const tr = table.getElementsByTagName('tr');
-
-            for (let i = 0; i < tr.length; i++) {
-                const td = tr[i].getElementsByTagName('td');
-                let found = false;
-                for (let j = 0; j < td.length; j++) {
-                    if (td[j]) {
-                        const txtValue = td[j].textContent || td[j].innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-                tr[i].style.display = found ? '' : 'none';
-            }
-        }
-
-        // Go to page
-        function goToPage(page) {
-            const perPage = document.getElementById('entriesPerPage').value;
-            window.location.href = '?per_page=' + perPage + '&page=' + page;
-        }
-
-        // Mobile Sidebar Toggle
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
-        const closeSidebar = document.getElementById('closeSidebar');
-
-        if (menuToggle && sidebar && sidebarOverlay && closeSidebar) {
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.remove('-translate-x-full');
-                sidebarOverlay.classList.remove('hidden');
-            });
-
-            closeSidebar.addEventListener('click', () => {
-                sidebar.classList.add('-translate-x-full');
-                sidebarOverlay.classList.add('hidden');
-            });
-
-            sidebarOverlay.addEventListener('click', () => {
-                sidebar.classList.add('-translate-x-full');
-                sidebarOverlay.classList.add('hidden');
-            });
-        }
+        })();
     </script>
 
 </body>
