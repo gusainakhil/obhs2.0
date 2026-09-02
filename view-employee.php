@@ -548,11 +548,11 @@ if (session_status() === PHP_SESSION_ACTIVE) {
             <div class="controls-bar">
                 <div class="entries-control">
                     <span>Show</span>
-                    <select id="entriesPerPage">
-                        <option value="10" <?php echo $per_page_param == 10 ? 'selected' : ''; ?>>10</option>
-                        <option value="25" <?php echo $per_page_param == 25 ? 'selected' : ''; ?>>25</option>
-                        <option value="50" <?php echo $per_page_param == 50 ? 'selected' : ''; ?>>50</option>
-                        <option value="100" <?php echo $per_page_param == 100 ? 'selected' : ''; ?>>100</option>
+                    <select id="entriesPerPage" name="per_page" aria-label="Entries per page">
+                        <option value="10" <?php echo $per_page_param === '10' ? 'selected' : ''; ?>>10</option>
+                        <option value="25" <?php echo $per_page_param === '25' ? 'selected' : ''; ?>>25</option>
+                        <option value="50" <?php echo $per_page_param === '50' ? 'selected' : ''; ?>>50</option>
+                        <option value="100" <?php echo $per_page_param === '100' ? 'selected' : ''; ?>>100</option>
                         <option value="all" <?php echo $per_page_param === 'all' ? 'selected' : ''; ?>>All</option>
                     </select>
                     <span>entries</span>
@@ -702,10 +702,39 @@ if (session_status() === PHP_SESSION_ACTIVE) {
 
     <script>
         (() => {
+            const entriesPerPageElement = document.getElementById('entriesPerPage');
+            const searchInputElement = document.getElementById('searchInput');
+            const employeeTableBodyElement = document.getElementById('employeeTableBody');
             const menuToggleButton = document.getElementById('menuToggle');
             const sidebarElement = document.getElementById('sidebar');
             const sidebarOverlayElement = document.getElementById('sidebarOverlay');
             const closeSidebarButton = document.getElementById('closeSidebar');
+
+            if (entriesPerPageElement) {
+                entriesPerPageElement.addEventListener('change', () => {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('per_page', entriesPerPageElement.value);
+                    url.searchParams.set('page', '1');
+                    url.searchParams.delete('edit_employee');
+                    window.location.href = url.toString();
+                });
+            }
+
+            if (searchInputElement && employeeTableBodyElement) {
+                searchInputElement.addEventListener('input', () => {
+                    const filter = searchInputElement.value.trim().toUpperCase();
+                    const rows = employeeTableBodyElement.querySelectorAll('tr');
+
+                    rows.forEach((row) => {
+                        const cells = row.querySelectorAll('td');
+                        const matches = Array.from(cells).some((cell) =>
+                            (cell.textContent || '').toUpperCase().includes(filter)
+                        );
+
+                        row.style.display = matches ? '' : 'none';
+                    });
+                });
+            }
 
             if (menuToggleButton && sidebarElement && sidebarOverlayElement && closeSidebarButton) {
                 menuToggleButton.addEventListener('click', () => {
