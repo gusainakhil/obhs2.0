@@ -195,7 +195,7 @@ if (isset($_POST['update_employee'])) {
 $employees = [];
 
 // Pagination settings
-$per_page_param = viewEmployeeResolvePerPage($_GET['per_page'] ?? '10');
+$per_page_param = viewEmployeeResolvePerPage($_GET['per_page'] ?? 'all');
 $records_per_page = ($per_page_param === 'all') ? 0 : (int) $per_page_param;
 $current_page = max(1, (int) ($_GET['page'] ?? 1));
 $offset = ($per_page_param === 'all') ? 0 : (($current_page - 1) * $records_per_page);
@@ -310,6 +310,16 @@ if (session_status() === PHP_SESSION_ACTIVE) {
             border: 1px solid #cbd5e1;
             border-radius: 4px;
             font-size: 13px;
+        }
+
+        .entries-control button {
+            padding: 6px 10px;
+            border: 1px solid #0284c7;
+            border-radius: 4px;
+            background: #0ea5e9;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
         }
 
         .search-control {
@@ -546,7 +556,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
 
             <!-- Controls Bar -->
             <div class="controls-bar">
-                <div class="entries-control">
+                <form id="entriesPerPageForm" class="entries-control" method="GET" action="view-employee.php">
                     <span>Show</span>
                     <select id="entriesPerPage" name="per_page" aria-label="Entries per page">
                         <option value="10" <?php echo $per_page_param === '10' ? 'selected' : ''; ?>>10</option>
@@ -555,8 +565,10 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                         <option value="100" <?php echo $per_page_param === '100' ? 'selected' : ''; ?>>100</option>
                         <option value="all" <?php echo $per_page_param === 'all' ? 'selected' : ''; ?>>All</option>
                     </select>
+                    <input type="hidden" name="page" value="1">
+                    <button type="submit">Apply</button>
                     <span>entries</span>
-                </div>
+                </form>
 
                 <div style="display: flex; gap: 12px; align-items: center;">
                     <div class="export-buttons-top">
@@ -703,6 +715,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
     <script>
         (() => {
             const entriesPerPageElement = document.getElementById('entriesPerPage');
+            const entriesPerPageFormElement = document.getElementById('entriesPerPageForm');
             const searchInputElement = document.getElementById('searchInput');
             const employeeTableBodyElement = document.getElementById('employeeTableBody');
             const menuToggleButton = document.getElementById('menuToggle');
@@ -710,13 +723,9 @@ if (session_status() === PHP_SESSION_ACTIVE) {
             const sidebarOverlayElement = document.getElementById('sidebarOverlay');
             const closeSidebarButton = document.getElementById('closeSidebar');
 
-            if (entriesPerPageElement) {
+            if (entriesPerPageElement && entriesPerPageFormElement) {
                 entriesPerPageElement.addEventListener('change', () => {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('per_page', entriesPerPageElement.value);
-                    url.searchParams.set('page', '1');
-                    url.searchParams.delete('edit_employee');
-                    window.location.href = url.toString();
+                    entriesPerPageFormElement.submit();
                 });
             }
 
