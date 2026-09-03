@@ -84,13 +84,15 @@ $down_tte_total = $downCoach['tte'];
 $down_total_target = $downCoach['total_feed'] + $downCoach['tte'];
 $down_total_achieved = $downAchieve['tte'] + $downAchieve['ac_non_ac'];
 
-$up_ac = calculateCoachWisePercentageWithoutGrade($up, $from_date, $to_date, 'AC');
-$up_non = calculateCoachWisePercentageWithoutGrade($up, $from_date, $to_date, 'NON-AC');
-$up_tte = calculateCoachWisePercentageWithoutGrade($up, $from_date, $to_date, 'TTE');
+$up_ac = calculateRoundWiseSummaryPercentageWithoutGrade($up, $from_date, $to_date, 'AC', $up_ac_total);
+$up_non = calculateRoundWiseSummaryPercentageWithoutGrade($up, $from_date, $to_date, 'NON-AC', $up_non_ac_total);
+$up_tte = calculateRoundWiseSummaryPercentageWithoutGrade($up, $from_date, $to_date, 'TTE', $up_tte_total);
+$upSections = ['ac' => $up_ac, 'non_ac' => $up_non, 'tte' => $up_tte];
 
-$down_ac = calculateCoachWisePercentageWithoutGrade($down, $from_date, $to_date, 'AC');
-$down_non = calculateCoachWisePercentageWithoutGrade($down, $from_date, $to_date, 'NON-AC');
-$down_tte = calculateCoachWisePercentageWithoutGrade($down, $from_date, $to_date, 'TTE');
+$down_ac = calculateRoundWiseSummaryPercentageWithoutGrade($down, $from_date, $to_date, 'AC', $down_ac_total);
+$down_non = calculateRoundWiseSummaryPercentageWithoutGrade($down, $from_date, $to_date, 'NON-AC', $down_non_ac_total);
+$down_tte = calculateRoundWiseSummaryPercentageWithoutGrade($down, $from_date, $to_date, 'TTE', $down_tte_total);
+$downSections = ['ac' => $down_ac, 'non_ac' => $down_non, 'tte' => $down_tte];
 
 $upFinalPSI = calculateFinalPSI([
     ['total' => $up_ac_total, 'percent' => $up_ac['avg_percentage']],
@@ -104,7 +106,20 @@ $downFinalPSI = calculateFinalPSI([
     ['total' => $downCoach['tte'], 'percent' => $down_tte['avg_percentage']]
 ]);
 
-$up_down_PSI = number_format(($upFinalPSI + $downFinalPSI) / 2, 2);
+$up_down_PSI = number_format(calculateFinalPSI([
+    [
+        'total' => $up_ac_total + $down_ac_total,
+        'percent' => combineRoundWiseSummaryPercentages([$upSections['ac'], $downSections['ac']])
+    ],
+    [
+        'total' => $up_non_ac_total + $down_non_ac_total,
+        'percent' => combineRoundWiseSummaryPercentages([$upSections['non_ac'], $downSections['non_ac']])
+    ],
+    [
+        'total' => $up_tte_total + $down_tte_total,
+        'percent' => combineRoundWiseSummaryPercentages([$upSections['tte'], $downSections['tte']])
+    ]
+]), 2);
 
 // Header Info
 $sheet->setCellValue('A1', 'Round-Wise Summary Report');

@@ -372,8 +372,8 @@ if (!$is_newui_sidebar):
   <div class="brand">
     <div class="brand-copy">
       <img src="<?php echo $escape($logo_src); ?>" alt="Beatle Analytics">
-      <h2>OBHS</h2>
-      <p>Outbound Housekeeping System</p>
+      <h2 style=" text-align: center;">OBHS</h2>
+      <p style="text-align: center;">Outbound Housekeeping System</p>
     </div>
     <?php if (!$is_newui_sidebar): ?>
     <button id="closeSidebar" class="sidebar-close" type="button" aria-label="Close sidebar">✕</button>

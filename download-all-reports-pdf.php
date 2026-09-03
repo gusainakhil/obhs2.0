@@ -347,13 +347,15 @@ function downloadAllReportsPdfRenderAttendanceCell($data, $station_id)
     $down_total_target = $downCoach['total_feed'] + $downCoach['tte'];
     $down_total_achieved = $downAchieve['tte'] + $downAchieve['ac_non_ac'];
     
-    $up_ac = calculateCoachWisePercentage($up, $from_date, $to_date, 'AC', $grade);
-    $up_non = calculateCoachWisePercentage($up, $from_date, $to_date, 'NON-AC', $grade);
-    $up_tte = calculateCoachWisePercentage($up, $from_date, $to_date, 'TTE', $grade);
+    $up_ac = calculateRoundWiseSummaryPercentage($up, $from_date, $to_date, 'AC', $grade, $up_ac_total);
+    $up_non = calculateRoundWiseSummaryPercentage($up, $from_date, $to_date, 'NON-AC', $grade, $up_non_ac_total);
+    $up_tte = calculateRoundWiseSummaryPercentage($up, $from_date, $to_date, 'TTE', $grade, $up_tte_total);
+    $upSections = ['ac' => $up_ac, 'non_ac' => $up_non, 'tte' => $up_tte];
     
-    $down_ac = calculateCoachWisePercentage($down, $from_date, $to_date, 'AC', $grade);
-    $down_non = calculateCoachWisePercentage($down, $from_date, $to_date, 'NON-AC', $grade);
-    $down_tte = calculateCoachWisePercentage($down, $from_date, $to_date, 'TTE', $grade);
+    $down_ac = calculateRoundWiseSummaryPercentage($down, $from_date, $to_date, 'AC', $grade, $down_ac_total);
+    $down_non = calculateRoundWiseSummaryPercentage($down, $from_date, $to_date, 'NON-AC', $grade, $down_non_ac_total);
+    $down_tte = calculateRoundWiseSummaryPercentage($down, $from_date, $to_date, 'TTE', $grade, $down_tte_total);
+    $downSections = ['ac' => $down_ac, 'non_ac' => $down_non, 'tte' => $down_tte];
     
     $upFinalPSI = calculateFinalPSI([
         ['total' => $up_ac_total, 'percent' => $up_ac['avg_percentage']],
@@ -367,7 +369,20 @@ function downloadAllReportsPdfRenderAttendanceCell($data, $station_id)
         ['total' => $downCoach['tte'], 'percent' => $down_tte['avg_percentage']]
     ]);
     
-    $up_down_PSI = number_format(($upFinalPSI + $downFinalPSI) / 2, 2);
+    $up_down_PSI = number_format(calculateFinalPSI([
+        [
+            'total' => $up_ac_total + $down_ac_total,
+            'percent' => combineRoundWiseSummaryPercentages([$upSections['ac'], $downSections['ac']])
+        ],
+        [
+            'total' => $up_non_ac_total + $down_non_ac_total,
+            'percent' => combineRoundWiseSummaryPercentages([$upSections['non_ac'], $downSections['non_ac']])
+        ],
+        [
+            'total' => $up_tte_total + $down_tte_total,
+            'percent' => combineRoundWiseSummaryPercentages([$upSections['tte'], $downSections['tte']])
+        ]
+    ]), 2);
     ?>
 
     <h1>Round-Wise Summary Report</h1>

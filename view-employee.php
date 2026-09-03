@@ -90,9 +90,15 @@ function viewEmployeeResolvePerPage($value)
     return in_array($value, $allowed, true) ? $value : '10';
 }
 
-function viewEmployeeListUrl($perPage, $page, $editEmployeeId = null)
+function viewEmployeeListUrl($perPage, $page, $editEmployeeId = null, $search = '')
 {
-    $params = ['per_page' => $perPage, 'page' => $page];
+    $params = ['per_page' => $perPage, 'page' => max(1, (int) $page)];
+    $search = trim((string) $search);
+
+    if ($search !== '') {
+        $params['search'] = $search;
+    }
+
     if ($editEmployeeId !== null) {
         $params['edit_employee'] = (int) $editEmployeeId;
     }
@@ -106,6 +112,9 @@ $station_name = viewEmployeeEscape(getStationName($station_id));
 // Handle delete request
 if (isset($_POST['delete_employee'])) {
     $employee_id = (int) ($_POST['employee_id'] ?? 0);
+    $redirect_per_page = viewEmployeeResolvePerPage($_POST['per_page'] ?? 'all');
+    $redirect_page = max(1, (int) ($_POST['page'] ?? 1));
+    $redirect_search = trim((string) ($_POST['search'] ?? ''));
 
     // Get employee photo before deleting
     $emp_data = $employee_id > 0 ? viewEmployeeFetchPhoto($mysqli, $employee_id, $station_id) : null;
@@ -130,7 +139,7 @@ if (isset($_POST['delete_employee'])) {
         }
     }
 
-    header("Location: view-employee.php");
+    header('Location: ' . viewEmployeeListUrl($redirect_per_page, $redirect_page, null, $redirect_search));
     exit();
 }
 
@@ -140,6 +149,9 @@ if (isset($_POST['update_employee'])) {
     $name = trim((string) ($_POST['edit_name'] ?? ''));
     $employee_code = trim((string) ($_POST['edit_employee_id_code'] ?? ''));
     $designation = trim((string) ($_POST['edit_designation'] ?? ''));
+    $redirect_per_page = viewEmployeeResolvePerPage($_POST['per_page'] ?? 'all');
+    $redirect_page = max(1, (int) ($_POST['page'] ?? 1));
+    $redirect_search = trim((string) ($_POST['search'] ?? ''));
     $current_employee = $employee_id > 0 ? viewEmployeeFetchPhoto($mysqli, $employee_id, $station_id) : null;
     $old_photo = $current_employee['photo'] ?? '';
     $photo_name = $old_photo;
@@ -187,7 +199,7 @@ if (isset($_POST['update_employee'])) {
         $_SESSION['error_msg'] = 'Failed to update employee.';
     }
 
-    header("Location: view-employee.php");
+    header('Location: ' . viewEmployeeListUrl($redirect_per_page, $redirect_page, null, $redirect_search));
     exit();
 }
 
@@ -195,6 +207,8 @@ if (isset($_POST['update_employee'])) {
 $employees = [];
 
 // Pagination settings
+$search_term = trim((string) ($_GET['search'] ?? ''));
+$search_like = '%' . $search_term . '%';
 $per_page_param = viewEmployeeResolvePerPage($_GET['per_page'] ?? 'all');
 $records_per_page = ($per_page_param === 'all') ? 0 : (int) $per_page_param;
 $current_page = max(1, (int) ($_GET['page'] ?? 1));
@@ -202,10 +216,15 @@ $offset = ($per_page_param === 'all') ? 0 : (($current_page - 1) * $records_per_
 
 // Get total count
 $count_query = "SELECT COUNT(*) as total FROM base_employees WHERE station_id = ?";
+$count_query .= $search_term !== '' ? " AND (name LIKE ? OR employee_id LIKE ? OR desination LIKE ?)" : "";
 $stmt = $mysqli->prepare($count_query);
 $total_records = 0;
 if ($stmt) {
-    $stmt->bind_param("i", $station_id);
+    if ($search_term === '') {
+        $stmt->bind_param("i", $station_id);
+    } else {
+        $stmt->bind_param("isss", $station_id, $search_like, $search_like, $search_like);
+    }
     $stmt->execute();
     $count_result = $stmt->get_result();
     $total_records = (int) ($count_result->fetch_assoc()['total'] ?? 0);
@@ -232,17 +251,25 @@ if ($current_page > $total_pages) {
 }
 
 // Fetch paginated employees
-$query = "SELECT id, name, employee_id, desination, photo FROM base_employees WHERE station_id = ? ORDER BY created_at DESC";
+$query = "SELECT id, name, employee_id, desination, photo FROM base_employees WHERE station_id = ?";
+if ($search_term !== '') {
+    $query .= " AND (name LIKE ? OR employee_id LIKE ? OR desination LIKE ?)";
+}
+$query .= " ORDER BY created_at DESC";
 if ($per_page_param !== 'all') {
     $query .= " LIMIT ? OFFSET ?";
 }
 
 $stmt = $mysqli->prepare($query);
 if ($stmt) {
-    if ($per_page_param === 'all') {
+    if ($search_term === '' && $per_page_param === 'all') {
         $stmt->bind_param("i", $station_id);
-    } else {
+    } elseif ($search_term === '') {
         $stmt->bind_param("iii", $station_id, $records_per_page, $offset);
+    } elseif ($per_page_param === 'all') {
+        $stmt->bind_param("isss", $station_id, $search_like, $search_like, $search_like);
+    } else {
+        $stmt->bind_param("isssii", $station_id, $search_like, $search_like, $search_like, $records_per_page, $offset);
     }
     $stmt->execute();
     $result = $stmt->get_result();
@@ -334,6 +361,31 @@ if (session_status() === PHP_SESSION_ACTIVE) {
             border-radius: 4px;
             font-size: 13px;
             width: 200px;
+        }
+
+        .search-button,
+        .clear-search-button {
+            padding: 6px 10px;
+            border: 1px solid #0284c7;
+            border-radius: 4px;
+            background: #0ea5e9;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .clear-search-button {
+            border-color: #94a3b8;
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        .search-button:hover {
+            background: #0284c7;
+        }
+
+        .clear-search-button:hover {
+            background: #e2e8f0;
         }
 
         .export-buttons-top {
@@ -566,6 +618,9 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                         <option value="all" <?php echo $per_page_param === 'all' ? 'selected' : ''; ?>>All</option>
                     </select>
                     <input type="hidden" name="page" value="1">
+                    <?php if ($search_term !== ''): ?>
+                    <input type="hidden" name="search" value="<?php echo viewEmployeeEscape($search_term); ?>">
+                    <?php endif; ?>
                     <button type="submit">Apply</button>
                     <span>entries</span>
                 </form>
@@ -576,11 +631,15 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                         <a class="btn-export-top btn-excel" href="export-employee-excel.php" target="_blank">Excel</a>
                     </div>
 
-                    <div class="search-control">
-                        <span>Search:</span>
-                        <input type="text" class="search-input" id="searchInput"
-                            placeholder="Search...">
-                    </div>
+                    <form id="employeeSearchForm" class="search-control" method="GET" action="view-employee.php">
+                        <label for="searchInput">Search:</label>
+                        <input type="hidden" name="per_page" value="<?php echo viewEmployeeEscape($per_page_param); ?>">
+                        <input type="hidden" name="page" value="1">
+                        <input type="text" class="search-input" id="searchInput" name="search"
+                            value="<?php echo viewEmployeeEscape($search_term); ?>" placeholder="Name, ID or designation...">
+                        <button type="submit" id="searchButton" class="search-button">Search</button>
+                        <a href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, 1)); ?>" id="clearSearchButton" class="clear-search-button">Clear</a>
+                    </form>
                 </div>
             </div>
 
@@ -589,6 +648,9 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                 <h3 id="edit-employee-title" class="text-lg font-bold text-slate-800">Edit Employee</h3>
                 <form method="POST" action="" enctype="multipart/form-data" class="mt-4">
                     <input type="hidden" name="edit_employee_id" value="<?php echo (int) $editing_employee['id']; ?>">
+                    <input type="hidden" name="per_page" value="<?php echo viewEmployeeEscape($per_page_param); ?>">
+                    <input type="hidden" name="page" value="<?php echo (int) $current_page; ?>">
+                    <input type="hidden" name="search" value="<?php echo viewEmployeeEscape($search_term); ?>">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <input type="text" name="edit_name" required value="<?php echo viewEmployeeEscape($editing_employee['name']); ?>" class="px-3 py-2 border border-slate-300 rounded-md" aria-label="Employee name">
                         <input type="text" name="edit_employee_id_code" required value="<?php echo viewEmployeeEscape($editing_employee['employee_id']); ?>" class="px-3 py-2 border border-slate-300 rounded-md" aria-label="Employee ID">
@@ -597,7 +659,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                     <div class="flex gap-3 mt-4 items-center">
                         <input type="file" name="edit_photo" accept="image/*" class="text-sm">
                         <button type="submit" name="update_employee" class="bg-blue-500 text-white px-4 py-2 rounded-md font-semibold">Update</button>
-                        <a href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page)); ?>" class="bg-slate-300 text-slate-700 px-4 py-2 rounded-md font-semibold">Cancel</a>
+                        <a href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page, null, $search_term)); ?>" class="bg-slate-300 text-slate-700 px-4 py-2 rounded-md font-semibold">Cancel</a>
                     </div>
                 </form>
             </section>
@@ -619,7 +681,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                     <tbody id="employeeTableBody">
                         <?php 
                         if (!empty($employees)):
-                            $sr_no = 1;
+                            $sr_no = ($per_page_param === 'all') ? 1 : ($offset + 1);
                             foreach ($employees as $employee):
                         ?>
                         <tr>
@@ -630,10 +692,13 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                             <td><?php echo viewEmployeeEscape($employee['desination']); ?></td>
                             <td>
                                 <div class="action-btns">
-                                    <a class="btn-edit" href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page, $employee['id'])); ?>" aria-label="Edit <?php echo viewEmployeeEscape($employee['name']); ?>"><i class="fas fa-edit"></i></a>
+                                    <a class="btn-edit" href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page, $employee['id'], $search_term)); ?>" aria-label="Edit <?php echo viewEmployeeEscape($employee['name']); ?>"><i class="fas fa-edit"></i></a>
                                     <form method="POST" action="" class="inline">
                                         <input type="hidden" name="delete_employee" value="1">
                                         <input type="hidden" name="employee_id" value="<?php echo (int) $employee['id']; ?>">
+                                        <input type="hidden" name="per_page" value="<?php echo viewEmployeeEscape($per_page_param); ?>">
+                                        <input type="hidden" name="page" value="<?php echo (int) $current_page; ?>">
+                                        <input type="hidden" name="search" value="<?php echo viewEmployeeEscape($search_term); ?>">
                                         <button type="submit" class="btn-delete" aria-label="Delete <?php echo viewEmployeeEscape($employee['name']); ?>"><i class="fas fa-trash"></i></button>
                                     </form>
                                 </div>
@@ -646,7 +711,13 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                         <tr>
                             <td colspan="6" style="text-align: center; padding: 40px;">
                                 <i class="fas fa-users text-4xl text-slate-300 mb-2"></i>
-                                <p style="color: #64748b;">No employees found. <a href="create-employee.php" style="color: #0ea5e9;">Add your first employee</a></p>
+                                <p style="color: #64748b;">
+                                    <?php if ($search_term !== ''): ?>
+                                    No employees matched "<?php echo viewEmployeeEscape($search_term); ?>".
+                                    <?php else: ?>
+                                    No employees found. <a href="create-employee.php" style="color: #0ea5e9;">Add your first employee</a>
+                                    <?php endif; ?>
+                                </p>
                             </td>
                         </tr>
                         <?php endif; ?>
@@ -661,7 +732,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                 </div>
                 <div class="pagination-controls">
                     <?php if ($current_page > 1): ?>
-                    <a href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page - 1)); ?>">Previous</a>
+                    <a href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page - 1, null, $search_term)); ?>">Previous</a>
                     <?php else: ?>
                     <button disabled>Previous</button>
                     <?php endif; ?>
@@ -672,7 +743,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                     $end_page = min($total_pages, $current_page + 2);
                     
                     if ($start_page > 1) {
-                        echo '<a href="' . viewEmployeeEscape(viewEmployeeListUrl($per_page_param, 1)) . '">1</a>';
+                        echo '<a href="' . viewEmployeeEscape(viewEmployeeListUrl($per_page_param, 1, null, $search_term)) . '">1</a>';
                         if ($start_page > 2) {
                             echo '<span>...</span>';
                         }
@@ -682,7 +753,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                         if ($i == $current_page) {
                             echo '<span class="active">' . $i . '</span>';
                         } else {
-                            echo '<a href="' . viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $i)) . '">' . $i . '</a>';
+                            echo '<a href="' . viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $i, null, $search_term)) . '">' . $i . '</a>';
                         }
                     }
                     
@@ -690,12 +761,12 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                         if ($end_page < $total_pages - 1) {
                             echo '<span>...</span>';
                         }
-                        echo '<a href="' . viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $total_pages)) . '">' . $total_pages . '</a>';
+                        echo '<a href="' . viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $total_pages, null, $search_term)) . '">' . $total_pages . '</a>';
                     }
                     ?>
                     
                     <?php if ($current_page < $total_pages): ?>
-                    <a href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page + 1)); ?>">Next</a>
+                    <a href="<?php echo viewEmployeeEscape(viewEmployeeListUrl($per_page_param, $current_page + 1, null, $search_term)); ?>">Next</a>
                     <?php else: ?>
                     <button disabled>Next</button>
                     <?php endif; ?>
@@ -730,7 +801,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
             }
 
             if (searchInputElement && employeeTableBodyElement) {
-                searchInputElement.addEventListener('input', () => {
+                const filterEmployees = () => {
                     const filter = searchInputElement.value.trim().toUpperCase();
                     const rows = employeeTableBodyElement.querySelectorAll('tr');
 
@@ -742,7 +813,9 @@ if (session_status() === PHP_SESSION_ACTIVE) {
 
                         row.style.display = matches ? '' : 'none';
                     });
-                });
+                };
+
+                searchInputElement.addEventListener('input', filterEmployees);
             }
 
             if (menuToggleButton && sidebarElement && sidebarOverlayElement && closeSidebarButton) {

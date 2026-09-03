@@ -1289,6 +1289,112 @@ function calculateCoachWisePercentageWithoutGrade(
     ];
 }
 
+function calculateRoundWiseSummarySectionPercentage(
+    array $data,
+    string $coach_type,
+    int $target_units
+): array {
+    $coachList = $data['coach_wise'] ?? [];
+    $targets = $data['targets'] ?? [];
+
+    if ($coach_type === 'AC') {
+        $target_per_coach = (int) ($targets['ac_coach_target'] ?? 0);
+    } elseif ($coach_type === 'NON-AC') {
+        $target_per_coach = (int) ($targets['non_ac_coach_target'] ?? 0);
+    } else {
+        $target_per_coach = (int) ($targets['tte_target'] ?? 0);
+    }
+
+    $total_questions = (int) ($data['total_questions'] ?? 0);
+    $highest_marking = (int) ($data['highest_marking'] ?? 0);
+    $total_percentage = 0.0;
+
+    foreach ($coachList as $row) {
+        $feedback_sum = $row['feedback_sum'] ?? 0;
+        $passenger_count = $row['total_passenger_count'] ?? 0;
+        $percentage = 0.0;
+
+        if ($total_questions > 0 && $highest_marking > 0) {
+            $effective_target = ($passenger_count <= $target_per_coach && $target_per_coach > 0)
+                ? $target_per_coach
+                : $passenger_count;
+
+            $denom = $total_questions * $highest_marking * $effective_target;
+
+            if ($denom > 0) {
+                $percentage = ($feedback_sum / $denom) * 100;
+            }
+        }
+
+        $total_percentage += $percentage;
+    }
+
+    $target_units = max(0, $target_units);
+    $divisor = max($target_units, count($coachList));
+    $avg_percentage = $divisor > 0 ? round($total_percentage / $divisor, 2) : 0.0;
+
+    return [
+        'avg_percentage' => number_format($avg_percentage, 2, '.', ''),
+        'percentage_sum' => $total_percentage,
+        'divisor' => $divisor,
+        'target_units' => $target_units,
+        'achieved_units' => count($coachList),
+    ];
+}
+
+function calculateRoundWiseSummaryPercentage(
+    string $train,
+    string $from_date,
+    string $to_date,
+    string $coach_type,
+    string $grade,
+    int $target_units
+): array {
+    $data = feedback_calculation_coach_wise(
+        $train,
+        $from_date,
+        $to_date,
+        $coach_type,
+        $grade
+    );
+
+    return calculateRoundWiseSummarySectionPercentage($data, $coach_type, $target_units);
+}
+
+function calculateRoundWiseSummaryPercentageWithoutGrade(
+    string $train,
+    string $from_date,
+    string $to_date,
+    string $coach_type,
+    int $target_units
+): array {
+    $data = feedback_calculation_coach_wise_without_grade(
+        $train,
+        $from_date,
+        $to_date,
+        $coach_type
+    );
+
+    return calculateRoundWiseSummarySectionPercentage($data, $coach_type, $target_units);
+}
+
+function combineRoundWiseSummaryPercentages(array $sections): float
+{
+    $total_percentage_sum = 0.0;
+    $total_divisor = 0;
+
+    foreach ($sections as $section) {
+        $total_percentage_sum += (float) ($section['percentage_sum'] ?? 0);
+        $total_divisor += (int) ($section['divisor'] ?? 0);
+    }
+
+    if ($total_divisor === 0) {
+        return 0.0;
+    }
+
+    return round($total_percentage_sum / $total_divisor, 2);
+}
+
 function calculateFinalPSI(array $sections): float
 {
     $sum = 0.0;

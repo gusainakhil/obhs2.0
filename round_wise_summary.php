@@ -74,13 +74,26 @@ function roundWiseEmptyAchievedData()
     ];
 }
 
-function roundWisePercentage($train_no, $from_date, $to_date, $coach_type, $grade)
+function roundWisePercentage($train_no, $from_date, $to_date, $coach_type, $grade, $target_units)
 {
     if ($train_no === '') {
-        return ['avg_percentage' => 0];
+        return [
+            'avg_percentage' => '0.00',
+            'percentage_sum' => 0.0,
+            'divisor' => max(0, (int) $target_units),
+            'target_units' => max(0, (int) $target_units),
+            'achieved_units' => 0,
+        ];
     }
 
-    return calculateCoachWisePercentage($train_no, $from_date, $to_date, $coach_type, $grade);
+    return calculateRoundWiseSummaryPercentage(
+        $train_no,
+        $from_date,
+        $to_date,
+        $coach_type,
+        $grade,
+        (int) $target_units
+    );
 }
 
 function roundWiseBuildTrainSummary($train_no, $from_date, $to_date, $grade)
@@ -91,15 +104,15 @@ function roundWiseBuildTrainSummary($train_no, $from_date, $to_date, $grade)
     $coach = array_merge(roundWiseEmptyCoachData(), is_array($coach) ? $coach : []);
     $achieve = array_merge(roundWiseEmptyAchievedData(), is_array($achieve) ? $achieve : []);
 
-    $ac = roundWisePercentage($train_no, $from_date, $to_date, 'AC', $grade);
-    $non_ac = roundWisePercentage($train_no, $from_date, $to_date, 'NON-AC', $grade);
-    $tte = roundWisePercentage($train_no, $from_date, $to_date, 'TTE', $grade);
-
     $ac_total = (int) $coach['ac'];
     $non_ac_total = (int) $coach['non_ac'];
     $ac_feed_total = $ac_total * (int) $coach['feed_ac'];
     $non_ac_feed_total = $non_ac_total * (int) $coach['feed_non_ac'];
     $tte_total = (int) $coach['tte'];
+
+    $ac = roundWisePercentage($train_no, $from_date, $to_date, 'AC', $grade, $ac_total);
+    $non_ac = roundWisePercentage($train_no, $from_date, $to_date, 'NON-AC', $grade, $non_ac_total);
+    $tte = roundWisePercentage($train_no, $from_date, $to_date, 'TTE', $grade, $tte_total);
 
     $final_psi = calculateFinalPSI([
         ['total' => $ac_total, 'percent' => $ac['avg_percentage']],
@@ -118,6 +131,11 @@ function roundWiseBuildTrainSummary($train_no, $from_date, $to_date, $grade)
         'total_target' => (int) $coach['total_feed'] + $tte_total,
         'total_achieved' => (int) $achieve['tte'] + (int) $achieve['ac_non_ac'],
         'final_psi' => $final_psi,
+        'sections' => [
+            'ac' => $ac,
+            'non_ac' => $non_ac,
+            'tte' => $tte,
+        ],
     ];
 }
 
@@ -516,6 +534,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                 $up_total_target = $upSummary['total_target'];
                 $up_total_achieved = $upSummary['total_achieved'];
                 $upFinalPSI = $upSummary['final_psi'];
+                $upSections = $upSummary['sections'];
 
                 $down_ac_total = $downSummary['ac_total'];
                 $down_non_ac_total = $downSummary['non_ac_total'];
@@ -525,8 +544,22 @@ if (session_status() === PHP_SESSION_ACTIVE) {
                 $down_total_target = $downSummary['total_target'];
                 $down_total_achieved = $downSummary['total_achieved'];
                 $downFinalPSI = $downSummary['final_psi'];
+                $downSections = $downSummary['sections'];
 
-                $up_down_PSI = number_format(($upFinalPSI + $downFinalPSI) / 2, 2);
+                $up_down_PSI = number_format(calculateFinalPSI([
+                    [
+                        'total' => $up_ac_total + $down_ac_total,
+                        'percent' => combineRoundWiseSummaryPercentages([$upSections['ac'], $downSections['ac']]),
+                    ],
+                    [
+                        'total' => $up_non_ac_total + $down_non_ac_total,
+                        'percent' => combineRoundWiseSummaryPercentages([$upSections['non_ac'], $downSections['non_ac']]),
+                    ],
+                    [
+                        'total' => $up_tte_total + $down_tte_total,
+                        'percent' => combineRoundWiseSummaryPercentages([$upSections['tte'], $downSections['tte']]),
+                    ],
+                ]), 2);
             } else {
                 echo '<p> </p>';
                 exit();
