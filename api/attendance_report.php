@@ -9,7 +9,9 @@ require_once "../includes/connection.php"; // $mysqli
 
 $req = json_decode(file_get_contents("php://input"), true);
 
-$grade      = $req["grade"] ?? null;
+$grade      = trim((string) ($req["grade"] ?? ""));
+// Mobile clients may send labels such as "D - Thursday"; the database stores only "D".
+$grade      = trim(explode("-", $grade, 2)[0]);
 $train_no   = $req["train_up"] ?? null;
 $from       = $req["from"] ?? null;
 $to         = $req["to"] ?? null;
