@@ -11,15 +11,21 @@ $passenger_id = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"), 0, 3
 
 /* ---------- READ BASIC POST DATA ---------- */
 $station_id = $_POST["station_id"] ?? "";
-$pnr_number = $_POST["pnr_number"] ?? "";
+$pnr_input  = $_POST["pnr_number"] ?? "";
+$pnr_number = is_scalar($pnr_input) ? (string) $pnr_input : ""; // Optional
 $name       = $_POST["name"] ?? "";
 $grade      = $_POST["grade"] ?? "";
 $coach_type = $_POST["coach_type"] ?? "";
 $train_no   = $_POST["train_no"] ?? "";
 $coach_no   = $_POST["coach_no"] ?? "";
-$seat_no    = $_POST["seat_no"] ?? "";
+$seat_input = $_POST["seat_no"] ?? "";
+$seat_no    = is_scalar($seat_input) && trim((string) $seat_input) !== ""
+    ? (int) $seat_input
+    : null; // Optional; the live database column accepts NULL.
 $ph_number  = $_POST["ph_number"] ?? "";
 $verified   = $_POST["verified"] ?? 0;
+
+$seat_no_sql = $seat_no === null ? "NULL" : (string) $seat_no;
 
 /* ---------- PHOTO (OPTIONAL) ---------- */
 $photo_name = null;
@@ -47,7 +53,7 @@ mysqli_begin_transaction($mysqli);
 $sql = "INSERT INTO OBHS_passenger 
 (id, station_id, pnr_number, name, grade, coach_type, train_no, coach_no, seat_no, ph_number, verified, photo)
 VALUES 
-('$passenger_id', '$station_id', '$pnr_number', '$name', '$grade', '$coach_type', '$train_no', '$coach_no', '$seat_no', '$ph_number', '$verified', '$photo_name')";
+('$passenger_id', '$station_id', '$pnr_number', '$name', '$grade', '$coach_type', '$train_no', '$coach_no', $seat_no_sql, '$ph_number', '$verified', '$photo_name')";
 
 if (!mysqli_query($mysqli, $sql)) {
     mysqli_rollback($mysqli);

@@ -165,6 +165,11 @@ if ($station_id === 17) {
         'icon' => $resolve_sidebar_icon('View Employee'),
         'label' => 'View Employee',
     ];
+    $sidebar_links[] = [
+        'href' => $build_project_href('attendance-with-photos-train-wise.php'),
+        'icon' => $resolve_sidebar_icon('Attendance Report'),
+        'label' => 'Attendance Report',
+    ];
 } else {
     $sidebar_links[] = [
         'href' => $build_project_href('create-employee.php'),
