@@ -1,5 +1,8 @@
 <?php
-session_start();
+if (isset($_SESSION['station_id']) && $_SESSION['station_id'] == 35) {
+    header("Location: https://obhs.beatleanalytics.in/");
+    exit;
+}
 include '../includes/connection.php';
 include '../includes/helpers.php';
 
