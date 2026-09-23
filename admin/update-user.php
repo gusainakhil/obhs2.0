@@ -182,6 +182,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         } elseif ($r_name === 'Daily Attendance Report') {
                             $link = 'daily-attendance.php';
                             $type='Attendance2';
+                        } elseif ($r_name === 'Chemical Report') {
+                            $link = 'chemical-stock.php';
+                            $type='Chemical';
                         } else {
                             $link = '';
                             $type='';
@@ -537,6 +540,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     </label>
                                                     <?php if (!empty($existing_reports_map['Daily Attendance Report'])): ?>
                                                         <?php $rep = $existing_reports_map['Daily Attendance Report']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="reports[]"
+                                                        value="Chemical Report" id="chemicalReport" <?php if (isset($existing_reports_map['Chemical Report'])) echo 'checked data-locked="1"'; elseif(in_array('Chemical Report', $existing_reports)) echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="chemicalReport">
+                                                        Chemical Report
+                                                    </label>
+                                                    <?php if (!empty($existing_reports_map['Chemical Report'])): ?>
+                                                        <?php $rep = $existing_reports_map['Chemical Report']; ?>
                                                         <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
                                                             <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
                                                         </button>

@@ -91,6 +91,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               } elseif ($r_name === 'Daily Attendance Report') {
                 $empty_link = 'daily-attendance.php';
                 $type = 'Attendance2';
+              } elseif ($r_name === 'Chemical Report') {
+                $empty_link = 'chemical-stock.php';
+                $type = 'Chemical';
               } else {
                 $empty_link = '';
               }
@@ -364,6 +367,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             value="Daily Attendance Report" id="dailyAttendanceReport">
                           <label class="form-check-label" for="dailyAttendanceReport">
                             Daily Attendance Report
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="reports[]"
+                            value="Chemical Report" id="chemicalReport">
+                          <label class="form-check-label" for="chemicalReport">
+                            Chemical Report
                           </label>
                         </div>
 
