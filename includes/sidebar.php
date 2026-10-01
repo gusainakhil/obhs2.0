@@ -44,9 +44,6 @@ $build_project_href = static function ($href) use ($is_newui_sidebar) {
 $resolve_sidebar_icon = static function ($label) {
     static $icon_map = [
         'Dashboard' => '▦',
-        'Chemical Stock' => '⚗',
-        'Daily Chemical Report' => '☷',
-        'Chemical Report' => '☷',
         'Round Wise Summary' => '◉',
         'Round Wise Summary Without Grade' => '◎',
         'Photo Report' => '▣',
@@ -133,17 +130,6 @@ $sidebar_links = [
 
 $sidebar_links = array_merge($sidebar_links, $assigned_report_links);
 
-// $sidebar_links[] = [
-//     'href' => $build_project_href('chemical-stock.php'),
-//     'icon' => $resolve_sidebar_icon('Chemical Stock'),
-//     'label' => 'Chemical Stock',
-// ];
-// $sidebar_links[] = [
-//     'href' => $build_project_href('chemical-report.php'),
-//     'icon' => $resolve_sidebar_icon('Daily Chemical Report'),
-//     'label' => 'Daily Chemical Report',
-// ];
-
 if ($station_id === 8) {
     $sidebar_links[] = [
         'href' => $build_project_href('feedback-single-train-report.php'),
@@ -168,7 +154,7 @@ $sidebar_links[] = [
     'label' => 'View Feedback Target',
 ];
 
-if ($station_id === 17) {
+if ($station_id === 17 || $station_id === 26) {
     $sidebar_links[] = [
         'href' => $build_project_href('jodhpur-employees/add-employee-jodhpur.php'),
         'icon' => $resolve_sidebar_icon('Create Employee'),
