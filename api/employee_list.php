@@ -11,7 +11,7 @@ require_once "../includes/connection.php";
 $stationId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Decide table based on conditionstation_id
-if ($stationId === 17) {
+if ($stationId === 17 || $stationId === 26) {
     $table = "base_employees_jodhpur";
 } else {
     $table = "base_employees";

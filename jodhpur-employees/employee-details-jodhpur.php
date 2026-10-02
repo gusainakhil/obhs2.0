@@ -1,13 +1,32 @@
 <?php
 session_start();
 include '../includes/connection.php';
+include '../includes/helpers.php';
+
+$station_id = $_SESSION['station_id'] ?? null;
+$station_name = getStationName($station_id);
+$organisation_name = 'No Organisation';
+
+$organisation_query = "SELECT organisation_name FROM OBHS_users WHERE station_id = ? AND type = 2 LIMIT 1";
+$organisation_stmt = $mysqli->prepare($organisation_query);
+$organisation_stmt->bind_param("i", $station_id);
+$organisation_stmt->execute();
+$organisation_result = $organisation_stmt->get_result();
+
+if ($organisation_row = $organisation_result->fetch_assoc()) {
+    $database_organisation_name = trim((string) $organisation_row['organisation_name']);
+    if ($database_organisation_name !== '') {
+        $organisation_name = $database_organisation_name;
+    }
+}
+$organisation_stmt->close();
 
 $employee_id = $_GET['id'] ?? 0;
 
 $employee = null;
-$query = "SELECT * FROM base_employees_jodhpur WHERE id = ?";
+$query = "SELECT * FROM base_employees_jodhpur WHERE id = ? AND station_id = ?";
 $stmt = $mysqli->prepare($query);
-$stmt->bind_param("i", $employee_id);
+$stmt->bind_param("ii", $employee_id, $station_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -233,8 +252,8 @@ function e($value) {
     <!-- FRONT SIDE -->
     <div class="id-card">
         <div class="card-header">
-            <h2>RAKSHAK SECURITAS PVT. LTD.</h2>
-            <p>RAILWAY STATION NWR JODHPUR (RAJ)</p>
+            <h2><?php echo e($organisation_name); ?></h2>
+            <p>RAILWAY STATION <?php echo e($station_name); ?></p>
         </div>
 
         <div class="photo-box">
@@ -318,7 +337,7 @@ function e($value) {
 
             <div class="instruction">
                 <strong>Instructions:</strong><br>
-                This card is property of RAKSHAK SECURITAS PVT. LTD.
+                This card is property of <?php echo e($organisation_name); ?>
                 If found, please return to the company office.
             </div>
 
@@ -338,7 +357,7 @@ function e($value) {
         </div>
 
         <div class="footer">
-            RAKSHAK SECURITAS PVT. LTD.
+            <?php echo e($organisation_name); ?>
         </div>
     </div>
 

@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../includes/connection.php';
+$station_id =$_SESSION['station_id'] ?? null;
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -63,16 +64,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // Insert into database
     $query = "INSERT INTO base_employees_jodhpur 
-              (employee_id, name, station, desination, photo, REN_ID, Rakshak_ID, FATHER_NAME, Police_ver, 
+              (employee_id, name, station, station_id, desination, photo, REN_ID, Rakshak_ID, FATHER_NAME, Police_ver, 
                Police_ver_dt, MOBILE_NO, ADHAR_NO, DOB, FORMULA_DOB, AGE, ADDRESH, PVC, PVC_Ok_Applied, 
                PVC_Issue_Month, MEDICAL, MEDICAL_ISSUE_MONTH, PAN_CARD, AC_NAME, AC_NO, IFSC_CODE, EDU, 
                Doc_Status, REMARK, STATUS, Issue_Date, Valid_Upto_date, FORMULA_Valid_Upto, Valid_Upto_Month, 
-               DOCUMENT_LINK, notification, created_at, updated_at) 
-              VALUES (?, ?, 'jodhpur', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+               DOCUMENT_LINK, notification, created_at, updated_at ) 
+              VALUES (?, ?, 'jodhpur', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
     
     $stmt = $mysqli->prepare($query);
-    $stmt->bind_param("ssssssssssssssssssssssssssssssssss", 
-        $employee_id, $name, $desination, $photo, $REN_ID, $Rakshak_ID, $FATHER_NAME, 
+    $stmt->bind_param("ssissssssssssssssssssssssssssssssss", 
+        $employee_id, $name, $station_id, $desination, $photo, $REN_ID, $Rakshak_ID, $FATHER_NAME, 
         $Police_ver, $Police_ver_dt, $MOBILE_NO, $ADHAR_NO, $DOB, $FORMULA_DOB, $AGE, $ADDRESH, 
         $PVC, $PVC_Ok_Applied, $PVC_Issue_Month, $MEDICAL, $MEDICAL_ISSUE_MONTH, $PAN_CARD, 
         $AC_NAME, $AC_NO, $IFSC_CODE, $EDU, $Doc_Status, $REMARK, $STATUS, $Issue_Date, 

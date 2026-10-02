@@ -1,15 +1,16 @@
 <?php
 session_start();
 include '../includes/connection.php';
+$station_id = $_SESSION['station_id'] ?? null;
 
 // Get employee ID from URL
 $edit_id = $_GET['id'] ?? 0;
 
 // Fetch employee data
 $data = null;
-$query = "SELECT * FROM base_employees_jodhpur WHERE id = ?";
+$query = "SELECT * FROM base_employees_jodhpur WHERE id = ? AND station_id = ?";
 $stmt = $mysqli->prepare($query);
-$stmt->bind_param("i", $edit_id);
+$stmt->bind_param("ii", $edit_id, $station_id);
 $stmt->execute();
 $result = $stmt->get_result();
 if ($row = $result->fetch_assoc()) {
@@ -95,16 +96,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               AC_NO = ?, IFSC_CODE = ?, EDU = ?, Doc_Status = ?, REMARK = ?, STATUS = ?, 
               Issue_Date = ?, Valid_Upto_date = ?, FORMULA_Valid_Upto = ?, Valid_Upto_Month = ?, 
               DOCUMENT_LINK = ?, notification = ?, updated_at = NOW()
-              WHERE id = ?";
+              WHERE id = ? AND station_id = ?";
     
     $stmt = $mysqli->prepare($query);
-    $stmt->bind_param("ssssssssssssssssssssssssssssssssssi", 
+    $stmt->bind_param("ssssssssssssssssssssssssssssssssssii", 
         $employee_id, $name, $desination, $photo, $REN_ID, $Rakshak_ID, $FATHER_NAME, 
         $Police_ver, $Police_ver_dt, $MOBILE_NO, $ADHAR_NO, $DOB, $FORMULA_DOB, $AGE, $ADDRESH, 
         $PVC, $PVC_Ok_Applied, $PVC_Issue_Month, $MEDICAL, $MEDICAL_ISSUE_MONTH, $PAN_CARD, 
         $AC_NAME, $AC_NO, $IFSC_CODE, $EDU, $Doc_Status, $REMARK, $STATUS, $Issue_Date, 
         $Valid_Upto_date, $FORMULA_Valid_Upto, $Valid_Upto_Month, $DOCUMENT_LINK, $notification,
-        $edit_id);
+        $edit_id, $station_id);
     
     if ($stmt->execute()) {
         $_SESSION['success'] = "Employee updated successfully!";

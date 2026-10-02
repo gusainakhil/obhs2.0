@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../includes/connection.php';
+$station_id =$_SESSION['station_id'] ?? null;
 
 // Handle Delete
 if (isset($_GET['delete_id'])) {
@@ -36,13 +37,17 @@ if (isset($_GET['delete_id'])) {
     exit();
 }
 
-// Fetch all employees
+// Fetch employees for the logged-in station
 $data = [];
-$query = "SELECT * FROM base_employees_jodhpur ORDER BY created_at DESC";
-$result = $mysqli->query($query);
+$query = "SELECT * FROM base_employees_jodhpur WHERE station_id = ? ORDER BY created_at DESC";
+$stmt = $mysqli->prepare($query);
+$stmt->bind_param("i", $station_id);
+$stmt->execute();
+$result = $stmt->get_result();
 while ($row = $result->fetch_assoc()) {
     $data[] = $row;
 }
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -335,6 +340,7 @@ while ($row = $result->fetch_assoc()) {
         let currentAction = '';
         let currentUrl = '';
         const ADMIN_PASSWORD = 'admin123';
+        const REQUIRES_PASSWORD = <?php echo ((int) $station_id === 17) ? 'true' : 'false'; ?>;
 
         $(document).ready(function () {
             var table = $('#employeeTable').DataTable({
@@ -358,6 +364,11 @@ while ($row = $result->fetch_assoc()) {
         });
 
         function showPasswordModal(action, url) {
+            if (!REQUIRES_PASSWORD) {
+                window.location.href = url;
+                return;
+            }
+
             currentAction = action;
             currentUrl = url;
 
