@@ -154,7 +154,7 @@ $sidebar_links[] = [
     'label' => 'View Feedback Target',
 ];
 
-if ($station_id === 17 || $station_id === 26) {
+if ($station_id === 17 || $station_id === 26 || $stationId === 21 || $stationId === 36) {
     $sidebar_links[] = [
         'href' => $build_project_href('jodhpur-employees/add-employee-jodhpur.php'),
         'icon' => $resolve_sidebar_icon('Create Employee'),
