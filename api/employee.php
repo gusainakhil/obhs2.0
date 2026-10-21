@@ -11,12 +11,11 @@ require_once "../includes/connection.php";
 $stationId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Decide table based on conditionstation_id
-if ($stationId === 17 || $stationId === 26) {
+if ($stationId === 17 || $stationId === 26 || $stationId === 21 || $stationId === 36 ) {
     $table = "base_employees_jodhpur";
 } else {
     $table = "base_employees";
 }
-
 // SQL JOIN
 $sql = "
     SELECT b.id, b.employee_id, b.name, b.desination, b.station_id,
