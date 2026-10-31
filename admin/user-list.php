@@ -138,7 +138,16 @@ if (!isset($_SESSION['user_id'])) {
                         ?>
                         <tr class="align-middle">
                           <td><?php echo $i++; ?></td>
-                          <td><?php echo htmlspecialchars($user['station_name'] ?? ''); ?></td>
+                          <td>
+                            <a
+                              href="station-data-export.php?user_id=<?php echo (int)$user['user_id']; ?>"
+                              class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover fw-semibold"
+                              title="View and export station data"
+                            >
+                              <?php echo htmlspecialchars($user['station_name'] ?? ''); ?>
+                              <i class="bi bi-box-arrow-up-right ms-1 small" aria-hidden="true"></i>
+                            </a>
+                          </td>
                           <td><?php echo htmlspecialchars($user['organisation_name'] ?? ''); ?></td>
                           <td><?php echo htmlspecialchars($user['start_date'] ?? ''); ?></td>
                             <td><?php echo htmlspecialchars($user['end_date'] ?? ''); ?></td>

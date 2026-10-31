@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 27, 2026 at 11:25 PM
--- Server version: 10.11.18-MariaDB
--- PHP Version: 8.4.23
+-- Generation Time: Oct 31, 2026 at 12:48 PM
+-- Server version: 10.11.19-MariaDB
+-- PHP Version: 8.4.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -173,6 +173,45 @@ CREATE TABLE `base_photo_report` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `OBHS_chemicals`
+--
+
+CREATE TABLE `OBHS_chemicals` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `station_id` int(11) NOT NULL,
+  `name` varchar(120) NOT NULL,
+  `category` varchar(50) NOT NULL DEFAULT 'Cleaning',
+  `unit` varchar(10) NOT NULL DEFAULT 'L',
+  `current_quantity` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `low_stock_threshold` decimal(12,2) NOT NULL DEFAULT 10.00,
+  `created_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `OBHS_chemical_daily_entries`
+--
+
+CREATE TABLE `OBHS_chemical_daily_entries` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `chemical_id` bigint(20) UNSIGNED NOT NULL,
+  `station_id` int(11) NOT NULL,
+  `entry_date` date NOT NULL,
+  `opening_quantity` decimal(12,2) NOT NULL,
+  `used_quantity` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `received_quantity` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `closing_quantity` decimal(12,2) NOT NULL,
+  `notes` varchar(255) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `OBHS_divisions`
 --
 
@@ -240,8 +279,8 @@ CREATE TABLE `OBHS_passenger` (
   `name` varchar(100) NOT NULL,
   `id` char(64) NOT NULL,
   `ph_number` varchar(100) NOT NULL,
-  `pnr_number` varchar(100) NOT NULL,
-  `seat_no` int(11) NOT NULL,
+  `pnr_number` varchar(100) DEFAULT NULL,
+  `seat_no` int(11) DEFAULT NULL,
   `coach_no` varchar(100) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp(),
   `train_no` varchar(100) NOT NULL,
@@ -344,7 +383,9 @@ CREATE TABLE `OBHS_users` (
   `otp_skip` int(11) NOT NULL DEFAULT 1,
   `photo` int(11) NOT NULL DEFAULT 1,
   `photo_skip` int(11) NOT NULL DEFAULT 1,
-  `no_of_train` int(11) NOT NULL
+  `no_of_train` int(11) NOT NULL,
+  `passenger_otp_skip` int(2) DEFAULT 0,
+  `otp_form_app` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- --------------------------------------------------------
@@ -392,34 +433,62 @@ ALTER TABLE `app_version`
 --
 ALTER TABLE `base_attendance`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_station_date` (`station_id`,`created_at`);
+  ADD KEY `idx_station_date` (`station_id`,`created_at`),
+  ADD KEY `idx_attendance_station_train_grade_type_created` (`station_id`,`train_no`,`grade`,`type_of_attendance`,`created_at`),
+  ADD KEY `idx_attendance_employee_station_id` (`employee_id`,`station_id`,`id`),
+  ADD KEY `idx_attendance_station_created_train` (`station_id`,`created_at`,`train_no`),
+  ADD KEY `idx_attendance_duplicate_day` (`employee_id`,`station_id`,`type_of_attendance`,`train_no`,`grade`,`created_at`,`id`);
 
 --
 -- Indexes for table `base_employees`
 --
 ALTER TABLE `base_employees`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_station_id` (`station_id`);
+  ADD KEY `idx_station_id` (`station_id`),
+  ADD KEY `idx_employees_station_created` (`station_id`,`created_at`);
 
 --
 -- Indexes for table `base_employees_jodhpur`
 --
 ALTER TABLE `base_employees_jodhpur`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_employees_jodhpur_station_created` (`station_id`,`created_at`),
+  ADD KEY `idx_employees_jodhpur_station_employee` (`station_id`,`employee_id`);
 
 --
 -- Indexes for table `base_fb_target`
 --
 ALTER TABLE `base_fb_target`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_statio_id` (`station`);
+  ADD KEY `idx_statio_id` (`station`),
+  ADD KEY `idx_fb_target_station_train` (`station`,`train_no`),
+  ADD KEY `idx_fb_target_station_created` (`station`,`created_at`);
 
 --
 -- Indexes for table `base_photo_report`
 --
 ALTER TABLE `base_photo_report`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_station_createdat` (`station_id`,`created_at`);
+  ADD KEY `idx_station_createdat` (`station_id`,`created_at`),
+  ADD KEY `idx_photo_station_train_grade_coach_created` (`station_id`,`train_no`,`grade`,`coach_no`,`created_at`),
+  ADD KEY `idx_photo_station_train_grade_clean_created` (`station_id`,`train_no`,`grade`,`time_of_cleaning`,`created_at`);
+
+--
+-- Indexes for table `OBHS_chemicals`
+--
+ALTER TABLE `OBHS_chemicals`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_chemical_station_name` (`station_id`,`name`),
+  ADD KEY `idx_chemical_station` (`station_id`),
+  ADD KEY `idx_chemical_stock` (`station_id`,`current_quantity`);
+
+--
+-- Indexes for table `OBHS_chemical_daily_entries`
+--
+ALTER TABLE `OBHS_chemical_daily_entries`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_daily_station_date` (`station_id`,`entry_date`),
+  ADD KEY `idx_daily_chemical_date` (`chemical_id`,`entry_date`,`id`);
 
 --
 -- Indexes for table `OBHS_divisions`
@@ -434,40 +503,49 @@ ALTER TABLE `OBHS_divisions`
 ALTER TABLE `OBHS_feedback`
   ADD PRIMARY KEY (`unique_no`),
   ADD KEY `passenger_id` (`passenger_id`),
-  ADD KEY `idx_feed_passenger` (`feed_param`,`passenger_id`);
+  ADD KEY `idx_feed_passenger` (`feed_param`,`passenger_id`),
+  ADD KEY `idx_feedback_passenger_feed_value` (`passenger_id`,`feed_param`,`value`),
+  ADD KEY `idx_feedback_created_passenger` (`created`,`passenger_id`);
 
 --
 -- Indexes for table `OBHS_Globaladvertisment`
 --
 ALTER TABLE `OBHS_Globaladvertisment`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_globaladvertisment_date` (`date`);
 
 --
 -- Indexes for table `OBHS_marking`
 --
 ALTER TABLE `OBHS_marking`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_marking_station_value` (`station_id`,`value`),
+  ADD KEY `idx_marking_user_value` (`user_id`,`value`);
 
 --
 -- Indexes for table `OBHS_passenger`
 --
 ALTER TABLE `OBHS_passenger`
   ADD PRIMARY KEY (`unique_id`),
-  ADD KEY `idx_station_date` (`station_id`,`created`);
+  ADD KEY `idx_station_date` (`station_id`,`created`),
+  ADD KEY `idx_passenger_station_train_grade_type_created` (`station_id`,`train_no`,`grade`,`coach_type`,`created`),
+  ADD KEY `idx_passenger_station_created_train` (`station_id`,`created`,`train_no`);
 
 --
 -- Indexes for table `OBHS_questions`
 --
 ALTER TABLE `OBHS_questions`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `idx_questions_station_type_id` (`station_id`,`type`,`id`),
+  ADD KEY `idx_questions_user_id` (`user_id`,`id`);
 
 --
 -- Indexes for table `OBHS_reports`
 --
 ALTER TABLE `OBHS_reports`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `OBHS_reports_ibfk_1` (`user_id`);
+  ADD KEY `idx_reports_user_status_id` (`user_id`,`status`,`id`),
+  ADD KEY `idx_reports_station_type_status` (`station_id`,`type`,`status`);
 
 --
 -- Indexes for table `OBHS_station`
@@ -488,7 +566,11 @@ ALTER TABLE `OBHS_Station_POPUP`
 -- Indexes for table `OBHS_users`
 --
 ALTER TABLE `OBHS_users`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`),
+  ADD KEY `idx_users_username_type` (`username`,`type`),
+  ADD KEY `idx_users_email_type` (`email`,`type`),
+  ADD KEY `idx_users_station_type_status_end` (`station_id`,`type`,`status`,`end_date`),
+  ADD KEY `idx_users_type_end_status` (`type`,`end_date`,`status`);
 
 --
 -- Indexes for table `OBHS_zones`
@@ -502,7 +584,8 @@ ALTER TABLE `OBHS_zones`
 ALTER TABLE `pdf_attendence`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_station_id` (`station_id`),
-  ADD KEY `idx_date_range` (`from_date`);
+  ADD KEY `idx_date_range` (`from_date`),
+  ADD KEY `idx_pdf_attendence_station_trains_date_id` (`station_id`,`train_up`,`train_down`,`from_date`,`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -543,6 +626,18 @@ ALTER TABLE `base_fb_target`
 --
 ALTER TABLE `base_photo_report`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `OBHS_chemicals`
+--
+ALTER TABLE `OBHS_chemicals`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `OBHS_chemical_daily_entries`
+--
+ALTER TABLE `OBHS_chemical_daily_entries`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `OBHS_divisions`
@@ -619,6 +714,12 @@ ALTER TABLE `pdf_attendence`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `OBHS_chemical_daily_entries`
+--
+ALTER TABLE `OBHS_chemical_daily_entries`
+  ADD CONSTRAINT `fk_daily_chemical` FOREIGN KEY (`chemical_id`) REFERENCES `OBHS_chemicals` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `OBHS_divisions`
