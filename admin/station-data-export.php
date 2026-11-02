@@ -45,7 +45,9 @@ $totalRecords = array_sum($recordCounts);
     <link rel="stylesheet" href="css/adminlte.css" />
     <style>
       .export-hero { background: linear-gradient(135deg, #0d6efd 0%, #084298 100%); color: #fff; border: 0; overflow: hidden; }
-      .export-hero::after { content: ''; position: absolute; width: 230px; height: 230px; right: -55px; top: -100px; border-radius: 50%; background: rgba(255,255,255,.09); }
+      .export-hero::after { content: ''; position: absolute; width: 230px; height: 230px; right: -55px; top: -100px; border-radius: 50%; background: rgba(255,255,255,.09); pointer-events: none; z-index: 0; }
+      .export-hero .card-body { position: relative; z-index: 1; }
+      .overview-button { position: relative; z-index: 2; pointer-events: auto; }
       .export-option { cursor: pointer; border: 2px solid transparent; transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
       .export-option:hover { transform: translateY(-2px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.08); }
       .export-option:has(input:checked) { border-color: #0d6efd; background: rgba(13,110,253,.04); box-shadow: 0 0 0 .2rem rgba(13,110,253,.1); }
@@ -65,7 +67,10 @@ $totalRecords = array_sum($recordCounts);
         <div class="app-content"><div class="container-fluid">
           <div class="card export-hero position-relative mb-4 shadow-sm"><div class="card-body position-relative p-4"><div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
             <div><div class="text-white-50 text-uppercase small fw-semibold mb-1">Selected station</div><h2 class="mb-1"><i class="bi bi-broadcast-pin me-2"></i><?php echo htmlspecialchars($station['station_name']); ?></h2><p class="mb-0 text-white-50">Station ID: <?php echo (int) $station['station_id']; ?> &middot; <?php echo number_format($totalRecords); ?> total records available</p></div>
-            <div class="text-md-end"><div class="display-6 fw-bold"><?php echo number_format($totalRecords); ?></div><div class="text-white-50">Records in 3 tables</div></div>
+            <div class="text-md-end position-relative">
+              <a href="station-overview.php" class="btn btn-light fw-semibold mb-2 overview-button"><i class="bi bi-bar-chart-line me-2"></i>Station Overview</a>
+              <div class="display-6 fw-bold"><?php echo number_format($totalRecords); ?></div><div class="text-white-50">Records in 3 tables</div>
+            </div>
           </div></div></div>
 
           <form action="export-station-data.php" method="get" id="exportForm">
