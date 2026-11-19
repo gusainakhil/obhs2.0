@@ -41,9 +41,13 @@ if ($editing_id > 0) {
         $rres = mysqli_stmt_get_result($rstmt);
         if ($rres) {
             while ($rr = mysqli_fetch_assoc($rres)) {
-                $existing_reports[] = $rr['reports_name'];
+                // Normalize the previous label so existing assignments remain editable.
+                $report_name = $rr['reports_name'] === 'Feedback Report'
+                    ? 'Daily Feedback Report'
+                    : $rr['reports_name'];
+                $existing_reports[] = $report_name;
                 // create map for quick lookup with id/status
-                $existing_reports_map[$rr['reports_name']] = ['id' => (int)$rr['id'], 'status' => (int)$rr['status']];
+                $existing_reports_map[$report_name] = ['id' => (int)$rr['id'], 'status' => (int)$rr['status']];
             }
         }
         mysqli_stmt_close($rstmt);
@@ -160,6 +164,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $type='Feedback';
                         } elseif ($r_name === 'Round Wise Summary Without Grade') {
                             $link = 'without-grade-round_wise_summary.php';
+                            $type='Feedback';
+                        } elseif ($r_name === 'Daily Feedback Report') {
+                            $link = 'daily-feedback-report.php';
                             $type='Feedback';
                         } elseif ($r_name === 'Photo Report') {
                             $link = 'photo_report_before_after.php';
@@ -449,6 +456,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     </label>
                                                     <?php if (!empty($existing_reports_map['Round Wise Summary Without Grade'])): ?>
                                                         <?php $rep = $existing_reports_map['Round Wise Summary Without Grade']; ?>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
+                                                            <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
+                                                        </button>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="reports[]"
+                                                        value="Daily Feedback Report" id="dailyFeedbackReport" <?php if (isset($existing_reports_map['Daily Feedback Report'])) echo 'checked data-locked="1"'; elseif(in_array('Daily Feedback Report', $existing_reports)) echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="dailyFeedbackReport">
+                                                        Daily Feedback Report
+                                                    </label>
+                                                    <?php if (!empty($existing_reports_map['Daily Feedback Report'])): ?>
+                                                        <?php $rep = $existing_reports_map['Daily Feedback Report']; ?>
                                                         <button type="button" class="btn btn-sm btn-outline-secondary toggle-report" data-id="<?php echo $rep['id']; ?>" data-status="<?php echo $rep['status']; ?>">
                                                             <?php echo $rep['status'] == 1 ? 'Hide' : 'Unhide'; ?>
                                                         </button>

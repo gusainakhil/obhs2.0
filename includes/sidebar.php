@@ -46,6 +46,7 @@ $resolve_sidebar_icon = static function ($label) {
         'Dashboard' => '▦',
         'Round Wise Summary' => '◉',
         'Round Wise Summary Without Grade' => '◎',
+        'Daily Feedback Report' => '◬',
         'Photo Report' => '▣',
         'Photo Report Time Slot' => '◫',
         'Photo Report Coach Wise' => '▣',
@@ -107,7 +108,16 @@ if ($reports_stmt) {
     if ($reports_result) {
         while ($row = $reports_result->fetch_assoc()) {
             $report_label = trim((string) ($row['reports_name'] ?? ''));
-            $report_href = $build_project_href($row['link'] ?? '');
+            $report_link = trim((string) ($row['link'] ?? ''));
+
+            if ($report_label === 'Feedback Report') {
+                $report_label = 'Daily Feedback Report';
+            }
+            if ($report_link === 'feedback-single-train-report.php') {
+                $report_link = 'daily-feedback-report.php';
+            }
+
+            $report_href = $build_project_href($report_link);
 
             if ($report_label === '' || $report_href === '') {
                 continue;
@@ -132,9 +142,9 @@ $sidebar_links = array_merge($sidebar_links, $assigned_report_links);
 
 if ($station_id === 8) {
     $sidebar_links[] = [
-        'href' => $build_project_href('feedback-single-train-report.php'),
-        'icon' => $resolve_sidebar_icon('Train Report'),
-        'label' => 'Train Report',
+        'href' => $build_project_href('daily-feedback-report.php'),
+        'icon' => $resolve_sidebar_icon('Daily Feedback Report'),
+        'label' => 'Daily Feedback Report',
     ];
     $sidebar_links[] = [
         'href' => $build_project_href('view-pdf-attendece.php'),
@@ -154,7 +164,7 @@ $sidebar_links[] = [
     'label' => 'View Feedback Target',
 ];
 
-if ($station_id === 17 || $station_id === 26 || $stationId === 21 || $stationId === 36) {
+if ($station_id === 17 || $station_id === 26 || $station_id === 21 || $station_id === 36) {
     $sidebar_links[] = [
         'href' => $build_project_href('jodhpur-employees/add-employee-jodhpur.php'),
         'icon' => $resolve_sidebar_icon('Create Employee'),

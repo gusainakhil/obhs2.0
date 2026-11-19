@@ -70,6 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               } elseif ($r_name === 'Round Wise Summary Without Grade') {
                 $empty_link = 'without-grade-round_wise_summary.php';
                 $type = 'Feedback';
+              } elseif ($r_name === 'Daily Feedback Report') {
+                $empty_link = 'daily-feedback-report.php';
+                $type = 'Feedback';
               } elseif ($r_name === 'Photo Report') {
                 $empty_link = 'photo_report_before_after.php';
                 $type = 'photo_report';
@@ -318,6 +321,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             value="Round Wise Summary Without Grade" id="roundwisesummaryWithoutGrade">
                           <label class="form-check-label" for="roundwisesummaryWithoutGrade">
                             Round wise Summary Report Without Grade
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="reports[]"
+                            value="Daily Feedback Report" id="dailyFeedbackReport">
+                          <label class="form-check-label" for="dailyFeedbackReport">
+                            Daily Feedback Report
                           </label>
                         </div>
                         <div class="form-check">
